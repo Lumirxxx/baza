@@ -70,7 +70,7 @@ const LoginPage = () => {
 
                     <div>
 
-                        <select className="select_button" value={selectedOption} onChange={handleSelectOption}>
+                        <select className="select_button select_button_custom" value={selectedOption} onChange={handleSelectOption}>
                             <option value=""> <div className="select_button_option">Отдел сотрудника</div> </option>
                             <option value="option1"><div className="select_button_option">IT - Отдел</div></option>
                             <option value="option2"><div className="select_button_option">Отдел АСУ ТП</div></option>
