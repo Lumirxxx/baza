@@ -15,24 +15,60 @@ const LoginPage = () => {
         event.preventDefault();
 
         // Получение данных пользователя из JSON
-        fetch("http://192.168.10.109:8000/users/")
-            .then((response) => response.json())
-            .then((data) => {
-                // Проверка на наличие пользователя с таким логином и паролем
-                const users = data.find(
-                    (users) => users.username === username && users.password === password
-                );
-
-                if (users) {
-                    navigate("/main");
-                    console.log("Вы успешно авторизовались!");
+        fetch("http://192.168.10.109:8000/api/v1/api-token-auth/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username,
+                password,
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
                 } else {
-                    setErrorMessage("Неправильный логин или пароль");
+                    throw new Error("Не удалось получить токен");
                 }
+            })
+            .then((data) => {
+                // Сохранение токена в локальном хранилище
+                localStorage.setItem("token", data.token);
+                console.log("Токен получен", data.token);
+
+                // Отправка GET-запроса с токеном
+                const token = localStorage.getItem("token");
+                console.log("Токен получен", data.token);
+                fetch("http://192.168.10.109:8000/api/v1/srv_releases", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Token ${token}`,
+                    },
+                    
+                })
+                    .then((response) => {
+                        console.log(response.headers);
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error("Request failed");
+                        }
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Обработка полученных данных
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+
+                navigate("/main");
+                console.log("Вы успешно авторизовались!");
             })
             .catch((error) => {
                 console.log(error);
-                setErrorMessage("Ошибка при получении данных пользователя");
+                setErrorMessage("Неправильный логин или пароль");
             });
     };
     const handleSelectOption = (event) => {
