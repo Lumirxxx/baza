@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -9,61 +9,42 @@ const LoginPage = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const navigate = useNavigate();
 
-
-
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Получение данных пользователя из JSON
-        fetch("http://192.168.10.109:8000/api/v1/api-token-auth/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+        axios
+            .post("http://192.168.10.109:8000/api/v1/token/", {
                 username,
                 password,
-            }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("Не удалось получить токен");
-                }
             })
-            .then((data) => {
+            .then((response) => {
                 // Сохранение токена в локальном хранилище
-                localStorage.setItem("token", data.token);
-                console.log("Токен получен", data.token);
-
+                localStorage.setItem("token", response.data.access);
+                console.log("Токен получен", response.data.access);
+                localStorage.setItem("refresh", response.data.refresh);
+                console.log("Токен получен рефреш", response.data.refresh);
                 // Отправка GET-запроса с токеном
                 const token = localStorage.getItem("token");
-                console.log("Токен получен", data.token);
-                fetch("http://192.168.10.109:8000/api/v1/srv_releases", {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Token ${token}`,
-                    },
-                    
-                })
-                    .then((response) => {
-                        console.log(response.headers);
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error("Request failed");
-                        }
+                // const refresh = localStorage.getItem("refresh");
+
+
+
+                axios
+                    .get("http://192.168.10.109:8000/api/v1/srv_releases", {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+
+                        },
                     })
-                    .then((response) => response.json())
-                    .then((data) => {
+                    .then((response) => {
+                        console.log("Релизы получены", response.data);
                         // Обработка полученных данных
                     })
                     .catch((error) => {
                         console.log(error);
                     });
 
-                navigate("/main");
+                navigate("/release");
                 console.log("Вы успешно авторизовались!");
             })
             .catch((error) => {
@@ -71,21 +52,24 @@ const LoginPage = () => {
                 setErrorMessage("Неправильный логин или пароль");
             });
     };
+
     const handleSelectOption = (event) => {
         setSelectedOption(event.target.value);
-    }
+    };
 
     return (
         <div className="login_page">
             <div className="login_page_logo">
-                <a href="#"><img src="/logo.svg" /></a>
+                <a href="#">
+                    <img src="/logo.svg" />
+                </a>
             </div>
             <div className="login_form">
                 <div className="login_form_title">Авторизация</div>
                 <form onSubmit={handleSubmit}>
                     <div>
-
-                        <input className="select_button"
+                        <input
+                            className="select_button"
                             placeholder="Логин"
                             type="text"
                             id="username"
@@ -94,8 +78,8 @@ const LoginPage = () => {
                         />
                     </div>
                     <div>
-
-                        <input className="select_button select_button_password_margin"
+                        <input
+                            className="select_button select_button_password_margin"
                             placeholder="Пароль"
                             type="password"
                             id="password"
@@ -103,18 +87,26 @@ const LoginPage = () => {
                             onChange={(event) => setPassword(event.target.value)}
                         />
                     </div>
-
                     <div>
-
-                        <select className="select_button select_button_custom" value={selectedOption} onChange={handleSelectOption}>
-                            <option value=""> <div className="select_button_option">Отдел сотрудника</div> </option>
-                            <option value="option1"><div className="select_button_option">IT - Отдел</div></option>
-                            <option value="option2"><div className="select_button_option">Отдел АСУ ТП</div></option>
-
+                        <select
+                            className="select_button select_button_custom"
+                            value={selectedOption}
+                            onChange={handleSelectOption}
+                        >
+                            <option value="">
+                                <div className="select_button_option">Отдел сотрудника</div>
+                            </option>
+                            <option value="option1">
+                                <div className="select_button_option">IT - Отдел</div>
+                            </option>
+                            <option value="option2">
+                                <div className="select_button_option">Отдел АСУ ТП</div>
+                            </option>
                         </select>
                     </div>
-
-                    <button className="form_button_submit" type="submit">Войти</button>
+                    <button className="form_button_submit" type="submit">
+                        Войти
+                    </button>
                     {errorMessage && <p>{errorMessage}</p>}
                 </form>
             </div>
