@@ -44,7 +44,7 @@ const LoginPage = () => {
                         console.log(error);
                     });
 
-                navigate("/release");
+                navigate("/main");
                 console.log("Вы успешно авторизовались!");
             })
             .catch((error) => {

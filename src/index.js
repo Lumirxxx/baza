@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import './fonts/gothampro_black.ttf'
+import './fonts/gothampro_bold.ttf'
+import './fonts/gothampro_medium.ttf'
+import './fonts/gothampro_light.ttf'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

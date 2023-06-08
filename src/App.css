@@ -1,6 +1,8 @@
 .App {
   text-align: center;
+
 }
+
 
 .App-logo {
   height: 40vmin;
@@ -29,6 +31,7 @@
 }
 
 .login_page {
+  background-color: #002456;
   background-image: url("/public/bgLoginPage.png");
   background-position: center;
   background-size: 100%;
@@ -38,6 +41,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
 
 }
 
@@ -52,10 +56,12 @@
   padding-bottom: 45px;
   background-color: #fff;
   border-radius: 15px;
+  margin-top: 9.75rem;
 
 }
 
 .login_form_title {
+  font-family: gothampro;
   font-size: 20px;
   font-weight: normal;
   margin-bottom: 60px;
@@ -73,6 +79,7 @@
   max-width: 257px;
   width: 100%;
   text-indent: 15px;
+  font-family: gothampro;
 
 }
 
