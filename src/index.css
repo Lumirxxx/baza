@@ -16,7 +16,7 @@ body {
 
 @font-face {
   font-family: gothampro;
-  src: local(gothampro_light), url(./fonts/gothampro_light.ttf) format('truetype');
+  src: local(gothampro_light), url(./fonts/gothampro_light.ttf ) format('truetype');
   font-weight: light;
 }
 
