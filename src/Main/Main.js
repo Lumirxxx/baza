@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import MainFunc from "../MainButton/MainFunc";
-import MainError from "../MainButton/MainError";
-import MainChange from "../MainButton/MainChange";
+// import MainFunc from "../MainButton/MainFunc";
+// import MainError from "../MainButton/MainError";
+// import MainChange from "../MainButton/MainChange";
 
 const Main = () => {
     const [menu, setMenu] = useState([]);
+    const [sections, setSections] = useState([]);
+    const [selectedButtonId, setSelectedButtonId] = useState(null);
     const [newMenuItem, setNewMenuItem] = useState({
         name: "",
     });
@@ -27,32 +29,23 @@ const Main = () => {
             });
     }, []);
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setNewMenuItem({ ...newMenuItem, [name]: value });
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    useEffect(() => {
         const token = localStorage.getItem("token");
-        const newMenu = {
-            name: newMenuItem.name,
-        };
         axios
-            .post("http://192.168.10.109:8000/api/v1/menu/", newMenu, {
+            .get(`http://192.168.10.109:8000/api/v1/sections/?menu_id=${selectedButtonId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
             .then((response) => {
                 console.log(response.data);
-                setMenu([...menu, newMenu]);
-                setNewMenuItem({ name: "" });
+                setSections(response.data);
             })
             .catch((error) => {
                 console.log(error);
             });
-    };
+    }, [selectedButtonId]);
+
 
     return (
 
@@ -62,17 +55,45 @@ const Main = () => {
                 <div className="main_page_logo">
                     <img src="/Headerlogomain.svg"></img>
                 </div>
+                {menu.map((menuItem) => (
+                    <button
+                        className="button_body"
+                        key={menuItem.id}
+                        onClick={() => setSelectedButtonId(menuItem.id)}
+                    >
+                        <div className="button_text">{menuItem.name}</div>
+                    </button>
 
-                <MainFunc />
+                ))}
+
+                {/* <MainFunc />
                 <MainError />
-                <MainChange />
+                <MainChange /> */}
             </div>
-            {/* {menu.map((menuItem) => (
-                <button key={menuItem.id}>
-                    <h2>{menuItem.name}</h2>
-                </button>
-            ))}
-            <form onSubmit={handleSubmit}>
+            {/* Рендерим вывод меню 2го ряда */}
+            <div className="sections_container">
+
+                {sections.map((section) => (
+                    <div key={section.id}>
+
+                        <div>
+                            <h2>{section.name}</h2>
+                            {section.items && (
+                                <ul>
+                                    {section.items.map((item) => (
+                                        <li key={item.id}>{item.name}</li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+
+                    </div>
+                ))}
+            </div>
+
+
+
+            {/* <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="name">Name</label>
                     <input
@@ -85,7 +106,7 @@ const Main = () => {
                 </div>
                 <button type="submit">Add</button>
             </form> */}
-        </div>
+        </div >
     );
 };
 
