@@ -7,10 +7,12 @@ import axios from "axios";
 const Main = () => {
     const [menu, setMenu] = useState([]);
     const [sections, setSections] = useState([]);
+    const [articles, setArticle] = useState([]);
     const [selectedButtonId, setSelectedButtonId] = useState(null);
-    const [newMenuItem, setNewMenuItem] = useState({
-        name: "",
-    });
+    const [articleButtonId, setArticleButtonId] = useState(null);
+    // const [newMenuItem, setNewMenuItem] = useState({
+    //     name: "",
+    // });
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -21,7 +23,7 @@ const Main = () => {
                 },
             })
             .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 setMenu(response.data);
             })
             .catch((error) => {
@@ -38,13 +40,32 @@ const Main = () => {
                 },
             })
             .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 setSections(response.data);
             })
             .catch((error) => {
                 console.log(error);
+                console.log('http://192.168.10.109:8000/api/v1/sections/?menu_id=' + selectedButtonId)
             });
     }, [selectedButtonId]);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        axios
+            .get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${articleButtonId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((response) => {
+                console.log(response.data);
+                setArticle(response.data);
+
+            })
+            .catch((error) => {
+                console.log(error);
+                console.log('http://192.168.10.109:8000/api/v1/articles/?section_id=' + articleButtonId)
+            });
+    }, [articleButtonId]);
 
 
     return (
@@ -73,6 +94,14 @@ const Main = () => {
             {/* Рендерим вывод меню 2го ряда */}
             <div className="sections_container">
 
+
+                {sections.map((section) => (
+                    <div className="section_button" key={section.id} onClick={() => setArticleButtonId(section.id)}>{section.name}</div>
+                ))}
+
+
+
+                {/* 
                 {sections.map((section) => (
                     <div key={section.id}>
 
@@ -81,15 +110,35 @@ const Main = () => {
                             {section.items && (
                                 <ul>
                                     {section.items.map((item) => (
-                                        <li key={item.id}>{item.name}</li>
+                                        <li key={item.id} onClick={() => setArticleButtonId(item.id)}>{item.name}</li>
+
+
                                     ))}
                                 </ul>
                             )}
                         </div>
 
                     </div>
-                ))}
+                ))} */}
             </div>
+            <div className="article_container">
+                {articles.map((article) => (
+                    <div key={article.id}>
+                        <div>
+                            <h2>{article.text}</h2>
+                            {article.items && (
+                                <ul>
+                                    {article.items.map((item) => (
+                                        <li key={item.id}>{item.text}</li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </div>
+                ))}
+
+            </div>
+
 
 
 
