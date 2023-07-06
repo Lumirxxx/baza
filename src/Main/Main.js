@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import AddButton from "../Addbutton/AddButton";
 // import MainFunc from "../MainButton/MainFunc";
 // import MainError from "../MainButton/MainError";
 // import MainChange from "../MainButton/MainChange";
@@ -71,90 +72,63 @@ const Main = () => {
     return (
 
         <div className="main_page_container">
-            <div className="main_page">
+            <div className="main_page_container_custom">
+                <div className="main_page">
 
-                <div className="main_page_logo">
-                    <img src="/Headerlogomain.svg"></img>
-                </div>
-                {menu.map((menuItem) => (
-                    <button
-                        className="button_body"
-                        key={menuItem.id}
-                        onClick={() => setSelectedButtonId(menuItem.id)}
-                    >
-                        <div className="button_text">{menuItem.name}</div>
-                    </button>
+                    <div className="main_page_logo">
+                        <img src="/Headerlogomain.svg"></img>
+                    </div>
+                    {menu.map((menuItem) => (
+                        <button
+                            className="button_body"
+                            key={menuItem.id}
+                            onClick={() => setSelectedButtonId(menuItem.id)}
+                        >
+                            <div className="button_text">{menuItem.name}</div>
+                        </button>
 
-                ))}
-
-                {/* <MainFunc />
+                    ))}
+                    <AddButton sections={sections} />
+                    {/* <MainFunc />
                 <MainError />
                 <MainChange /> */}
-            </div>
-            {/* Рендерим вывод меню 2го ряда */}
-            <div className="sections_container">
-
-
-                {sections.map((section) => (
-                    <div className="section_button" key={section.id} onClick={() => setArticleButtonId(section.id)}>{section.name}</div>
-                ))}
-
-
-
-                {/* 
-                {sections.map((section) => (
-                    <div key={section.id}>
-
-                        <div>
-                            <h2>{section.name}</h2>
-                            {section.items && (
-                                <ul>
-                                    {section.items.map((item) => (
-                                        <li key={item.id} onClick={() => setArticleButtonId(item.id)}>{item.name}</li>
-
-
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-
-                    </div>
-                ))} */}
-            </div>
-            <div className="article_container">
-                {articles.map((article) => (
-                    <div key={article.id}>
-                        <div>
-                            <h2>{article.text}</h2>
-                            {article.items && (
-                                <ul>
-                                    {article.items.map((item) => (
-                                        <li key={item.id}>{item.text}</li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    </div>
-                ))}
-
-            </div>
-
-
-
-
-            {/* <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="name">Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={newMenuItem.name}
-                        onChange={handleInputChange}
-                    />
                 </div>
-                <button type="submit">Add</button>
-            </form> */}
+                {/* Рендерим вывод меню 2го ряда */}
+                <div className="menu_container_right">
+                    <div className="sections_container">
+
+
+                        {sections.map((section) => (
+                            <div className="section_button" key={section.id} onClick={() => setArticleButtonId(section.id)}>{section.name}</div>
+                        ))}
+
+
+
+                    </div>
+                    {/* // Рендерим вывод списка статей 3го ряда */}
+                    <div className="article_container">
+                        {articles.map((article) => (
+                            <div key={article.id}>
+                                <div>
+                                    <h2>{article.text}</h2>
+                                    {article.items && (
+                                        <ul>
+                                            {article.items.map((item) => (
+                                                <li key={item.id}>{item.text}</li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
         </div >
     );
 };
