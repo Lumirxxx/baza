@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddButton = () => {
+const AddButtonSections = () => {
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [sectionId, setSectionId] = useState(null);
+    const [menuId, setMenuId] = useState("");
+    const [menus, setMenus] = useState([]);
 
-    const [newArticle, setNewArticle] = useState({
-
-        text: ""
+    const [newSection, setNewSection] = useState({
+        name: ""
     });
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         axios
-            .get("http://192.168.10.109:8000/api/v1/sections", {
+            .get("http://192.168.10.109:8000/api/v1/menu/", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
             .then((response) => {
-                setSections(response.data);
+                setMenus(response.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -31,45 +31,43 @@ const AddButton = () => {
         setShowForm(true);
     };
 
-    const handleSectionChange = (event) => {
-        setSectionId(event.target.value);
+    const handleMenuChange = (event) => {
+        setMenuId(event.target.value);
     };
 
     const handleInputChange = (event) => {
-        setNewArticle({
-            ...newArticle,
+        setNewSection({
+            ...newSection,
             [event.target.name]: event.target.value
         });
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const token = localStorage.getItem("token");
         axios
             .post(
-                "http://192.168.10.109:8000/api/v1/articles/",
+                "http://192.168.10.109:8000/api/v1/sections/",
                 {
-                    section_id: sectionId,
-                    text: newArticle.text
+                    menu_id: menuId,
+                    name: newSection.name
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 }
             )
             .then((response) => {
-                console.log("New article added:", response.data);
-                setNewArticle(response.data); // Обновление списка  
+                console.log("New section added:", response.data);
+                setSections([...sections, response.data]); //Обновление списка секций
             })
             .catch((error) => {
-                console.log("Error adding new article:", error);
+                console.log("Error adding new section:", error);
             });
 
-        setSectionId(null);
-        setNewArticle({
-
-            text: ""
+        setMenuId("");
+        setNewSection({
+            name: ""
         });
         setShowForm(false);
     };
@@ -78,34 +76,35 @@ const AddButton = () => {
     return (
         <div>
             {!showForm ? (
-                <button onClick={handleButtonClick}>Add</button>
+                <button onClick={handleButtonClick}>Add Section</button>
             ) : (
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="section">Section:</label>
+                        <label htmlFor="menu">Menu:</label>
                         <select
-                            id="section"
-                            name="section"
-                            value={sectionId}
-                            onChange={handleSectionChange}
+                            id="menu"
+                            name="menu"
+                            value={menuId}
+                            onChange={handleMenuChange}
                         >
                             <option value="" disabled>
-                                Select a section
+                                Select a menu
                             </option>
-                            {sections.map((section) => (
-                                <option key={section.id} value={section.id}>
-                                    {section.name}
+                            {menus.map((menu) => (
+                                <option key={menu.id} value={menu.id}>
+                                    {menu.name}
                                 </option>
                             ))}
                         </select>
                     </div>
 
                     <div>
-                        <label htmlFor="text">Text:</label>
-                        <textarea
-                            id="text"
-                            name="text"
-                            value={newArticle.text}
+                        <label htmlFor="name">Name:</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={newSection.name}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -116,4 +115,4 @@ const AddButton = () => {
     );
 };
 
-export default AddButton;
+export default AddButtonSections;

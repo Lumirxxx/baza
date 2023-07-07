@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddButton from "../Addbutton/AddButton";
+import AddButtonSections from "../Addbutton/AddButtonSections";
 // import MainFunc from "../MainButton/MainFunc";
 // import MainError from "../MainButton/MainError";
 // import MainChange from "../MainButton/MainChange";
@@ -11,9 +12,6 @@ const Main = () => {
     const [articles, setArticle] = useState([]);
     const [selectedButtonId, setSelectedButtonId] = useState(null);
     const [articleButtonId, setArticleButtonId] = useState(null);
-    // const [newMenuItem, setNewMenuItem] = useState({
-    //     name: "",
-    // });
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -24,7 +22,6 @@ const Main = () => {
                 },
             })
             .then((response) => {
-                // console.log(response.data);
                 setMenu(response.data);
             })
             .catch((error) => {
@@ -41,7 +38,6 @@ const Main = () => {
                 },
             })
             .then((response) => {
-                // console.log(response.data);
                 setSections(response.data);
             })
             .catch((error) => {
@@ -49,6 +45,7 @@ const Main = () => {
                 console.log('http://192.168.10.109:8000/api/v1/sections/?menu_id=' + selectedButtonId)
             });
     }, [selectedButtonId]);
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         axios
@@ -58,9 +55,7 @@ const Main = () => {
                 },
             })
             .then((response) => {
-                console.log(response.data);
                 setArticle(response.data);
-
             })
             .catch((error) => {
                 console.log(error);
@@ -68,13 +63,10 @@ const Main = () => {
             });
     }, [articleButtonId]);
 
-
     return (
-
         <div className="main_page_container">
             <div className="main_page_container_custom">
                 <div className="main_page">
-
                     <div className="main_page_logo">
                         <img src="/Headerlogomain.svg"></img>
                     </div>
@@ -86,51 +78,50 @@ const Main = () => {
                         >
                             <div className="button_text">{menuItem.name}</div>
                         </button>
-
                     ))}
                     <AddButton sections={sections} />
-                    {/* <MainFunc />
-                <MainError />
-                <MainChange /> */}
+                    <AddButtonSections menu={menu} />
+
                 </div>
-                {/* Рендерим вывод меню 2го ряда */}
                 <div className="menu_container_right">
-                    <div className="sections_container">
-
-
-                        {sections.map((section) => (
-                            <div className="section_button" key={section.id} onClick={() => setArticleButtonId(section.id)}>{section.name}</div>
-                        ))}
-
-
-
-                    </div>
-                    {/* // Рендерим вывод списка статей 3го ряда */}
-                    <div className="article_container">
-                        {articles.map((article) => (
-                            <div key={article.id}>
-                                <div>
-                                    <h2>{article.text}</h2>
-                                    {article.items && (
-                                        <ul>
-                                            {article.items.map((item) => (
-                                                <li key={item.id}>{item.text}</li>
-                                            ))}
-                                        </ul>
-                                    )}
+                    {sections.length > 0 && (
+                        <div className="sections_container">
+                            {sections.map((section) => (
+                                <div
+                                    className="section_button"
+                                    key={section.id}
+                                    onClick={() => setArticleButtonId(section.id)}
+                                >
+                                    {section.name}
                                 </div>
+                            ))}
+                        </div>
+                    )}
+                    {articles.length > 0 && (
+                        <div className="article_container">
+                            <div className="article_button_container">
+                                {articles.map((article) => (
+                                    <div key={article.id}>
+                                        <div className="article_content">
+                                            <div>{article.text}</div>
+                                            {article.items && (
+                                                <ul>
+                                                    {article.items.map((item) => (
+                                                        <li key={item.id}>{item.text}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-
-                    </div>
-
+                        </div>
+                    )}
                 </div>
-
-
-
             </div>
-        </div >
+        </div>
     );
 };
 
 export default Main;
+
