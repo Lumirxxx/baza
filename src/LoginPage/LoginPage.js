@@ -30,7 +30,7 @@ const LoginPage = () => {
 
 
                 axios
-                    .get("http://192.168.10.109:8000/api/v1/srv_releases", {
+                    .get("http://192.168.10.109:8000/api/v1/menu", {
                         headers: {
                             Authorization: `Bearer ${token}`,
 

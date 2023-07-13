@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddButton from "../Addbutton/AddButton";
 import AddButtonSections from "../Addbutton/AddButtonSections";
-// import MainFunc from "../MainButton/MainFunc";
-// import MainError from "../MainButton/MainError";
-// import MainChange from "../MainButton/MainChange";
 
 const Main = () => {
     const [menu, setMenu] = useState([]);
@@ -12,6 +9,9 @@ const Main = () => {
     const [articles, setArticle] = useState([]);
     const [selectedButtonId, setSelectedButtonId] = useState(null);
     const [articleButtonId, setArticleButtonId] = useState(null);
+
+
+
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -63,6 +63,38 @@ const Main = () => {
             });
     }, [articleButtonId]);
 
+    const handleDeleteSection = (sectionId) => {
+        const token = localStorage.getItem("token");
+        axios
+            .delete(`http://192.168.10.109:8000/api/v1/sections/${sectionId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((response) => {
+                console.log("Section deleted successfully");
+            })
+            .catch((error) => {
+                console.log("Error deleting section:", error);
+            });
+    };
+
+    const handleDeleteArticle = (articleId) => {
+        const token = localStorage.getItem("token");
+        axios
+            .delete(`http://192.168.10.109:8000/api/v1/articles/${articleId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((response) => {
+                console.log("Article deleted successfully");
+            })
+            .catch((error) => {
+                console.log("Error deleting article:", error);
+            });
+    };
+
     return (
         <div className="main_page_container">
             <div className="main_page_container_custom">
@@ -81,7 +113,6 @@ const Main = () => {
                     ))}
                     <AddButton sections={sections} />
                     <AddButtonSections menu={menu} />
-
                 </div>
                 <div className="menu_container_right">
                     {sections.length > 0 && (
@@ -92,7 +123,17 @@ const Main = () => {
                                     key={section.id}
                                     onClick={() => setArticleButtonId(section.id)}
                                 >
-                                    {section.name}
+                                    <div>
+                                        <div>
+                                            <img src={section.img}></img>
+
+                                        </div>
+                                        <div>
+                                            {section.name}
+                                        </div>
+
+                                    </div>
+                                    <button onClick={() => handleDeleteSection(section.id)}>Delete</button>
                                 </div>
                             ))}
                         </div>
@@ -100,18 +141,22 @@ const Main = () => {
                     {articles.length > 0 && (
                         <div className="article_container">
                             <div className="article_button_container">
+                                
                                 {articles.map((article) => (
                                     <div key={article.id}>
                                         <div className="article_content">
+                                            
                                             <div>{article.text}</div>
                                             {article.items && (
                                                 <ul>
                                                     {article.items.map((item) => (
+                                                        
                                                         <li key={item.id}>{item.text}</li>
                                                     ))}
                                                 </ul>
                                             )}
                                         </div>
+                                        <button onClick={() => handleDeleteArticle(article.id)}>Delete</button>
                                     </div>
                                 ))}
                             </div>

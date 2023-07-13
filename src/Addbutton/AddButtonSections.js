@@ -6,6 +6,8 @@ const AddButtonSections = () => {
     const [showForm, setShowForm] = useState(false);
     const [menuId, setMenuId] = useState("");
     const [menus, setMenus] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(null);
+
 
     const [newSection, setNewSection] = useState({
         name: ""
@@ -44,33 +46,36 @@ const AddButtonSections = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const formData = new FormData();
+        formData.append("menu_id", menuId);
+        formData.append("name", newSection.name);
+        formData.append("img", selectedImage);
+
         axios
             .post(
                 "http://192.168.10.109:8000/api/v1/sections/",
-                {
-                    menu_id: menuId,
-                    name: newSection.name
-                },
+                formData,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             )
             .then((response) => {
-                console.log("New section added:", response.data);
-                setSections([...sections, response.data]); //Обновление списка секций
+                 console.log("Новая секция добавлена:", response.data);
+                setSections([...sections, response.data]);
             })
             .catch((error) => {
                 console.log("Error adding new section:", error);
             });
 
         setMenuId("");
-        setNewSection({
-            name: ""
-        });
+        setNewSection({ name: "" });
+        setSelectedImage(null);
         setShowForm(false);
     };
+
 
 
     return (
@@ -108,6 +113,16 @@ const AddButtonSections = () => {
                             onChange={handleInputChange}
                         />
                     </div>
+                    <div>
+                        <label htmlFor="image">Изображение:</label>
+                        <input
+                            type="file"
+                            id="image"
+                            name="image"
+                            onChange={(event) => setSelectedImage(event.target.files[0])}
+                        />
+                    </div>
+
                     <button type="submit">Submit</button>
                 </form>
             )}
