@@ -46,30 +46,23 @@ const AddButton = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const formData = new FormData();
-        formData.append("section_id", sectionId);
-        formData.append("text", newArticle.text);
-
-        // Добавить все выбранные изображения в FormData
-        for (let i = 0; i < selectedImages.length; i++) {
-            formData.append("images", selectedImages[i]);
-        }
-
         const token = localStorage.getItem("token");
         axios
             .post(
                 "http://192.168.10.109:8000/api/v1/articles/",
-                formData,
+                {
+                    section_id: sectionId,
+                    text: newArticle.text
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
                     },
                 }
             )
             .then((response) => {
                 console.log("New article added:", response.data);
-                setNewArticle(response.data);
+                setNewArticle(response.data); // Обновление списка  
             })
             .catch((error) => {
                 console.log("Error adding new article:", error);
@@ -77,12 +70,11 @@ const AddButton = () => {
 
         setSectionId(null);
         setNewArticle({
+
             text: ""
         });
-        setSelectedImages([]);
         setShowForm(false);
     };
-
 
 
     return (

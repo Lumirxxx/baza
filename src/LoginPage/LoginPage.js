@@ -29,20 +29,20 @@ const LoginPage = () => {
 
 
 
-                axios
-                    .get("http://192.168.10.109:8000/api/v1/menu", {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
+                // axios
+                //     .get("http://192.168.10.109:8000/api/v1/menu", {
+                //         headers: {
+                //             Authorization: `Bearer ${token}`,
 
-                        },
-                    })
-                    .then((response) => {
-                        console.log("Релизы получены", response.data);
-                        // Обработка полученных данных
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                //         },
+                //     })
+                //     .then((response) => {
+                //         console.log("Релизы получены", response.data);
+                //         // Обработка полученных данных
+                //     })
+                //     .catch((error) => {
+                //         console.log(error);
+                //     });
 
                 navigate("/main");
                 console.log("Вы успешно авторизовались!");
