@@ -121,7 +121,7 @@ const Main = () => {
                                         </div>
                                         <div className="section_name">{section.name}</div>
                                     </div>
-                                    <button onClick={() => handleDeleteSection(section.id)}>Delete</button>
+                                    <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)}></div>
                                 </div>
                             ))}
                         </div>
@@ -141,7 +141,7 @@ const Main = () => {
                                                 </ul>
                                             )}
                                         </div>
-                                        <button onClick={() => handleDeleteArticle(article.id)}>Delete</button>
+                                        <div className="cl-btn-4" onClick={() => handleDeleteArticle(article.id)}></div>
                                     </div>
                                 ))}
                             </div>
