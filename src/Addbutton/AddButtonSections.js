@@ -56,9 +56,13 @@ const AddButtonSections = () => {
 
         const token = localStorage.getItem("token");
 
+        console.log("menuId:", menuId); // Выводим значение menuId в консоль
+        console.log("newSection.name:", newSection); // Выводим значение newSection.name в консоль
+        console.log("selectedImage:", selectedImage); // Выводим значение selectedImage в консоль
         console.log("Тело запроса:", formData); // Выводим тело запроса в консоль
 
         axios
+
             .post(
                 "http://192.168.10.109:8000/api/v1/sections/",
                 formData,
@@ -71,7 +75,8 @@ const AddButtonSections = () => {
             )
             .then((response) => {
                 console.log("Новая секция добавлена:", response.data);
-                setSections([response.data]);
+                setSections((prevSections) => [...prevSections, response.data]);
+
             })
             .catch((error) => {
                 console.log("Ошибка при добавлении новой секции:", error);

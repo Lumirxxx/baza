@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import AddButton from "../Addbutton/AddButton";
 import AddButtonSections from "../Addbutton/AddButtonSections";
 
@@ -9,6 +10,7 @@ const Main = () => {
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
@@ -28,19 +30,20 @@ const Main = () => {
         };
 
         fetchData();
-    }, []);
+    }, []); // Пустой массив в качестве зависимости
 
 
 
-    const handleSectionButtonClick = async (sectionId) => {
+
+    const handleSectionButtonClick = async (menu_id) => {
         try {
-            const response = await axios.get(`http://192.168.10.109:8000/api/v1/sections/${sectionId}/articles/`, {
+            const response = await axios.get(`http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            setSections(response.data.sections);
-            setArticles(response.data.articles);
+            setSections(response.data);
+            setArticles([]);
         } catch (error) {
             console.log(error);
         }
@@ -112,11 +115,11 @@ const Main = () => {
                                     key={section.id}
                                     onClick={() => handleArticleButtonClick(section.id)}
                                 >
-                                    <div>
-                                        <div>
-                                            <img src={section.img} alt="Section Image" />
+                                    <div className="section_button_content">
+                                        <div className="section_img_container">
+                                            <img className="section_img" src={section.img} alt="Section Image" />
                                         </div>
-                                        <div>{section.name}</div>
+                                        <div className="section_name">{section.name}</div>
                                     </div>
                                     <button onClick={() => handleDeleteSection(section.id)}>Delete</button>
                                 </div>
@@ -146,6 +149,10 @@ const Main = () => {
                     )}
                 </div>
             </div>
+            <div className="admin_button">
+                <Link to="/admin">Admin Page</Link> {/* Добавить Link для перехода на AdminPage */}
+            </div>
+
             {/* <AddButton />
             <AddButtonSections /> */}
         </div>
