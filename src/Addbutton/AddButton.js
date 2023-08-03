@@ -6,20 +6,32 @@ const AddButton = () => {
     const [showForm, setShowForm] = useState(false);
     const [sectionId, setSectionId] = useState(null);
     const [selectedImages, setSelectedImages] = useState([]);
-
-
     const [newArticle, setNewArticle] = useState({
-
         text: ""
     });
 
-    useEffect(() => {
+    const handleButtonClick = () => {
+        setShowForm(true);
+    };
+
+    const handleSectionChange = (event) => {
+        const sectionId = event.target.value;
+        setSectionId(sectionId);
+        setNewArticle({
+            ...newArticle,
+            section_id: sectionId
+        });
+        // fetchSections("");
+    };
+
+    const fetchSections = (sectionId) => {
         const token = localStorage.getItem("token");
         axios
-            .get("http://192.168.10.109:8000/api/v1/sections", {
+            .get("http://192.168.10.109:8000/api/v1/sections/", {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`
                 },
+
             })
             .then((response) => {
                 setSections(response.data);
@@ -27,14 +39,7 @@ const AddButton = () => {
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
 
-    const handleButtonClick = () => {
-        setShowForm(true);
-    };
-
-    const handleSectionChange = (event) => {
-        setSectionId(event.target.value);
     };
 
     const handleInputChange = (event) => {
@@ -46,36 +51,38 @@ const AddButton = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const token = localStorage.getItem("token");
-        axios
-            .post(
-                "http://192.168.10.109:8000/api/v1/articles/",
-                {
-                    section_id: sectionId,
-                    text: newArticle.text
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
+        if (sectionId !== null) {
+            const token = localStorage.getItem("token");
+            axios
+                .post(
+                    "http://192.168.10.109:8000/api/v1/articles/",
+                    {
+                        section_id: sectionId,
+                        text: newArticle.text
                     },
-                }
-            )
-            .then((response) => {
-                console.log("New article added:", response.data);
-                setNewArticle(response.data); // Обновление списка  
-            })
-            .catch((error) => {
-                console.log("Error adding new article:", error);
-            });
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+                .then((response) => {
+                    console.log("New article added:", response.data);
+                    setNewArticle(response.data);
+                })
+                .catch((error) => {
+                    console.log("Error adding new article:", error);
+                });
+        } else {
+            console.log("sectionId is null");
+        }
 
-        setSectionId(null);
+        setSectionId("");
         setNewArticle({
-
             text: ""
         });
         setShowForm(false);
     };
-
 
     return (
         <div>
@@ -86,12 +93,14 @@ const AddButton = () => {
                     <div>
                         <label htmlFor="section">Section:</label>
                         <select
+                            required
                             id="section"
                             name="section"
                             value={sectionId}
                             onChange={handleSectionChange}
+                            onClick={fetchSections}
                         >
-                            <option value="" disabled>
+                            <option value="" disabled selected>
                                 Select a section
                             </option>
                             {sections.map((section) => (
@@ -105,12 +114,14 @@ const AddButton = () => {
                     <div>
                         <label htmlFor="text">Text:</label>
                         <textarea
+                            required
                             id="text"
                             name="text"
                             value={newArticle.text}
                             onChange={handleInputChange}
                         />
                     </div>
+
                     <div>
                         <label htmlFor="images">Изображения:</label>
                         <input
@@ -118,7 +129,9 @@ const AddButton = () => {
                             id="images"
                             name="images"
                             multiple
-                            onChange={(event) => setSelectedImages([...event.target.files])}
+                            onChange={(event) =>
+                                setSelectedImages([...event.target.files])
+                            }
                         />
                     </div>
 

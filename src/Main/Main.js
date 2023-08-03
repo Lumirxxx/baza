@@ -49,16 +49,20 @@ const Main = () => {
         }
     };
 
-    const handleArticleButtonClick = async (articleId) => {
+    const handleArticleButtonClick = async (sectionId) => {
         try {
-            const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/${articleId}/`, {
+            const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+
+            setArticles(response.data);
             console.log(response.data);
 
         } catch (error) {
+            console.log(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}/`)
+            console.log(sectionId)
             console.log(error);
         }
     };

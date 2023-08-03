@@ -9,13 +9,10 @@ const AddButtonSections = () => {
     const [newSection, setNewSection] = useState({
         name: ""
     });
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [menusLoaded, setMenusLoaded] = useState(false);
+    const [selectedImage, setSelectedImage] = useState("");
 
-
-    useEffect(() => {
+    const fetchMenus = () => {
         const token = localStorage.getItem("token");
-        if (menusLoaded) return; // Если список меню уже загружен, выходим из useEffect
         axios
             .get("http://192.168.10.109:8000/api/v1/menu/", {
                 headers: {
@@ -24,13 +21,16 @@ const AddButtonSections = () => {
             })
             .then((response) => {
                 setMenus(response.data);
-                setMenusLoaded(true); // Устанавливаем флаг, что список меню был загружен
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [menusLoaded]); // Зависимость изменяется только когда флаг menusLoaded изменяется
+    };
 
+    useEffect(() => {
+        // Запрашиваем список меню при монтировании компонента
+        fetchMenus();
+    }, []);
 
     const handleButtonClick = () => {
         setShowForm(true);
@@ -61,7 +61,6 @@ const AddButtonSections = () => {
 
         const token = localStorage.getItem("token");
 
-        // Запрос на добавление новой секции
         axios
             .post(
                 "http://192.168.10.109:8000/api/v1/sections/",
@@ -74,17 +73,18 @@ const AddButtonSections = () => {
                 }
             )
             .then((response) => {
+                console.log("Новая секция добавлена:", response.data);
                 setSections((prevSections) => [...prevSections, response.data]);
             })
             .catch((error) => {
-                console.log(error);
+                console.log("Ошибка при добавлении новой секции:", error);
             });
 
         setMenuId("");
         setNewSection({
             name: ""
         });
-        setSelectedImage(null);
+        setSelectedImage("");
         setShowForm(false);
     };
 
@@ -100,18 +100,8 @@ const AddButtonSections = () => {
                 >
                     <div>
                         <label htmlFor="menu">Меню:</label>
-                        <select
-                            id="menu"
-                            name="menu"
-                            value={menuId}
-                            onChange={handleMenuChange}
-                            onClick={() => {
-                                if (!menusLoaded) {
-                                    setMenusLoaded(true);
-                                }
-                            }}
-                        >
-                            <option value="" disabled>
+                        <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} onClick={fetchMenus}>
+                            <option value="" disabled selected>
                                 Выберите меню
                             </option>
                             {menus.map((menu) => (
@@ -124,13 +114,27 @@ const AddButtonSections = () => {
 
                     <div>
                         <label htmlFor="name">Название:</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={newSection.name}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                        <input required type="text" id="name" name="name"                         value={newSection.name}
+                        onChange={handleInputChange}
+                    />
+                </div>
 
-                    <div>
+                <div>
+                    <label htmlFor="image">Изображение:</label>
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                    />
+                </div>
+
+                <button type="submit">Отправить</button>
+            </form>
+        )}
+    </div>
+);
+
+export default AddButtonSections;
+

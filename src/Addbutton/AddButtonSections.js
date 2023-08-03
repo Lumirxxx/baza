@@ -9,9 +9,9 @@ const AddButtonSections = () => {
     const [newSection, setNewSection] = useState({
         name: ""
     });
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState("");
 
-    useEffect(() => {
+    const fetchMenus = () => {
         const token = localStorage.getItem("token");
         axios
             .get("http://192.168.10.109:8000/api/v1/menu/", {
@@ -25,7 +25,11 @@ const AddButtonSections = () => {
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
+    };
+
+    // useEffect(() => {
+    //     fetchMenus();
+    // }, []);
 
     const handleButtonClick = () => {
         setShowForm(true);
@@ -56,13 +60,7 @@ const AddButtonSections = () => {
 
         const token = localStorage.getItem("token");
 
-        console.log("menuId:", menuId); // Выводим значение menuId в консоль
-        console.log("newSection.name:", newSection); // Выводим значение newSection.name в консоль
-        console.log("selectedImage:", selectedImage); // Выводим значение selectedImage в консоль
-        console.log("Тело запроса:", formData); // Выводим тело запроса в консоль
-
         axios
-
             .post(
                 "http://192.168.10.109:8000/api/v1/sections/",
                 formData,
@@ -76,7 +74,6 @@ const AddButtonSections = () => {
             .then((response) => {
                 console.log("Новая секция добавлена:", response.data);
                 setSections((prevSections) => [...prevSections, response.data]);
-
             })
             .catch((error) => {
                 console.log("Ошибка при добавлении новой секции:", error);
@@ -86,7 +83,7 @@ const AddButtonSections = () => {
         setNewSection({
             name: ""
         });
-        setSelectedImage(null);
+        setSelectedImage("");
         setShowForm(false);
     };
 
@@ -102,13 +99,8 @@ const AddButtonSections = () => {
                 >
                     <div>
                         <label htmlFor="menu">Меню:</label>
-                        <select
-                            id="menu"
-                            name="menu"
-                            value={menuId}
-                            onChange={handleMenuChange}
-                        >
-                            <option value="" disabled>
+                        <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} onClick={fetchMenus}>
+                            <option value="" disabled selected>
                                 Выберите меню
                             </option>
                             {menus.map((menu) => (
@@ -121,26 +113,16 @@ const AddButtonSections = () => {
 
                     <div>
                         <label htmlFor="name">Название:</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={newSection.name}
-                            onChange={handleInputChange}
-                        />
+                        <input required type="text" id="name" name="name" value={newSection.name} onChange={handleInputChange} />
                     </div>
 
                     <div>
                         <label htmlFor="image">Изображение:</label>
-                        <input
-                            type="file"
-                            id="image" name="image"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                        />
+                        <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
                     </div>
 
-                    <button type="submit">Отправить</button>
+                    <button type="submit">
+                        Отправить</button>
                 </form>
             )}
         </div>
