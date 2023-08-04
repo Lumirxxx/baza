@@ -11,6 +11,7 @@ const AddButton = () => {
     });
 
     const handleButtonClick = () => {
+        fetchSections();
         setShowForm(true);
     };
 
@@ -98,7 +99,7 @@ const AddButton = () => {
                             name="section"
                             value={sectionId}
                             onChange={handleSectionChange}
-                            onClick={fetchSections}
+
                         >
                             <option value="" disabled selected>
                                 Select a section

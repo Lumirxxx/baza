@@ -33,6 +33,7 @@ const AddButtonSections = () => {
 
     const handleButtonClick = () => {
         setShowForm(true);
+        fetchMenus();
     };
 
     const handleMenuChange = (event) => {
@@ -90,7 +91,7 @@ const AddButtonSections = () => {
     return (
         <div>
             {!showForm ? (
-                <button onClick={handleButtonClick}>Добавить секцию</button>
+                <button  onClick={handleButtonClick}>Добавить секцию</button>
             ) : (
                 <form
                     onSubmit={handleSubmit}
@@ -99,7 +100,7 @@ const AddButtonSections = () => {
                 >
                     <div>
                         <label htmlFor="menu">Меню:</label>
-                        <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} onClick={fetchMenus}>
+                        <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
                             <option value="" disabled selected>
                                 Выберите меню
                             </option>
