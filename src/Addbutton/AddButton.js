@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import sanitizeHtml from "sanitize-html";
 
 const AddButton = () => {
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [sectionId, setSectionId] = useState(null);
     const [selectedImages, setSelectedImages] = useState([]);
+    const [editorValue, setEditorValue] = useState("");
     const [newArticle, setNewArticle] = useState({
         text: ""
     });
@@ -22,17 +26,15 @@ const AddButton = () => {
             ...newArticle,
             section_id: sectionId
         });
-        // fetchSections("");
     };
 
-    const fetchSections = (sectionId) => {
+    const fetchSections = () => {
         const token = localStorage.getItem("token");
         axios
             .get("http://192.168.10.109:8000/api/v1/sections/", {
                 headers: {
                     Authorization: `Bearer ${token}`
-                },
-
+                }
             })
             .then((response) => {
                 setSections(response.data);
@@ -40,7 +42,6 @@ const AddButton = () => {
             .catch((error) => {
                 console.log(error);
             });
-
     };
 
     const handleInputChange = (event) => {
@@ -52,21 +53,31 @@ const AddButton = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
         if (sectionId !== null) {
             const token = localStorage.getItem("token");
+            const formattedText = sanitizeHtml(editorValue, {
+                allowedTags: ["p", "strong", "em", "ul", "li", "link"],
+                allowedAttributes: {
+                    a: ["href"]
+                }
+            });
+
+            const formData = new FormData();
+            formData.append("section_id", sectionId);
+            formData.append("text", formattedText);
+
+            selectedImages.forEach((image, index) => {
+                formData.append(`image_${index}`, image);
+            });
+
             axios
-                .post(
-                    "http://192.168.10.109:8000/api/v1/articles/",
-                    {
-                        section_id: sectionId,
-                        text: newArticle.text
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+                .post("http://192.168.10.109:8000/api/v1/articles/", formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
                     }
-                )
+                })
                 .then((response) => {
                     console.log("New article added:", response.data);
                     setNewArticle(response.data);
@@ -78,10 +89,9 @@ const AddButton = () => {
             console.log("sectionId is null");
         }
 
-        setSectionId("");
-        setNewArticle({
-            text: ""
-        });
+        setSectionId(null);
+        setEditorValue("");
+        setSelectedImages([]);
         setShowForm(false);
     };
 
@@ -99,7 +109,6 @@ const AddButton = () => {
                             name="section"
                             value={sectionId}
                             onChange={handleSectionChange}
-
                         >
                             <option value="" disabled selected>
                                 Select a section
@@ -114,17 +123,20 @@ const AddButton = () => {
 
                     <div>
                         <label htmlFor="text">Text:</label>
-                        <textarea
+                        <ReactQuill
                             required
                             id="text"
                             name="text"
-                            value={newArticle.text}
-                            onChange={handleInputChange}
+                            value={editorValue}
+                            onChange={setEditorValue}
+                            
+
+
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="images">Изображения:</label>
+                        <label htmlFor="images">Images:</label>
                         <input
                             type="file"
                             id="images"
@@ -144,3 +156,4 @@ const AddButton = () => {
 };
 
 export default AddButton;
+

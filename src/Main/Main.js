@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import AddButton from "../Addbutton/AddButton";
 import AddButtonSections from "../Addbutton/AddButtonSections";
+import FormattedText from "../FormattedTex/FormattedTex";
 
 const Main = () => {
     const [menu, setMenu] = useState([]);
@@ -136,7 +137,8 @@ const Main = () => {
                                 {articles.map((article) => (
                                     <div key={article.id}>
                                         <div className="article_content">
-                                            <div>{article.text}</div>
+                                            <div dangerouslySetInnerHTML={{ __html: article.text }}></div>
+
                                             {article.items && (
                                                 <ul>
                                                     {article.items.map((item) => (
