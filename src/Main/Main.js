@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import AddButton from "../Addbutton/AddButton";
-import AddButtonSections from "../Addbutton/AddButtonSections";
-import FormattedText from "../FormattedTex/FormattedTex";
+// import draftToHtml from "draftjs-to-html";
+// import FormattedText from "../FormattedTex/FormattedTex";
+// import AddButton from "../Addbutton/AddButton";
+// import AddButtonSections from "../Addbutton/AddButtonSections";
+
 
 const Main = () => {
     const [menu, setMenu] = useState([]);
@@ -94,6 +96,7 @@ const Main = () => {
         }
     };
 
+
     return (
         <div className="main_container">
             <div className="menu_container">
@@ -144,6 +147,7 @@ const Main = () => {
                                                     {article.items.map((item) => (
                                                         <li key={item.id}>{item.text}</li>
                                                     ))}
+
                                                 </ul>
                                             )}
                                         </div>

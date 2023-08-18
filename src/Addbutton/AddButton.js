@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import sanitizeHtml from "sanitize-html";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw, ContentState, convertFromRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const AddButton = () => {
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [sectionId, setSectionId] = useState(null);
     const [selectedImages, setSelectedImages] = useState([]);
-    const [editorValue, setEditorValue] = useState("");
-    const [newArticle, setNewArticle] = useState({
-        text: ""
-    });
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const [contentHtml, setContentHtml] = useState("");
 
     const handleButtonClick = () => {
         fetchSections();
@@ -22,12 +22,15 @@ const AddButton = () => {
     const handleSectionChange = (event) => {
         const sectionId = event.target.value;
         setSectionId(sectionId);
-        setNewArticle({
-            ...newArticle,
-            section_id: sectionId
-        });
     };
 
+    const handleEditorStateChange = (state) => {
+        setEditorState(state);
+        const contentState = state.getCurrentContent();
+        const contentHtml = draftToHtml(convertToRaw(contentState));
+        const cleanedContentHtml = contentHtml.replace(/"|\\n/g, "");
+        setContentHtml(cleanedContentHtml);
+    };
     const fetchSections = () => {
         const token = localStorage.getItem("token");
         axios
@@ -44,28 +47,18 @@ const AddButton = () => {
             });
     };
 
-    const handleInputChange = (event) => {
-        setNewArticle({
-            ...newArticle,
-            [event.target.name]: event.target.value
-        });
-    };
-
     const handleSubmit = (event) => {
         event.preventDefault();
 
         if (sectionId !== null) {
             const token = localStorage.getItem("token");
-            const formattedText = sanitizeHtml(editorValue, {
-                allowedTags: ["p", "strong", "em", "ul", "li", "link"],
-                allowedAttributes: {
-                    a: ["href"]
-                }
-            });
+            const contentState = editorState.getCurrentContent();
+            const rawContentState = convertToRaw(contentState);
 
             const formData = new FormData();
             formData.append("section_id", sectionId);
-            formData.append("text", formattedText);
+            formData.append("text", contentHtml);
+
 
             selectedImages.forEach((image, index) => {
                 formData.append(`image_${index}`, image);
@@ -75,12 +68,11 @@ const AddButton = () => {
                 .post("http://192.168.10.109:8000/api/v1/articles/", formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data"
-                    }
+                        "Content-Type": "multipart/form-data",
+                    },
                 })
                 .then((response) => {
                     console.log("New article added:", response.data);
-                    setNewArticle(response.data);
                 })
                 .catch((error) => {
                     console.log("Error adding new article:", error);
@@ -90,11 +82,25 @@ const AddButton = () => {
         }
 
         setSectionId(null);
-        setEditorValue("");
+        setEditorState(EditorState.createEmpty());
         setSelectedImages([]);
         setShowForm(false);
     };
 
+
+    useEffect(() => {
+        const rawContentState = JSON.parse(localStorage.getItem("content"));
+        if (rawContentState) {
+            const contentState = convertFromRaw(rawContentState);
+            const editorState = EditorState.createWithContent(contentState);
+            setEditorState(editorState);
+        }
+    }, []);
+    useEffect(() => {
+        const contentState = editorState.getCurrentContent();
+        const rawContentState = convertToRaw(contentState);
+        localStorage.setItem("content", JSON.stringify(rawContentState));
+    }, [editorState]);
     return (
         <div>
             {!showForm ? (
@@ -123,16 +129,11 @@ const AddButton = () => {
 
                     <div>
                         <label htmlFor="text">Text:</label>
-                        <ReactQuill
-                            required
-                            id="text"
-                            name="text"
-                            value={editorValue}
-                            onChange={setEditorValue}
-                            
-
-
+                        <Editor
+                            editorState={editorState}
+                            onEditorStateChange={handleEditorStateChange}
                         />
+
                     </div>
 
                     <div>
@@ -156,4 +157,3 @@ const AddButton = () => {
 };
 
 export default AddButton;
-

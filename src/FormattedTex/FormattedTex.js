@@ -1,7 +1,7 @@
-import React from "react";
+// import React from "react";
 
-const FormattedText = ({ html }) => {
-    return <div dangerouslySetInnerHTML={{ __html: html }} />;
-};
+// const FormattedText = ({ html }) => {
+//     return <div dangerouslySetInnerHTML={{ __html: html }} />;
+// };
 
-export default FormattedText;
+// export default FormattedText;
