@@ -86,6 +86,24 @@ const AddButton = () => {
         setSelectedImages([]);
         setShowForm(false);
     };
+    const handleImageUpload = async (file) => {
+        const formData = new FormData();
+        const token = localStorage.getItem("token");
+        formData.append("img", file);
+
+        try {
+            const response = await axios.post("http://192.168.10.109:8000/api/v1/images/", formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            const imageUrl = response.data.imageUrl;
+            // Обработка URL изображения
+        } catch (error) {
+            console.log("Ошибка при загрузке изображения:", error);
+        }
+    };
 
 
     useEffect(() => {
@@ -132,11 +150,21 @@ const AddButton = () => {
                         <Editor
                             editorState={editorState}
                             onEditorStateChange={handleEditorStateChange}
+                            toolbar={
+                                {
+                                    image: {
+                                        uploadCallback: handleImageUpload,
+                                        alt: { present: true, mandatory: false },
+                                    },
+                                }
+                            }
+                            handlePastedText={handleImageUpload}
                         />
+
 
                     </div>
 
-                    <div>
+                    {/* <div>
                         <label htmlFor="images">Images:</label>
                         <input
                             type="file"
@@ -147,7 +175,7 @@ const AddButton = () => {
                                 setSelectedImages([...event.target.files])
                             }
                         />
-                    </div>
+                    </div> */}
 
                     <button type="submit">Submit</button>
                 </form>
