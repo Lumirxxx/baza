@@ -52,8 +52,8 @@ const AddButton = () => {
 
         if (sectionId !== null) {
             const token = localStorage.getItem("token");
-            const contentState = editorState.getCurrentContent();
-            const rawContentState = convertToRaw(contentState);
+            // const contentState = editorState.getCurrentContent();
+            // const rawContentState = convertToRaw(contentState);
 
             const formData = new FormData();
             formData.append("section_id", sectionId);
@@ -98,12 +98,19 @@ const AddButton = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            const imageUrl = response.data.imageUrl;
+            const imageUrl = response.data.img;
             // Обработка URL изображения
+            console.log("Image URL:", imageUrl);
+
+            // Отображение изображения
+            const imgElement = document.createElement("img");
+            imgElement.src = imageUrl;
+            document.body.appendChild(imgElement);
         } catch (error) {
             console.log("Ошибка при загрузке изображения:", error);
         }
     };
+
 
 
     useEffect(() => {
