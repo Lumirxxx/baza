@@ -10,9 +10,11 @@ const AddButton = () => {
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [sectionId, setSectionId] = useState(null);
+
     const [selectedImages, setSelectedImages] = useState([]);
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [contentHtml, setContentHtml] = useState("");
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const handleButtonClick = () => {
         fetchSections();
@@ -31,6 +33,7 @@ const AddButton = () => {
         const cleanedContentHtml = contentHtml.replace(/"|\\n/g, "");
         setContentHtml(cleanedContentHtml);
     };
+
     const fetchSections = () => {
         const token = localStorage.getItem("token");
         axios
@@ -52,13 +55,10 @@ const AddButton = () => {
 
         if (sectionId !== null) {
             const token = localStorage.getItem("token");
-            // const contentState = editorState.getCurrentContent();
-            // const rawContentState = convertToRaw(contentState);
 
             const formData = new FormData();
             formData.append("section_id", sectionId);
             formData.append("text", contentHtml);
-
 
             selectedImages.forEach((image, index) => {
                 formData.append(`image_${index}`, image);
@@ -84,9 +84,13 @@ const AddButton = () => {
         setSectionId(null);
         setEditorState(EditorState.createEmpty());
         setSelectedImages([]);
+        setSelectedImage(null);
         setShowForm(false);
     };
+
     const handleImageUpload = async (file) => {
+        setSelectedImage(file);
+
         const formData = new FormData();
         const token = localStorage.getItem("token");
         formData.append("img", file);
@@ -99,19 +103,11 @@ const AddButton = () => {
                 },
             });
             const imageUrl = response.data.img;
-            // Обработка URL изображения
             console.log("Image URL:", imageUrl);
-
-            // Отображение изображения
-            const imgElement = document.createElement("img");
-            imgElement.src = imageUrl;
-            document.body.appendChild(imgElement);
         } catch (error) {
             console.log("Ошибка при загрузке изображения:", error);
         }
     };
-
-
 
     useEffect(() => {
         const rawContentState = JSON.parse(localStorage.getItem("content"));
@@ -121,68 +117,50 @@ const AddButton = () => {
             setEditorState(editorState);
         }
     }, []);
-    useEffect(() => {
-        const contentState = editorState.getCurrentContent();
-        const rawContentState = convertToRaw(contentState);
-        localStorage.setItem("content", JSON.stringify(rawContentState));
-    }, [editorState]);
+
     return (
         <div>
-            {!showForm ? (
-                <button onClick={handleButtonClick}>Add</button>
-            ) : (
+            <button onClick={handleButtonClick}>Add Article</button>
+
+            {showForm && (
                 <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="section">Section:</label>
-                        <select
-                            required
-                            id="section"
-                            name="section"
-                            value={sectionId}
-                            onChange={handleSectionChange}
-                        >
-                            <option value="" disabled selected>
-                                Select a section
+                    <select value={sectionId} onChange={handleSectionChange}>
+                        <option value="" disabled selected>Select a section</option>
+                        {sections.map((section) => (
+                            <option key={section.id} value={section.id}>
+                                {section.name}
                             </option>
-                            {sections.map((section) => (
-                                <option key={section.id} value={section.id}>
-                                    {section.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                        ))}
+                    </select>
 
-                    <div>
-                        <label htmlFor="text">Text:</label>
-                        <Editor
-                            editorState={editorState}
-                            onEditorStateChange={handleEditorStateChange}
-                            toolbar={
-                                {
-                                    image: {
-                                        uploadCallback: handleImageUpload,
-                                        alt: { present: true, mandatory: false },
-                                    },
-                                }
-                            }
-                            handlePastedText={handleImageUpload}
-                        />
+                    <Editor
+                        editorState={editorState}
+                        onEditorStateChange={handleEditorStateChange}
+                        toolbar={{
+                            options: ["inline", "blockType", "list", "textAlign", "link", "embedded", "image"],
+                            inline: { options: ["bold", "italic", "underline"] },
+                            blockType: { options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6"] },
+                            list: { options: ["unordered", "ordered"] },
+                            textAlign: { options: ["left", "center", "right"] },
+                            link: { options: ["link"] },
+                            embedded: { options: ["image"] },
+                            image: {
+                                uploadCallback: handleImageUpload,
+                                uploadEnabled: true,
+                                className: undefined,
+                                component: undefined,
+                                popupClassName: undefined,
+                                urlEnabled: true,
+                                uploadEnabled: true,
+                                alignmentEnabled: true,
 
+                                previewImage: true,
+                                alt: { present: true, mandatory: true },
 
-                    </div>
-
-                    {/* <div>
-                        <label htmlFor="images">Images:</label>
-                        <input
-                            type="file"
-                            id="images"
-                            name="images"
-                            multiple
-                            onChange={(event) =>
-                                setSelectedImages([...event.target.files])
-                            }
-                        />
-                    </div> */}
+                                inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                            },
+                        }}
+                    />
 
                     <button type="submit">Submit</button>
                 </form>
@@ -192,3 +170,4 @@ const AddButton = () => {
 };
 
 export default AddButton;
+

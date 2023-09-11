@@ -24,7 +24,7 @@ const LoginPage = () => {
                 localStorage.setItem("refresh", response.data.refresh);
                 console.log("Токен получен рефреш", response.data.refresh);
                 // Отправка GET-запроса с токеном
-                const token = localStorage.getItem("token");
+                // const token = localStorage.getItem("token");
                 // const refresh = localStorage.getItem("refresh");
 
 
