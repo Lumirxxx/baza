@@ -140,7 +140,7 @@ const Main = () => {
                                 {articles.map((article) => (
                                     <div key={article.id}>
                                         <div className="article_content">
-                                            <div dangerouslySetInnerHTML={{ __html: article.text }}></div>
+                                            <div className="article_content_text" dangerouslySetInnerHTML={{ __html: article.text }}></div>
 
                                             {article.items && (
                                                 <ul>

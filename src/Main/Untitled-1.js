@@ -114,27 +114,27 @@ const AddButtonSections = () => {
 
                     <div>
                         <label htmlFor="name">Название:</label>
-                        <input required type="text" id="name" name="name"                         value={newSection.name}
-                        onChange={handleInputChange}
-                    />
-                </div>
+                        <input required type="text" id="name" name="name" value={newSection.name}
+                            onChange={handleInputChange}
+                        />
+                    </div>
 
-                <div>
-                    <label htmlFor="image">Изображение:</label>
-                    <input
-                        type="file"
-                        id="image"
-                        name="image"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                    />
-                </div>
+                    <div>
+                        <label htmlFor="image">Изображение:</label>
+                        <input
+                            type="file"
+                            id="image"
+                            name="image"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
+                    </div>
 
-                <button type="submit">Отправить</button>
-            </form>
-        )}
-    </div>
-);
+                    <button type="submit">Отправить</button>
+                </form>
+            )}
+        </div>
+    );
 
-export default AddButtonSections;
+    export default AddButtonSections;
 

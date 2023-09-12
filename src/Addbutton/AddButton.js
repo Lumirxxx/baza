@@ -156,6 +156,7 @@ const AddButton = () => {
 
                                 previewImage: true,
                                 alt: { present: true, mandatory: true },
+                                defaultSize: { width: 512, height: 512 },
 
                                 inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
                             },
@@ -170,4 +171,3 @@ const AddButton = () => {
 };
 
 export default AddButton;
-
