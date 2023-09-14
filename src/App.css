@@ -257,8 +257,8 @@ img {
 
 .delete_button {
   position: absolute !important;
-  top: -17px;
-  right: -19px;
+  top: 0px;
+  right: -10px;
   z-index: 100 !important;
 }
 
