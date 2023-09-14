@@ -5,7 +5,7 @@
 
 img {
   max-width: 32rem;
-  width: 100%;
+
 }
 
 .main_container {
@@ -115,7 +115,14 @@ img {
   padding-right: 103px;
   border-radius: 5px;
   border: 0;
+  cursor: pointer;
 }
+
+.form_button_submit:hover {
+  box-shadow: inset 0px -10px 20px 0px rgba(0, 0, 0, 0.25);
+  transition: 0.5s;
+}
+
 
 .button_body {
   background-color: #355E8B;
@@ -232,8 +239,9 @@ img {
 }
 
 .section_img_container {
-  margin-left: 1.68rem;
-  margin-right: 1.68rem;
+  /* margin-left: 1.68rem;
+  margin-right: 1.68rem; */
+  width: 40px;
 }
 
 .section_button_container {
@@ -242,8 +250,16 @@ img {
 }
 
 .article_content {
+  position: relative;
   padding-left: 4.06rem;
   padding-right: 10px;
+}
+
+.delete_button {
+  position: absolute !important;
+  top: -17px;
+  right: -19px;
+  z-index: 100 !important;
 }
 
 .cl-btn-4 {

@@ -125,7 +125,9 @@ const Main = () => {
                                 >
                                     <div className="section_button_content">
                                         <div className="section_img_container">
-                                            <img className="section_img" src={section.img} alt="Section Image" />
+                                            
+                                        {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
+                                           
                                         </div>
                                         <div className="section_name">{section.name}</div>
                                     </div>
@@ -145,13 +147,16 @@ const Main = () => {
                                             {article.items && (
                                                 <ul>
                                                     {article.items.map((item) => (
-                                                        <li key={item.id}>{item.text}</li>
+                                                        <div>
+                                                            <li key={item.id}>{item.text}</li>
+                                                        </div>
                                                     ))}
 
                                                 </ul>
                                             )}
+                                            <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(article.id)}></div>
                                         </div>
-                                        <div className="cl-btn-4" onClick={() => handleDeleteArticle(article.id)}></div>
+
                                     </div>
                                 ))}
                             </div>
