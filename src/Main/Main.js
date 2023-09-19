@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-// import draftToHtml from "draftjs-to-html";
-// import FormattedText from "../FormattedTex/FormattedTex";
-// import AddButton from "../Addbutton/AddButton";
-// import AddButtonSections from "../Addbutton/AddButtonSections";
+import { useNavigate } from "react-router-dom";
+import AddButton from "../Addbutton/AddButton";
+
+
+
+
 
 
 const Main = () => {
     const [menu, setMenu] = useState([]);
     const [sections, setSections] = useState([]);
     const [articles, setArticles] = useState([]);
+    const [isSectionsOpen, setIsSectionsOpen] = useState(true); // Добавлено состояние для отслеживания открытых секций
+    const [isArticlesOpen, setIsArticlesOpen] = useState(true);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
 
@@ -28,8 +34,13 @@ const Main = () => {
                     console.log('получили меню');
                 }
             } catch (error) {
-                console.log(error);
+                if (error.response && error.response.status === 401) {
+                    navigate("/");
+                } else {
+                    console.log(error);
+                }
             }
+
         };
 
         fetchData();
@@ -40,17 +51,33 @@ const Main = () => {
 
     const handleSectionButtonClick = async (menu_id) => {
         try {
-            const response = await axios.get(`http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            setSections(response.data);
-            setArticles([]);
+            if (isSectionsOpen) {
+                // Если секции уже открыты, закрываем их вместе с статьями
+                setSections([]);
+                setIsSectionsOpen(false);
+                setArticles([]);
+            } else {
+                const response = await axios.get(
+                    `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+                setSections(response.data);
+                setIsSectionsOpen(true);
+                setArticles([]);
+            }
         } catch (error) {
-            console.log(error);
+            if (error.response && error.response.status === 401) {
+                navigate("/");
+            } else {
+                console.log(error);
+            }
         }
     };
+
 
     const handleArticleButtonClick = async (sectionId) => {
         try {
@@ -125,13 +152,14 @@ const Main = () => {
                                 >
                                     <div className="section_button_content">
                                         <div className="section_img_container">
-                                            
-                                        {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
-                                           
+
+                                            {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
+
                                         </div>
                                         <div className="section_name">{section.name}</div>
                                     </div>
                                     <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)}></div>
+
                                 </div>
                             ))}
                         </div>
