@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AddButton from "../Addbutton/AddButton";
 import AddButtonSections from "../Addbutton/AddButtonSections";
 import axios from "axios";
+import AddButtonSubsections from "../Addbutton/AddButtonSubsections";
 
 const AdminPage = () => {
     const navigate = useNavigate();
@@ -33,6 +34,7 @@ const AdminPage = () => {
             <h1>Адмика Е*ать</h1>
             <AddButton />
             <AddButtonSections />
+            <AddButtonSubsections />
         </div>
     );
 };

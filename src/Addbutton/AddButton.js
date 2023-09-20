@@ -9,7 +9,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 const AddButton = () => {
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [sectionId, setSectionId] = useState(null);
+    const [subsectionId, setSectionId] = useState(null);
 
     const [selectedImages, setSelectedImages] = useState([]);
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -22,8 +22,8 @@ const AddButton = () => {
     };
 
     const handleSectionChange = (event) => {
-        const sectionId = event.target.value;
-        setSectionId(sectionId);
+        const subsectionId = event.target.value;
+        setSectionId(subsectionId);
     };
 
     const handleEditorStateChange = (state) => {
@@ -37,7 +37,7 @@ const AddButton = () => {
     const fetchSections = () => {
         const token = localStorage.getItem("token");
         axios
-            .get("http://192.168.10.109:8000/api/v1/sections/", {
+            .get("http://192.168.10.109:8000/api/v1/subsections/", {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -53,11 +53,11 @@ const AddButton = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        if (sectionId !== null) {
+        if (subsectionId !== null) {
             const token = localStorage.getItem("token");
 
             const formData = new FormData();
-            formData.append("section_id", sectionId);
+            formData.append("subsection_id", subsectionId);
             formData.append("text", contentHtml);
 
             selectedImages.forEach((image, index) => {
@@ -78,7 +78,7 @@ const AddButton = () => {
                     console.log("Error adding new article:", error);
                 });
         } else {
-            console.log("sectionId is null");
+            console.log("subsectionId is null");
         }
 
         setSectionId(null);
@@ -124,7 +124,7 @@ const AddButton = () => {
 
             {showForm && (
                 <form onSubmit={handleSubmit}>
-                    <select value={sectionId} onChange={handleSectionChange}>
+                    <select value={subsectionId} onChange={handleSectionChange}>
                         <option value="" disabled selected>Select a section</option>
                         {sections.map((section) => (
                             <option key={section.id} value={section.id}>

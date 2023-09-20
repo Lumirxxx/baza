@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import AddButton from "../Addbutton/AddButton";
+
 
 
 
@@ -12,9 +12,10 @@ import AddButton from "../Addbutton/AddButton";
 const Main = () => {
     const [menu, setMenu] = useState([]);
     const [sections, setSections] = useState([]);
+    const [subsections, setSubsections] = useState([]);
     const [articles, setArticles] = useState([]);
     const [isSectionsOpen, setIsSectionsOpen] = useState(true); // Добавлено состояние для отслеживания открытых секций
-    const [isArticlesOpen, setIsArticlesOpen] = useState(true);
+    // const [isArticlesOpen, setIsArticlesOpen] = useState(true);
     const navigate = useNavigate();
 
 
@@ -56,6 +57,7 @@ const Main = () => {
                 setSections([]);
                 setIsSectionsOpen(false);
                 setArticles([]);
+                setSubsections([]);
             } else {
                 const response = await axios.get(
                     `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
@@ -68,6 +70,7 @@ const Main = () => {
                 setSections(response.data);
                 setIsSectionsOpen(true);
                 setArticles([]);
+                setSubsections([]);
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
@@ -77,11 +80,24 @@ const Main = () => {
             }
         }
     };
-
-
-    const handleArticleButtonClick = async (sectionId) => {
+    const handleSubsectionButtonClick = async (sectionId) => {
         try {
-            const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}`, {
+            const response = await axios.get(`http://192.168.10.109:8000/api/v1/subsections/?section_id=${sectionId}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            setSubsections(response.data);
+            setArticles([]);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    const handleArticleButtonClick = async (subsectionId) => {
+        try {
+            const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?subsection_id=${subsectionId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -91,8 +107,8 @@ const Main = () => {
             console.log(response.data);
 
         } catch (error) {
-            console.log(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}/`)
-            console.log(sectionId)
+            console.log(`http://192.168.10.109:8000/api/v1/articles/?subsection_id=${subsectionId}/`)
+            console.log(subsectionId)
             console.log(error);
         }
     };
@@ -109,6 +125,18 @@ const Main = () => {
             console.log(error);
         }
     };
+    const handleDeleteSubsection = async (subsectionId) => {
+        try {
+            await axios.delete(`http://192.168.10.109:8000/api/v1/subsections/${subsectionId}/`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            setSubsections(subsections.filter((subsection) => subsection.id !== subsectionId));
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleDeleteArticle = async (articleId) => {
         try {
@@ -126,11 +154,15 @@ const Main = () => {
 
     return (
         <div className="main_container">
+            <div className="header_container">
+                <div className="main_page_logo">
+                    <img src="/Headerlogomain.svg" alt="Logo" />
+                </div>
+            </div>
             <div className="menu_container">
+
                 <div className="menu_container_left">
-                    <div className="main_page_logo">
-                        <img src="/Headerlogomain.svg" alt="Logo" />
-                    </div>
+
                     {menu.map((menuItem) => (
                         <button
                             className="button_body"
@@ -148,7 +180,7 @@ const Main = () => {
                                 <div
                                     className="section_button"
                                     key={section.id}
-                                    onClick={() => handleArticleButtonClick(section.id)}
+                                    onClick={() => handleSubsectionButtonClick(section.id)}
                                 >
                                     <div className="section_button_content">
                                         <div className="section_img_container">
@@ -164,6 +196,23 @@ const Main = () => {
                             ))}
                         </div>
                     )}
+                    {
+                        subsections.length > 0 && (
+                            <div className="subsections_container">
+                                {subsections.map((subsection) => (
+                                    <div className="section_button" key={subsection.id} onClick={() => handleArticleButtonClick(subsection.id)}
+                                    >
+                                        <div className="subsection_button_content">
+                                            <div className="section_img_container">
+                                                {subsection.img && <img className="section_img" src={subsection.img} alt="Subsection Image" />}
+                                            </div>
+                                            <div className="subsection_name">{subsection.name}</div>
+                                        </div>
+                                        <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     {articles.length > 0 && (
                         <div className="article_container">
                             <div className="article_button_container">
