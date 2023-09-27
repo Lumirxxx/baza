@@ -20,9 +20,9 @@ const Main = () => {
     const [isSectionsOpen, setIsSectionsOpen] = useState(true); // Добавлено состояние для отслеживания открытых секций
     // const [isArticlesOpen, setIsArticlesOpen] = useState(true);
     const navigate = useNavigate();
-    const handleEditArticle = (article) => {
-        setSelectedArticle(article);
-    };
+    // const handleEditArticle = (article) => {
+    //     setSelectedArticle(article);
+    // };
 
 
     useEffect(() => {
@@ -52,10 +52,6 @@ const Main = () => {
 
         fetchData();
     }, []); // Пустой массив в качестве зависимости
-
-
-
-
     const handleSectionButtonClick = async (menu_id) => {
         try {
             if (isSectionsOpen) {
@@ -153,6 +149,7 @@ const Main = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+
             setArticles(articles.filter((article) => article.id !== articleId));
         } catch (error) {
             console.log(error);
@@ -242,7 +239,7 @@ const Main = () => {
                                                 </ul>
                                             )}
                                             <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(article.id)}></div>
-                                            {selectedArticle && <ArticleEditForm article={selectedArticle} />}
+                                            {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />}
 
                                         </div>
                                     </div>
