@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import ArticleEditForm from "../ArticleEditForm/ArticleEditForm";
+
 
 
 
@@ -14,9 +16,13 @@ const Main = () => {
     const [sections, setSections] = useState([]);
     const [subsections, setSubsections] = useState([]);
     const [articles, setArticles] = useState([]);
+    const [selectedArticle, setSelectedArticle] = useState(null);
     const [isSectionsOpen, setIsSectionsOpen] = useState(true); // Добавлено состояние для отслеживания открытых секций
     // const [isArticlesOpen, setIsArticlesOpen] = useState(true);
     const navigate = useNavigate();
+    const handleEditArticle = (article) => {
+        setSelectedArticle(article);
+    };
 
 
     useEffect(() => {
@@ -104,6 +110,8 @@ const Main = () => {
             });
 
             setArticles(response.data);
+            setSelectedArticle(response.data[0]); // Предполагая, что данные ответа являются массивом, выберите первую статью по умолчанию
+
             console.log(response.data);
 
         } catch (error) {
@@ -221,6 +229,9 @@ const Main = () => {
                                         <div className="article_content">
                                             <div className="article_content_text" dangerouslySetInnerHTML={{ __html: article.text }}></div>
 
+                                            {/* Добавьте кнопку "Редактировать"
+                                            <button onClick={() => handleEditArticle(article)}>Редактировать</button> */}
+
                                             {article.items && (
                                                 <ul>
                                                     {article.items.map((item) => (
@@ -228,14 +239,15 @@ const Main = () => {
                                                             <li key={item.id}>{item.text}</li>
                                                         </div>
                                                     ))}
-
                                                 </ul>
                                             )}
                                             <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(article.id)}></div>
-                                        </div>
+                                            {selectedArticle && <ArticleEditForm article={selectedArticle} />}
 
+                                        </div>
                                     </div>
                                 ))}
+
                             </div>
                         </div>
                     )}
