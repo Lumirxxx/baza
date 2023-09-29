@@ -163,14 +163,29 @@ img {
 
 }
 
+.modal-background {
+  width: 100%;
+  height: 100%;
+}
+
 .modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  backdrop-filter: blur(5px);
   border: 1px solid black;
   padding: 20px;
+  height: 100%;
+  width: 100%;
+  z-index: 201;
+}
+
+.form_modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .main_page_container {

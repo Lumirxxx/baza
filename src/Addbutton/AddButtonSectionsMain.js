@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddButtonSections = () => {
+const AddButtonSectionsMain = () => {
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [menuId, setMenuId] = useState("");
+    const [menuId, setMenuId] = useState([]);
     const [menus, setMenus] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newSection, setNewSection] = useState({
@@ -32,13 +32,15 @@ const AddButtonSections = () => {
     //     fetchMenus();
     // }, []);
 
-    const handleButtonClick = () => {
+    const handleButtonClick = (section) => {
         setShowModal(true);
+        setMenuId(parseInt(section.menu_id, 10));
         fetchMenus();
     };
 
     const handleMenuChange = (event) => {
-        setMenuId(event.target.value);
+        const menu = event.target.value;
+        setMenuId(parseInt(menuId, 10));
     };
 
     const handleInputChange = (event) => {
@@ -56,7 +58,9 @@ const AddButtonSections = () => {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append("menu_id", menuId);
+        if (menuId !== null) {
+            formData.append("menu_id", menuId);
+        }
         formData.append("name", newSection.name);
         formData.append("img", selectedImage);
 
@@ -78,6 +82,7 @@ const AddButtonSections = () => {
                 setSections((prevSections) => [...prevSections, response.data]);
             })
             .catch((error) => {
+
                 console.log("Ошибка при добавлении новой секции:", error);
             });
 
@@ -103,12 +108,9 @@ const AddButtonSections = () => {
                         >
                             <div>
                                 <label htmlFor="menu">Меню:</label>
-                                <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
-                                    <option value="" disabled selected>
-                                        Выберите меню
-                                    </option>
+                                <select required id="menu" name="menu_id" value={menuId} onChange={handleMenuChange}>
                                     {menus.map((menu) => (
-                                        <option key={menu.id} value={menu.id}>
+                                        <option value={parseInt(menu.id)} key={menu.id}>
                                             {menu.name}
                                         </option>
                                     ))}
@@ -135,4 +137,4 @@ const AddButtonSections = () => {
     );
 };
 
-export default AddButtonSections;
+export default AddButtonSectionsMain;
