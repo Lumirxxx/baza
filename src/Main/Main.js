@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ArticleEditForm from "../ArticleEditForm/ArticleEditForm";
+import AddButtonSections from "../Addbutton/AddButtonSections";
 
 
 
@@ -199,6 +200,9 @@ const Main = () => {
 
                                 </div>
                             ))}
+                            <div>
+                                <AddButtonSections />
+                            </div>
                         </div>
                     )}
                     {

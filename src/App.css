@@ -163,6 +163,16 @@ img {
 
 }
 
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid black;
+  padding: 20px;
+}
+
 .main_page_container {
   padding-right: 3.12rem;
   padding-left: 3.12rem;

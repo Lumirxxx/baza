@@ -6,6 +6,7 @@ const AddButtonSections = () => {
     const [showForm, setShowForm] = useState(false);
     const [menuId, setMenuId] = useState("");
     const [menus, setMenus] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const [newSection, setNewSection] = useState({
         name: ""
     });
@@ -32,7 +33,7 @@ const AddButtonSections = () => {
     // }, []);
 
     const handleButtonClick = () => {
-        setShowForm(true);
+        setShowModal(true);
         fetchMenus();
     };
 
@@ -90,41 +91,43 @@ const AddButtonSections = () => {
 
     return (
         <div>
-            {!showForm ? (
+            {!showModal ? (
                 <button onClick={handleButtonClick}>Добавить секцию</button>
             ) : (
-                <form
-                    onSubmit={handleSubmit}
-                    action="http://192.168.10.109:8000/api/v1/sections/"
-                    enctype="multipart/form-data"
-                >
-                    <div>
-                        <label htmlFor="menu">Меню:</label>
-                        <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
-                            <option value="" disabled selected>
-                                Выберите меню
-                            </option>
-                            {menus.map((menu) => (
-                                <option key={menu.id} value={menu.id}>
-                                    {menu.name}
+                <div className="modal">
+                    <form
+                        onSubmit={handleSubmit}
+                        action="http://192.168.10.109:8000/api/v1/sections/"
+                        enctype="multipart/form-data"
+                    >
+                        <div>
+                            <label htmlFor="menu">Меню:</label>
+                            <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
+                                <option value="" disabled selected>
+                                    Выберите меню
                                 </option>
-                            ))}
-                        </select>
-                    </div>
+                                {menus.map((menu) => (
+                                    <option key={menu.id} value={menu.id}>
+                                        {menu.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    <div>
-                        <label htmlFor="name">Название:</label>
-                        <input required type="text" id="name" name="name" value={newSection.name} onChange={handleInputChange} />
-                    </div>
+                        <div>
+                            <label htmlFor="name">Название:</label>
+                            <input required type="text" id="name" name="name" value={newSection.name} onChange={handleInputChange} />
+                        </div>
 
-                    <div>
-                        <label htmlFor="image">Изображение:</label>
-                        <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
-                    </div>
+                        <div>
+                            <label htmlFor="image">Изображение:</label>
+                            <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                        </div>
 
-                    <button type="submit">
-                        Отправить</button>
-                </form>
+                        <button type="submit">Отправить</button>
+                        <button type="button" onClick={() => setShowModal(false)}>Отмена</button>
+                    </form>
+                </div>
             )}
         </div>
     );
