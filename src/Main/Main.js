@@ -70,11 +70,13 @@ const Main = () => {
                         },
                     }
                 );
+                console.log(menu_id)
                 setSections(response.data);
                 setIsSectionsOpen(true);
                 setArticles([]);
                 setSubsections([]);
             }
+            <AddButtonSectionsMain menuId={menu_id} />
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
@@ -83,6 +85,7 @@ const Main = () => {
             }
         }
     };
+
     const handleSubsectionButtonClick = async (sectionId) => {
         try {
             const response = await axios.get(`http://192.168.10.109:8000/api/v1/subsections/?section_id=${sectionId}`, {
@@ -90,6 +93,7 @@ const Main = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+            console.log(sectionId)
             setSubsections(response.data);
             setArticles([]);
         } catch (error) {
@@ -125,6 +129,7 @@ const Main = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+
             setSections(sections.filter((section) => section.id !== sectionId));
         } catch (error) {
             console.log(error);
@@ -201,7 +206,7 @@ const Main = () => {
                                 </div>
                             ))}
                             <div>
-                            <AddButtonSectionsMain/>
+                                <AddButtonSectionsMain />
                             </div>
                         </div>
                     )}
@@ -229,10 +234,6 @@ const Main = () => {
                                     <div key={article.id}>
                                         <div className="article_content">
                                             <div className="article_content_text" dangerouslySetInnerHTML={{ __html: article.text }}></div>
-
-                                            {/* Добавьте кнопку "Редактировать"
-                                            <button onClick={() => handleEditArticle(article)}>Редактировать</button> */}
-
                                             {article.items && (
                                                 <ul>
                                                     {article.items.map((item) => (

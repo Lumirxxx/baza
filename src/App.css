@@ -281,6 +281,16 @@ img {
   cursor: pointer;
 }
 
+.section_button_add {
+  padding-left: 40px;
+  margin-top: 25px;
+  background-image: url("../public/add-square.svg");
+  background-repeat: no-repeat;
+  background-position: right;
+
+
+}
+
 .section_button:hover {
   box-shadow: inset 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   transition: 0.5s;
