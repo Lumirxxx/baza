@@ -92,7 +92,7 @@ const AddButtonSections = () => {
     return (
         <div>
             {!showModal ? (
-                <button onClick={handleButtonClick}>Добавить секцию</button>
+                <div className="section_button section_button_add" onClick={handleButtonClick}><div className="section_name">Добавить раздел</div></div>
             ) : (
                 <div className="modal-background">
                     <div className="modal">
@@ -101,6 +101,14 @@ const AddButtonSections = () => {
                             action="http://192.168.10.109:8000/api/v1/sections/"
                             enctype="multipart/form-data"
                         >
+                            <div className="form_title">
+                                <div className="form_title_text">Создание раздела</div>
+                                <div className="depart_name">
+                                    <div className="depart_name_text">
+                                        Подразделение:Отдел IT
+                                    </div>
+                                </div>
+                            </div>
                             <div>
                                 <label htmlFor="menu">Меню:</label>
                                 <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
@@ -124,9 +132,18 @@ const AddButtonSections = () => {
                                 <label htmlFor="image">Изображение:</label>
                                 <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
                             </div>
+                            <div className="modal_form-button">
+                                <div className="form_button_container">
+                                    <button className="form_button" type="submit">Добавить</button>
+                                </div>
 
-                            <button type="submit">Отправить</button>
-                            <button type="button" onClick={() => setShowModal(false)}>Отмена</button>
+                                <div className="form_button_container">
+                                    <button className="form_button" type="button" onClick={() => setShowModal(false)}>Отмена</button>
+                                </div>
+
+
+                            </div>
+
                         </form>
                     </div>
                 </div>

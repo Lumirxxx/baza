@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ArticleEditForm from "../ArticleEditForm/ArticleEditForm";
 import AddButtonSectionsMain from "../Addbutton/AddButtonSectionsMain";
-
+import AddButtonSections from "../Addbutton/AddButtonSections";
+import EditButtonSection from "../Addbutton/EditButtonSection";
 
 
 
@@ -13,6 +14,7 @@ import AddButtonSectionsMain from "../Addbutton/AddButtonSectionsMain";
 
 
 const Main = () => {
+    const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
     const [sections, setSections] = useState([]);
     const [subsections, setSubsections] = useState([]);
@@ -76,7 +78,7 @@ const Main = () => {
                 setArticles([]);
                 setSubsections([]);
             }
-            <AddButtonSectionsMain menuId={menu_id} />
+
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
@@ -161,6 +163,17 @@ const Main = () => {
             console.log(error);
         }
     };
+    const handleSectionUpdate = (updatedSection) => {
+        setSections((prevSections) => {
+            const updatedSections = prevSections.map((section) => {
+                if (section.id === updatedSection.id) {
+                    return updatedSection;
+                }
+                return section;
+            });
+            return updatedSections;
+        });
+    };
 
 
     return (
@@ -201,12 +214,19 @@ const Main = () => {
                                         </div>
                                         <div className="section_name">{section.name}</div>
                                     </div>
-                                    <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)}></div>
-
+                                    <div className="button_update-container">
+                                        <EditButtonSection
+                                            key={section.id}
+                                            section={section}
+                                            onUpdate={handleSectionUpdate}
+                                        />
+                                        <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)}></div>
+                                    </div>
                                 </div>
                             ))}
                             <div>
-                                <AddButtonSectionsMain />
+                                <AddButtonSections menuId={menu_id} />
+                                {/* <AddButtonSectionsMain menuId={menu_id} /> */}
                             </div>
                         </div>
                     )}
@@ -259,8 +279,6 @@ const Main = () => {
                 <Link to="/admin">Admin Page</Link> {/* Добавить Link для перехода на AdminPage */}
             </div>
 
-            {/* <AddButton />
-            <AddButtonSections /> */}
         </div>
     );
 };
