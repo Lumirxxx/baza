@@ -6,6 +6,10 @@ import ArticleEditForm from "../ArticleEditForm/ArticleEditForm";
 import AddButtonSectionsMain from "../Addbutton/AddButtonSectionsMain";
 import AddButtonSections from "../Addbutton/AddButtonSections";
 import EditButtonSection from "../Addbutton/EditButtonSection";
+import AddButtonMenu from "../Addbutton/AddButtonMenu";
+import EditButtonMenu from "../Addbutton/EditButtonMenu";
+import AddButtonSubsections from "../Addbutton/AddButtonSubsections";
+import EditButtonSubsection from "../Addbutton/EditButtonSubsections";
 
 
 
@@ -124,6 +128,18 @@ const Main = () => {
         }
     };
 
+    const handleDeleteMenu = async (menuId) => {
+        try {
+            await axios.delete(`http://192.168.10.109:8000/api/v1/menu/${menuId}/`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            setMenu(menu.filter((menu) => menu.id !== menuId));
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const handleDeleteSection = async (sectionId) => {
         try {
             await axios.delete(`http://192.168.10.109:8000/api/v1/sections/${sectionId}/`, {
@@ -174,6 +190,17 @@ const Main = () => {
             return updatedSections;
         });
     };
+    const handleSubsectionUpdate = (updatedSubsection) => {
+        setSubsections((prevSubsections) => {
+            const updatedSubsections = prevSubsections.map((subsection) => {
+                if (subsection.id === updatedSubsection.id) {
+                    return updatedSubsection;
+                }
+                return subsection;
+            });
+            return updatedSubsections;
+        });
+    }
 
 
     return (
@@ -188,14 +215,19 @@ const Main = () => {
                 <div className="menu_container_left">
 
                     {menu.map((menuItem) => (
-                        <button
-                            className="button_body"
-                            key={menuItem.id}
-                            onClick={() => handleSectionButtonClick(menuItem.id)}
-                        >
-                            <div className="button_text">{menuItem.name}</div>
-                        </button>
+                        <div>
+                            <button
+                                className="button_body"
+                                key={menuItem.id}
+                                onClick={() => handleSectionButtonClick(menuItem.id)}
+                            >
+                                <div className="button_text">{menuItem.name}</div>
+                            </button>
+                            <div className="cl-btn-4" onClick={() => handleDeleteMenu(menuItem.id)}></div>
+                            <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} />
+                        </div>
                     ))}
+                    <AddButtonMenu />
                 </div>
                 <div className="menu_container_right">
                     {sections.length > 0 && (
@@ -243,8 +275,10 @@ const Main = () => {
                                             <div className="subsection_name">{subsection.name}</div>
                                         </div>
                                         <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div>
+                                        <EditButtonSubsection subsection={subsection} subsections={subsections} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} />
                                     </div>
                                 ))}
+                                <AddButtonSubsections subsections={subsections} />
                             </div>
                         )}
                     {articles.length > 0 && (
@@ -264,7 +298,7 @@ const Main = () => {
                                                 </ul>
                                             )}
                                             <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(article.id)}></div>
-                                            {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />}
+                                            {/* {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />} */}
 
                                         </div>
                                     </div>
