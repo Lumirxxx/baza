@@ -215,7 +215,7 @@ const Main = () => {
                 <div className="menu_container_left">
 
                     {menu.map((menuItem) => (
-                        <div>
+                        <div className="menu_item">
                             <button
                                 className="button_body"
                                 key={menuItem.id}
@@ -226,6 +226,7 @@ const Main = () => {
                             <div className="cl-btn-4" onClick={() => handleDeleteMenu(menuItem.id)}></div>
                             <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} />
                         </div>
+
                     ))}
                     <AddButtonMenu />
                 </div>
@@ -236,9 +237,9 @@ const Main = () => {
                                 <div
                                     className="section_button"
                                     key={section.id}
-                                    onClick={() => handleSubsectionButtonClick(section.id)}
+
                                 >
-                                    <div className="section_button_content">
+                                    <div className="section_button_content" onClick={() => handleSubsectionButtonClick(section.id)}>
                                         <div className="section_img_container">
 
                                             {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
@@ -274,8 +275,15 @@ const Main = () => {
                                             </div>
                                             <div className="subsection_name">{subsection.name}</div>
                                         </div>
-                                        <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div>
-                                        <EditButtonSubsection subsection={subsection} subsections={subsections} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} />
+                                        <div className="button_update-container">
+                                            <div className="section_button-container">
+                                                <div className="section_button_edit">
+                                                    <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div>
+                                                    <EditButtonSubsection subsection={subsection} subsections={subsections} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 ))}
                                 <AddButtonSubsections subsections={subsections} />

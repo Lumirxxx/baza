@@ -49,11 +49,12 @@ const EditButtonMenu = ({ menuItem, menuId }) => {
     };
 
     return (
-        <div>
+        <div className="edit_menu_button_container">
             {!showForm ? (
-                <button onClick={handleButtonClick}>Редактировать меню</button>
+                <div className="edit_menu_button" onClick={handleButtonClick}></div>
+
             ) : (
-                <form onSubmit={handleFormSubmit}>
+                <form className="form_modal" onSubmit={handleFormSubmit}>
                     <input
                         required
                         type="text"

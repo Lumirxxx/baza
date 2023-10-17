@@ -91,7 +91,9 @@ const AddButtonSubsections = () => {
     return (
         <div>
             {!showForm ? (
-                <button onClick={handleButtonClick}>Добавить суб секцию</button>
+                <div className="section_button section_button_add" onClick={handleButtonClick}>
+                    <div className="section_name">Добавить раздел</div>
+                </div>
             ) : (
                 <form
                     onSubmit={handleSubmit}

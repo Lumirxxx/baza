@@ -41,11 +41,11 @@ const EditButtonSection = ({ section, onUpdate }) => {
     return (
         <div className="section_button-container">
             {!showForm ? (
-                <div className="section_button section_button_edit" onClick={handleButtonClick}>
+                <div className="section_button_edit" onClick={handleButtonClick}>
                     <div className="section_name">ред</div>
                 </div>
             ) : (
-                <form className="form_edit" onSubmit={handleSubmit}>
+                <form className="form_edit form_modal" onSubmit={handleSubmit}>
                     <input
                         required
                         type="text"

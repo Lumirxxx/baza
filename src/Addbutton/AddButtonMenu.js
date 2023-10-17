@@ -47,9 +47,10 @@ const AddButtonMenu = () => {
     return (
         <div>
             {!showForm ? (
-                <button onClick={handleButtonClick}>Добавить меню</button>
+                <div className="section_button section_button_add" onClick={handleButtonClick}>
+                    <div className="section_name">Добавить меню</div> </div>
             ) : (
-                <form onSubmit={handleFormSubmit}>
+                <form className="form_modal" onSubmit={handleFormSubmit}>
                     <input
                         type="text"
                         placeholder="Имя"
@@ -62,6 +63,9 @@ const AddButtonMenu = () => {
                         onChange={handleFileChange}
                     />
                     <button type="submit">Добавить</button>
+                    <button type="button" onClick={() => setShowForm(false)}>
+                        Отмена
+                    </button>
                 </form>
             )}
         </div>

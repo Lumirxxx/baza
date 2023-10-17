@@ -50,7 +50,7 @@ const EditButtonSubsection = ({ subsection, subsectionId, onUpdate }) => {
                     <div className="section_name">ред</div>
                 </div>
             ) : (
-                <form className="form_edit" onSubmit={handleSubmit} action="http://192.168.10.109:8000/api/v1/subsections/">
+                <form className="form_edit form_modal" onSubmit={handleSubmit} action="http://192.168.10.109:8000/api/v1/subsections/">
                     <input
                         required
                         type="text"
