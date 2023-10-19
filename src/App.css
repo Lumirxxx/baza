@@ -198,7 +198,7 @@ img {
   font-size: 20px;
   color: #000;
   font-weight: normal;
-  margin-bottom: 60px;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -299,6 +299,8 @@ img {
   max-width: 245px;
   width: 100%;
   margin-right: 30px;
+  position: relative;
+  z-index: 1;
 }
 
 .article_button_container {
@@ -314,7 +316,7 @@ img {
 
 .section_button {
   position: relative;
-  z-index: 99;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -324,16 +326,74 @@ img {
   cursor: pointer;
 }
 
+.form_menu_label_name {
+  padding-bottom: 14px;
+  padding-top: 20px;
+}
+
+.form_menu_input {
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 16px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding-left: 10px;
+
+}
+
+.form_menu_input-image_add {
+  display: none;
+}
+
+.form_menu_label_img {
+  max-width: 28px;
+  width: 100%;
+  max-height: 28px;
+  height: 100%;
+}
+
+.form_menu_label_img-container {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  width: 300px;
+
+  height: 28px;
+  display: flex;
+  flex-direction: row !important;
+}
+
+.form_menu_label_img-text {
+  margin-left: 8px;
+}
+
+.form_menu_input-image {
+  background-image: url("../public/imageadd.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  max-width: 28px;
+  width: 100%;
+  max-height: 28px;
+  height: 100%;
+}
+
 .button_update-container {
   position: absolute;
-  z-index: 100;
+
   top: 0;
   right: 0;
 }
 
 .menu_item {
   position: relative;
-  z-index: 99;
+
+}
+
+.form_menu_label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .edit_menu_button_container {
@@ -416,7 +476,7 @@ img {
   margin-right: 20px;
   position: relative;
   display: block;
-  z-index: 200;
+  z-index: 0;
   text-indent: -9999px;
   cursor: pointer;
 }

@@ -238,6 +238,7 @@ const Main = () => {
                                     className="section_button"
                                     key={section.id}
 
+
                                 >
                                     <div className="section_button_content" onClick={() => handleSubsectionButtonClick(section.id)}>
                                         <div className="section_img_container">

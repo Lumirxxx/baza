@@ -109,9 +109,9 @@ const AddButtonSections = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <label htmlFor="menu">Меню:</label>
-                                <select required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
+                            <div className="form_menu_label">
+                                <label className="form_menu_label_name" htmlFor="menu">Меню:</label>
+                                <select className="form_menu_input" required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
                                     <option value="" disabled selected>
                                         Выберите меню
                                     </option>
@@ -123,14 +123,16 @@ const AddButtonSections = () => {
                                 </select>
                             </div>
 
-                            <div>
-                                <label htmlFor="name">Название:</label>
-                                <input required type="text" id="name" name="name" value={newSection.name} onChange={handleInputChange} />
+                            <div className="form_menu_label">
+                                <label className="form_menu_label_name" htmlFor="name">Название:</label>
+                                <input className="form_menu_input" placeholder="Наименование раздела" required type="text" id="name" name="name" value={newSection.name} onChange={handleInputChange} />
                             </div>
 
-                            <div>
-                                <label htmlFor="image">Изображение:</label>
-                                <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                            <div className="form_menu_label form_menu_label_img-container">
+                              
+                                <label className="form_menu_label_img" htmlFor="image"><div className="form_menu_input-image"></div></label>
+                                <label className="form_menu_label_img-text" htmlFor="image" >Загрузить файл SVG</label>
+                                <input className="form_menu_input-image_add" type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
                             </div>
                             <div className="modal_form-button">
                                 <div className="form_button_container">

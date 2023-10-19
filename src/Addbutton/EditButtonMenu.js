@@ -54,23 +54,30 @@ const EditButtonMenu = ({ menuItem, menuId }) => {
                 <div className="edit_menu_button" onClick={handleButtonClick}></div>
 
             ) : (
-                <form className="form_modal" onSubmit={handleFormSubmit}>
-                    <input
-                        required
-                        type="text"
-                        value={name}
-                        onChange={handleInputChange}
-                    />
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                    />
-                    <button type="submit">Сохранить</button>
-                    <button type="button" onClick={() => setShowForm(false)}>
-                        Отмена
-                    </button>
-                </form>
+                <div className="modal-background">
+                    <div className="modal">
+                        <form className="form_modal" onSubmit={handleFormSubmit}>
+                            <div className="form_menu_label">
+                                <label className="form_menu_label_name" htmlFor="name">Название:</label>
+                                <input
+                                    required
+                                    type="text"
+                                    value={name}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                            />
+                            <button type="submit">Сохранить</button>
+                            <button type="button" onClick={() => setShowForm(false)}>
+                                Отмена
+                            </button>
+                        </form>
+                    </div>
+                </div>
             )}
         </div>
     );
