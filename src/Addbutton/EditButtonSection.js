@@ -48,16 +48,27 @@ const EditButtonSection = ({ section, onUpdate }) => {
                 <div className="modal-background">
                     <div className="modal">
                         <form className="form_edit form_modal" onSubmit={handleSubmit}>
-                            <input
-                                required
-                                type="text"
-                                value={name}
-                                onChange={handleInputChange}
-                            />
-                            <button type="submit">Сохранить</button>
-                            <button type="button" onClick={() => setShowForm(false)}>
-                                Отмена
-                            </button>
+                            <div className="form_menu_label">
+                                <label className="form_menu_label_name" htmlFor="name">Название:</label>
+                                <input
+                                    className="form_menu_input"
+                                    required
+                                    type="text"
+                                    value={name}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="modal_form-button">
+                                <div className="form_button_container">
+                                    <button className="form_button" type="submit">Добавить</button>
+                                </div>
+
+                                <div className="form_button_container">
+                                    <button className="form_button" type="button" onClick={() => setShowForm(false)}>Отмена</button>
+                                </div>
+
+
+                            </div>
                         </form>
                     </div>
                 </div>
