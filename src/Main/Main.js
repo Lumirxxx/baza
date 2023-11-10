@@ -10,6 +10,8 @@ import AddButtonMenu from "../Addbutton/AddButtonMenu";
 import EditButtonMenu from "../Addbutton/EditButtonMenu";
 import AddButtonSubsections from "../Addbutton/AddButtonSubsections";
 import EditButtonSubsection from "../Addbutton/EditButtonSubsections";
+import AddFilesButton from "../Addbutton/AddFilesButton";
+import Files from "../Files/Files";
 
 
 
@@ -23,6 +25,7 @@ const Main = () => {
     const [sections, setSections] = useState([]);
     const [subsections, setSubsections] = useState([]);
     const [articles, setArticles] = useState([]);
+    const [files, setFiles] = useState([]);
     const [selectedArticle, setSelectedArticle] = useState(null);
     const [isSectionsOpen, setIsSectionsOpen] = useState(true); // Добавлено состояние для отслеживания открытых секций
     // const [isArticlesOpen, setIsArticlesOpen] = useState(true);
@@ -67,6 +70,7 @@ const Main = () => {
                 setIsSectionsOpen(false);
                 setArticles([]);
                 setSubsections([]);
+                setFiles([]);
             } else {
                 const response = await axios.get(
                     `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
@@ -81,6 +85,7 @@ const Main = () => {
                 setIsSectionsOpen(true);
                 setArticles([]);
                 setSubsections([]);
+
             }
 
         } catch (error) {
@@ -291,6 +296,7 @@ const Main = () => {
                             </div>
                         )}
                     {articles.length > 0 && (
+
                         <div className="article_container">
                             <div className="article_button_container">
                                 {articles.map((article) => (
@@ -306,7 +312,14 @@ const Main = () => {
                                                     ))}
                                                 </ul>
                                             )}
+                                            {files.map((file) => (
+                                                <div key={file.id}>
+                                                    <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
+                                                </div>
+                                            ))}
                                             <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(article.id)}></div>
+                                            <AddFilesButton articleId={article.id} />
+                                            <Files articleId={article.id} />
                                             {/* {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />} */}
 
                                         </div>
