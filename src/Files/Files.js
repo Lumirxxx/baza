@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 const Files = ({ articleId }) => {
     const [files, setFiles] = useState([]);
@@ -23,9 +24,20 @@ const Files = ({ articleId }) => {
     useEffect(() => {
         fetchFiles();
     }, [articleId]);
-    const handleDownload = (fileUrl) => {
-        window.open(fileUrl, "_blank");
-        console.log("Файл успешно скачен")
+
+    const handleDownload = (fileUrl, fileName) => {
+        axios
+            .get(fileUrl, {
+                responseType: "blob" // указываем, что ожидаем в ответе файловый объект blob
+            })
+            .then((response) => {
+                const blob = new Blob([response.data], { type: "application/octet-stream" });
+                saveAs(blob, fileName); // используем функцию saveAs из библиотеки file-saver для скачивания файла
+                console.log("Файл успешно скачен");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     return (
@@ -33,7 +45,7 @@ const Files = ({ articleId }) => {
             {files.map((file) => (
                 <div key={file.id}>
                     <a href={file.file} target="_blank" rel="noopener noreferrer" download>{file.name}</a>
-                    <button onClick={() => handleDownload(file.file)} download>Скачать</button>
+                    <button onClick={() => handleDownload(file.file, file.name)}>Скачать</button>
                 </div>
             ))}
         </>

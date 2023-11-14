@@ -33,7 +33,7 @@ const AdminPage = () => {
     return (
         <div>
             <h1>Адмика Е*ать</h1>
-            <AddButton />
+            <AddButton  />
             <AddButtonSections />
             <AddButtonSubsections />
             {/* <AddButtonCustom /> */}

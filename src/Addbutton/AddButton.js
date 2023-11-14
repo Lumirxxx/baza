@@ -5,20 +5,21 @@ import { EditorState, convertToRaw, ContentState, convertFromRaw } from "draft-j
 import draftToHtml from "draftjs-to-html";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
+// Компонент кнопки "Добавить "
 const AddButton = () => {
-    const [sections, setSections] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [subsectionId, setSectionId] = useState(null);
-
-    const [selectedImages, setSelectedImages] = useState([]);
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const [contentHtml, setContentHtml] = useState("");
-    const [selectedImage, setSelectedImage] = useState(null);
-
+    const [sections, setSections] = useState([]);// Состояние разделов
+    const [showForm, setShowForm] = useState(false); // Состояние отображения формы
+    const [subsectionId, setSectionId] = useState(null);// Состояние выбранного подраздела
+    const [fileName, setFileName] = useState("");
+    const [file, setFile] = useState(null);
+    const [selectedImages, setSelectedImages] = useState([]);// Состояние выбранных изображений
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());// Состояние редактора
+    const [contentHtml, setContentHtml] = useState("");// Состояние HTML-контента
+    const [selectedImage, setSelectedImage] = useState(null);// Состояние выбранного изображения
+    // Обработчик клика по кнопке "Добавить"
     const handleButtonClick = () => {
-        fetchSections();
-        setShowForm(true);
+        fetchSections();// Получение списка разделов
+        setShowForm(true);// Установка состояния отображения формы
     };
 
     const handleSectionChange = (event) => {
@@ -33,6 +34,9 @@ const AddButton = () => {
         const cleanedContentHtml = contentHtml.replace(/"|\\n/g, "");
         setContentHtml(cleanedContentHtml);
     };
+
+
+
 
     const fetchSections = () => {
         const token = localStorage.getItem("token");
@@ -72,13 +76,39 @@ const AddButton = () => {
                     },
                 })
                 .then((response) => {
-                    console.log("New article added:", response.data);
+                    const articleId = response.data.id;
+
+                    const fileFormData = new FormData();
+                    fileFormData.append("name", fileName); // Обновлено: Добавить fileName в fileFormData
+                    fileFormData.append("file", file); // Обновлено: Добавить file в fileFormData
+                    fileFormData.append("article_id", articleId);
+
+                    axios
+                        .post("http://192.168.10.109:8000/api/v1/files/", fileFormData, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data",
+                            },
+                        })
+                        .then((response) => {
+                            const fileName = response.data.name;
+                            const file = response.data.file;
+                            const fileFormData = new FormData();
+                            fileFormData.append("name", fileName);
+                            fileFormData.append("file", file);
+                            console.log("Файл загружен:", response.data);
+                        })
+                        .catch((error) => {
+                            console.log("Ошибка при загрузке файла:", error);
+                        });
+
+                    console.log("Новая статья добавлена:", response.data);
                 })
                 .catch((error) => {
-                    console.log("Error adding new article:", error);
+                    console.log("Ошибка при добавлении новой статьи:", error);
                 });
         } else {
-            console.log("subsectionId is null");
+            console.log("subsectionId равен null");
         }
 
         setSectionId(null);
@@ -162,6 +192,16 @@ const AddButton = () => {
                             },
                         }}
                     />
+                    <div>
+                        <label htmlFor="name">Имя файла:</label>
+                        <input type="text" id="name" value={fileName} onChange={(e) => setFileName(e.target.value)} />
+                    </div>
+
+                    <div>
+                        <label htmlFor="file">Выберите файл:</label>
+                        <input type="file" id="file" onChange={(e) => setFile(e.target.files[0])} />
+                    </div>
+
 
                     <button type="submit">Submit</button>
                 </form>
