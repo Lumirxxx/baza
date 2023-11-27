@@ -5,6 +5,7 @@ import AddButtonSections from "../Addbutton/AddButtonSections";
 import axios from "axios";
 import AddButtonSubsections from "../Addbutton/AddButtonSubsections";
 import AddButtonCustom from "../ArticleEditForm/ArticleEditCustom"
+import ArticleEditor from "../Addbutton/ArticleEditor";
 
 const AdminPage = () => {
     const navigate = useNavigate();
@@ -33,9 +34,10 @@ const AdminPage = () => {
     return (
         <div>
             <h1>Адмика Е*ать</h1>
-            <AddButton  />
+            <AddButton />
             <AddButtonSections />
             <AddButtonSubsections />
+            <ArticleEditor />
             {/* <AddButtonCustom /> */}
         </div>
     );

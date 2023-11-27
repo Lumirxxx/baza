@@ -3,6 +3,8 @@ import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, ContentState, convertFromRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 // Компонент кнопки "Добавить "
@@ -114,7 +116,7 @@ const AddButton = () => {
         setSectionId(null);
         setEditorState(EditorState.createEmpty());
         setSelectedImages([]);
-        setSelectedImage(null);
+        // setSelectedImage(null);
         setShowForm(false);
     };
 
@@ -176,22 +178,15 @@ const AddButton = () => {
                             embedded: { options: ["image"] },
                             image: {
                                 uploadCallback: handleImageUpload,
-                                uploadEnabled: true,
-                                className: undefined,
-                                component: undefined,
-                                popupClassName: undefined,
+
                                 urlEnabled: true,
                                 uploadEnabled: true,
-                                alignmentEnabled: true,
-
                                 previewImage: true,
-                                alt: { present: true, mandatory: true },
-                                defaultSize: { width: 512, height: 512 },
-
-                                inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                                alt: { present: false, mandatory: false }
                             },
                         }}
                     />
+
                     <div>
                         <label htmlFor="name">Имя файла:</label>
                         <input type="text" id="name" value={fileName} onChange={(e) => setFileName(e.target.value)} />
