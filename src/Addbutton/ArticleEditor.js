@@ -49,26 +49,40 @@ const ArticleEditor = () => {
         formData.append('img', selectedFile);
 
         try {
-            const articleResponse = await axios.post('http://192.168.10.109:8000/api/v1/articles/', articleData, {
+            await axios.post('http://192.168.10.109:8000/api/v1/articles/', articleData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
+            }).then((response) => {
+                const articleId = response.data.id;
+
+                const fileFormData = new FormData();
+                fileFormData.append("name", fileName);
+                fileFormData.append("file", file);
+                fileFormData.append("article_id", articleId);
+
+                axios.post("http://192.168.10.109:8000/api/v1/files/", fileFormData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                }).then((response) => {
+                    const fileName = response.data.name;
+                    const file = response.data.file;
+                    const fileFormData = new FormData();
+                    fileFormData.append("name", fileName);
+                    fileFormData.append("file", file);
+                    console.log("Файл загружен:", response.data);
+                }).catch((error) => {
+                    console.log("Ошибка при загрузке файла:", error);
+                });
+
+                console.log('Статья загружена:', response.data);
+            }).catch((error) => {
+                console.log('Ошибка при загрузке статьи или изображения:', error);
             });
-
-
-            console.log('Article uploaded:', articleResponse.data);
-
-            // const imageResponse = await axios.post('http://192.168.10.109:8000/api/v1/images/', formData, {
-            //     headers: {
-            //         Authorization: `Bearer ${token}`,
-            //         'Content-Type': 'multipart/form-data',
-            //     },
-            // });
-            // const imageUrl = imageResponse.data.img;
-            // console.log('Image URL:', imageUrl);
-
         } catch (error) {
-            console.log('Error uploading article or image:', error);
+            console.log('Ошибка при загрузке статьи или изображения:', error);
         }
     };
 
@@ -101,6 +115,15 @@ const ArticleEditor = () => {
                     <option key={subsection.id} value={subsection.id}>{subsection.name}</option>
                 ))}
             </select>
+            <div>
+                <label htmlFor="name">Имя файла:</label>
+                <input type="text" id="name" value={fileName} onChange={(e) => setFileName(e.target.value)} />
+            </div>
+
+            <div>
+                <label htmlFor="file">Выберите файл:</label>
+                <input type="file" id="file" onChange={(e) => setFile(e.target.files[0])} />
+            </div>
             <button onClick={handleSubmit}>Submit</button>
         </div>
     );

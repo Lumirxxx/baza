@@ -11,6 +11,7 @@ import EditButtonMenu from "../Addbutton/EditButtonMenu";
 import AddButtonSubsections from "../Addbutton/AddButtonSubsections";
 import EditButtonSubsection from "../Addbutton/EditButtonSubsections";
 import AddFilesButton from "../Addbutton/AddFilesButton";
+import EditArticleButton from "../Addbutton/EditArticleButton";
 import Files from "../Files/Files";
 
 
@@ -320,6 +321,7 @@ const Main = () => {
                                             <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(article.id)}></div>
                                             <AddFilesButton articleId={article.id} />
                                             <Files articleId={article.id} />
+                                            <EditArticleButton article={article} />
                                             {/* {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />} */}
 
                                         </div>
