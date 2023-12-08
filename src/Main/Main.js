@@ -28,14 +28,17 @@ const Main = () => {
     const [articles, setArticles] = useState([]);
     const [files, setFiles] = useState([]);
     const [selectedArticle, setSelectedArticle] = useState(null);
-    const [isSectionsOpen, setIsSectionsOpen] = useState(true); // Добавлено состояние для отслеживания открытых секций
+    const [isSectionsOpen, setIsSectionsOpen] = useState(false); // Добавлено состояние для отслеживания открытых секций
     // const [isArticlesOpen, setIsArticlesOpen] = useState(true);
     const navigate = useNavigate();
+    const [selectedMenuItemId, setSelectedMenuItemId] = useState(null);
     // const handleEditArticle = (article) => {
     //     setSelectedArticle(article);
     // };
 
-
+    // useEffect(() => {
+    //     // Логика обновления отображения кнопки AddButtonSections
+    // }, [selectedMenuItemId]);
     useEffect(() => {
 
         const fetchData = async () => {
@@ -50,6 +53,7 @@ const Main = () => {
                     console.log(response.data);
                     setMenu(response.data);
                     console.log('получили меню');
+                    console.log("isSectionsOpen:", isSectionsOpen);
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -62,11 +66,12 @@ const Main = () => {
         };
 
         fetchData();
+
     }, []); // Пустой массив в качестве зависимости
     const handleSectionButtonClick = async (menu_id) => {
         try {
             if (isSectionsOpen) {
-                // Если секции уже открыты, закрываем их вместе с статьями
+                setSelectedMenuItemId(null); // Сбросить selectedMenuItemId в null, чтобы кнопка AddButtonSections скрылась
                 setSections([]);
                 setIsSectionsOpen(false);
                 setArticles([]);
@@ -81,14 +86,15 @@ const Main = () => {
                         },
                     }
                 );
+
                 console.log(menu_id)
+
                 setSections(response.data);
                 setIsSectionsOpen(true);
                 setArticles([]);
                 setSubsections([]);
-
+                setSelectedMenuItemId(menu_id); // Установить selectedMenuItemId в menu_id
             }
-
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
@@ -215,6 +221,9 @@ const Main = () => {
                 <div className="main_page_logo">
                     <img src="/Headerlogomain.svg" alt="Logo" />
                 </div>
+                <div className="main_page_title">
+                    <div className="main_page_title_text">Меню</div>
+                </div>
             </div>
             <div className="menu_container">
 
@@ -227,9 +236,10 @@ const Main = () => {
                                 key={menuItem.id}
                                 onClick={() => handleSectionButtonClick(menuItem.id)}
                             >
+                                <img className="menu_img" src={menuItem.img} alt="Menu Image" />
                                 <div className="button_text">{menuItem.name}</div>
                             </button>
-                            <div className="cl-btn-4" onClick={() => handleDeleteMenu(menuItem.id)}></div>
+                            <div className="cl-btn-4 delete_button-menu" onClick={() => handleDeleteMenu(menuItem.id)}></div>
                             <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} />
                         </div>
 
@@ -243,10 +253,11 @@ const Main = () => {
                                 <div
                                     className="section_button"
                                     key={section.id}
+                                    onClick={() => handleSubsectionButtonClick(section.id)}
 
 
                                 >
-                                    <div className="section_button_content" onClick={() => handleSubsectionButtonClick(section.id)}>
+                                    <div className="section_button_content" >
                                         <div className="section_img_container">
 
                                             {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
@@ -255,21 +266,26 @@ const Main = () => {
                                         <div className="section_name">{section.name}</div>
                                     </div>
                                     <div className="button_update-container">
-                                        <EditButtonSection
-                                            key={section.id}
-                                            section={section}
-                                            onUpdate={handleSectionUpdate}
-                                        />
+
                                         <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)}></div>
                                     </div>
+                                    <EditButtonSection
+                                        key={section.id}
+                                        section={section}
+                                        onUpdate={handleSectionUpdate}
+                                    />
                                 </div>
                             ))}
-                            <div>
-                                <AddButtonSections menuId={menu_id} />
-                                {/* <AddButtonSectionsMain menuId={menu_id} /> */}
-                            </div>
+
+                            {/* <AddButtonSectionsMain menuId={menu_id} /> */}
+
                         </div>
                     )}
+
+
+                    {selectedMenuItemId !== null ? (
+                        <AddButtonSections menuId={selectedMenuItemId} />
+                    ) : null}
                     {
                         subsections.length > 0 && (
                             <div className="subsections_container">

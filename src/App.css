@@ -1,8 +1,30 @@
 .App {}
 
+button {
+  /* padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent; */
+  /* отображаем курсор в виде руки при наведении; некоторые
+  считают, что необходимо оставлять стрелочный вид для кнопок */
+  /* cursor: pointer; */
+}
+
+
 img {
   max-width: 32rem;
 
+
+}
+
+.image-uploading img {
+  filter: blur(0px) !important;
+  opacity: 1 !important;
+}
+
+.image-uploading::before {
+  display: none;
 }
 
 .main_container {
@@ -58,7 +80,16 @@ img {
 
 .main_page_logo {
   margin-top: 3.125rem;
-  margin-bottom: 2.81rem;
+  margin-bottom: 1.125rem;
+}
+
+.main_page_title_text {
+  font-family: gothampro;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 2.18rem;
+  margin-left: 4.87rem;
+
 }
 
 .login_form {
@@ -127,16 +158,26 @@ img {
   max-width: 15.3rem;
   height: 5.8rem;
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 2.18rem;
   overflow: hidden;
+  border: none;
 
 
+}
+
+.section_plus {
+  background-image: url("/public/note-favorite.svg");
+  max-width: 48px;
+  height: 48px;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .button_body:hover {
@@ -308,7 +349,7 @@ img {
 
 .header_container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .section_button {
@@ -379,7 +420,8 @@ img {
   position: absolute;
 
   top: 0;
-  right: 0;
+  left: 5px;
+  transform: translate(0, 50%);
 }
 
 .menu_item {
@@ -398,8 +440,8 @@ img {
   max-width: 24px;
   height: 24px;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  right: 5px;
 
 }
 
@@ -420,10 +462,11 @@ img {
 
 .section_button_add {
   padding-left: 40px;
-  margin-top: 25px;
+  /* margin-top: 25px; */
   background-image: url("../public/add-square.svg");
   background-repeat: no-repeat;
   background-position: 95%;
+  width: 15.31rem;
 
 
 }
@@ -462,6 +505,12 @@ img {
   top: 0px;
   right: -10px;
   z-index: 100 !important;
+}
+
+.delete_button-menu {
+  position: absolute !important;
+  top: 5px !important;
+  left: 5px;
 }
 
 .cl-btn-4 {

@@ -47,8 +47,9 @@ const AddButtonMenu = () => {
     return (
         <div>
             {!showForm ? (
-                <div className="section_button section_button_add" onClick={handleButtonClick}>
-                    <div className="section_name">Добавить меню</div> </div>
+                <div className="button_body" onClick={handleButtonClick}>
+                    <div className="section_plus"></div>
+                    <div className="button_text">Добавить меню</div> </div>
             ) : (
                 <div className="modal-background">
                     <div className="modal">

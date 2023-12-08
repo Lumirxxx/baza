@@ -129,7 +129,7 @@ const AddButtonSections = () => {
                             </div>
 
                             <div className="form_menu_label form_menu_label_img-container">
-                              
+
                                 <label className="form_menu_label_img" htmlFor="image"><div className="form_menu_input-image"></div></label>
                                 <label className="form_menu_label_img-text" htmlFor="image" >Загрузить файл SVG</label>
                                 <input className="form_menu_input-image_add" type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
