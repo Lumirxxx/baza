@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddButtonSections = () => {
+const AddButtonSections = (props) => {
+
+    const { menu_id } = props
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [menuId, setMenuId] = useState("");
+    const [menuId, setMenuId] = useState(menu_id);
     const [menus, setMenus] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newSection, setNewSection] = useState({
@@ -35,6 +37,7 @@ const AddButtonSections = () => {
     const handleButtonClick = () => {
         setShowModal(true);
         fetchMenus();
+        console.log(menu_id)
     };
 
     const handleMenuChange = (event) => {
@@ -111,12 +114,12 @@ const AddButtonSections = () => {
                             </div>
                             <div className="form_menu_label">
                                 <label className="form_menu_label_name" htmlFor="menu">Меню:</label>
-                                <select className="form_menu_input" required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
+                                <select className="form_menu_input" required id="menu" name="menu" value={menu_id} onChange={handleMenuChange} >
                                     <option value="" disabled selected>
                                         Выберите меню
                                     </option>
                                     {menus.map((menu) => (
-                                        <option key={menu.id} value={menu.id}>
+                                        <option key={menu.id} value={menu.id} >
                                             {menu.name}
                                         </option>
                                     ))}

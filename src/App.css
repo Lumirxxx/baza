@@ -304,6 +304,7 @@ img {
   max-width: 300px;
   width: 100%;
   /* margin-top: 10.81rem; */
+  margin-bottom: 30px;
 }
 
 .subsection_button_content {
@@ -491,7 +492,14 @@ img {
 
   padding-top: 0px;
   padding-bottom: 0px;
+  padding-right: 5px;
+  width: 24px;
+  height: 24px;
 
+}
+
+.edit_menu_button-black {
+  background-image: url("../public/editblack.svg");
 }
 
 .article_content {
@@ -529,6 +537,18 @@ img {
 
 .subsection_name {
   width: 100%;
+}
+
+.error_message {
+  text-align: center;
+  background-color: red;
+  color: #fff;
+}
+
+.container_position_col {
+  display: flex;
+  flex-direction: column;
+
 }
 
 .cl-btn-4:before,

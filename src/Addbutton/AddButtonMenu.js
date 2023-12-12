@@ -5,6 +5,7 @@ const AddButtonMenu = () => {
     const [name, setName] = useState("");
     const [img, setImg] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [error, setError] = useState([]);
 
     const handleButtonClick = () => {
         setShowForm(true);
@@ -36,6 +37,9 @@ const AddButtonMenu = () => {
             setShowForm(false);
         } catch (error) {
             console.log(error);
+            setError(error.response.data.img);
+            console.log(error.response.data);
+
         }
     };
 
@@ -54,6 +58,7 @@ const AddButtonMenu = () => {
                 <div className="modal-background">
                     <div className="modal">
                         <form className="form_modal" onSubmit={handleFormSubmit}>
+                            {error && <div className="error_message" >{error}</div>}
                             <div className="form_title">
                                 <div className="form_title_text">Создание раздела</div>
                                 <div className="depart_name">
@@ -65,6 +70,7 @@ const AddButtonMenu = () => {
                             <div className="form_menu_label">
                                 <label className="form_menu_label_name" htmlFor="name">Название:</label>
                                 <input
+                                    required
                                     className="form_menu_input"
                                     type="text"
                                     placeholder="Название"
