@@ -22,7 +22,7 @@ import Files from "../Files/Files";
 
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
-    const [section_id, setSectionId] = useState(null);
+    const [sectionId, setSectionId] = useState(null);
     const [menu, setMenu] = useState([]);
     const [sections, setSections] = useState([]);
     const [subsections, setSubsections] = useState([]);
@@ -35,13 +35,9 @@ const Main = () => {
     const [selectedMenuItemId, setSelectedMenuItemId] = useState(null);
     const [menuName, setMenuName] = useState('');
     const [showSubsections, setShowSubsections] = useState(false);
-    // const handleEditArticle = (article) => {
-    //     setSelectedArticle(article);
-    // };
+    const [selectedSectionItemId, setSelectedSectionItemId] = useState(null);
 
-    // useEffect(() => {
-    //     // Логика обновления отображения кнопки AddButtonSections
-    // }, [selectedMenuItemId]);
+
 
     useEffect(() => {
 
@@ -77,6 +73,7 @@ const Main = () => {
     const handleSectionButtonClick = async (menu_id) => {
         try {
             if (isSectionsOpen) {
+                // setSelectedSectionItemId(null);
                 setSelectedMenuItemId(null);
                 setSections([]);
                 setIsSectionsOpen(false);
@@ -97,6 +94,7 @@ const Main = () => {
                 const menuName = selectedMenuItem ? selectedMenuItem.name : "";
                 setMenuName(menuName);
                 setMenuId(menu_id);
+                console.log()
                 console.log("Menu Name:", menuName);
                 console.log(menu[0].name);
                 console.log(menuName)
@@ -104,6 +102,7 @@ const Main = () => {
                 setIsSectionsOpen(true);
                 setArticles([]);
                 setSubsections([]);
+                setSelectedSectionItemId(null);
                 setSelectedMenuItemId(menu_id);
                 console.log(menu_id)
                 setShowSubsections(true);
@@ -126,8 +125,9 @@ const Main = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+            setSelectedSectionItemId(sectionId);
             setSectionId(sectionId)
-            console.log(section_id)
+            console.log(sectionId)
             setSubsections(response.data);
             setArticles([]);
         } catch (error) {
@@ -307,36 +307,47 @@ const Main = () => {
                     </div>
 
 
-
-                    {
-                        subsections.length > 0 && (
-                            <div className="subsections_container">
-                                {subsections.map((subsection) => (
-                                    <div className="section_button" key={subsection.id} onClick={() => handleArticleButtonClick(subsection.id)}
-                                    >
-                                        <div className="subsection_button_content">
-                                            <div className="section_img_container">
-                                                {subsection.img && <img className="section_img" src={subsection.img} alt="Subsection Image" />}
-                                            </div>
-                                            <div className="subsection_name">{subsection.name}</div>
-                                        </div>
-                                        <div className="button_update-container">
-                                            <div className="section_button-container">
-                                                <div className="section_button_edit">
-                                                    <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div>
-                                                    <EditButtonSubsection subsection={subsection} subsections={subsections} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} />
+                    <div className="container_position_col container_position_col-sub" >
+                        {
+                            subsections.length > 0 && (
+                                <div className="subsections_container">
+                                    {subsections.map((subsection) => (
+                                        <div className="section_button" key={subsection.id} onClick={() => handleArticleButtonClick(subsection.id)}
+                                        >
+                                            <div className="subsection_button_content">
+                                                <div className="section_img_container">
+                                                    {subsection.img && <img className="section_img" src={subsection.img} alt="Subsection Image" />}
                                                 </div>
+                                                <div className="subsection_name">{subsection.name}</div>
                                             </div>
+                                            <div className="button_update-container">
+                                                <div className="section_button-container">
+                                                    <div className="section_button_edit">
+                                                        <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <EditButtonSubsection subsection={subsection} subsections={subsections} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} />
                                         </div>
+                                    ))}
 
-                                    </div>
-                                ))}
-
-                            </div>
+                                </div>
 
 
-                        )}
-                    <div> {showSubsections && <AddButtonSubsections subsections={subsections} />}</div>
+                            )}
+                        <div>
+                            {
+                                selectedSectionItemId !== null && showSubsections && sections.length > 0 && (
+                                    <AddButtonSubsections sectionId={sectionId} subsections={subsections} />
+                                )
+                            }
+
+
+                        </div>
+                    </div >
                     {articles.length > 0 && (
 
                         <div className="article_container">

@@ -309,13 +309,18 @@ img {
 
 .subsection_button_content {
   display: flex;
+  width: 100%;
 }
 
+
+
+
 .subsections_container {
-  max-width: 200px;
+
   width: 100%;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-bottom: 30px;
+
+
 }
 
 .section_button_content {
@@ -446,6 +451,11 @@ img {
 
 }
 
+figure {
+  width: 200px;
+  margin: 0;
+}
+
 .edit_menu_button {
   max-width: 24px;
   width: 100%;
@@ -453,6 +463,10 @@ img {
   height: 100%;
   cursor: cell;
   background-image: url("../public/editico.svg");
+}
+
+.rdw-image-center {
+  justify-content: flex-start !important;
 }
 
 
@@ -549,6 +563,11 @@ img {
   display: flex;
   flex-direction: column;
 
+}
+
+.container_position_col-sub {
+  margin-left: 30px;
+  margin-right: 30px;
 }
 
 .cl-btn-4:before,

@@ -6,6 +6,7 @@ import axios from "axios";
 import AddButtonSubsections from "../Addbutton/AddButtonSubsections";
 import AddButtonCustom from "../ArticleEditForm/ArticleEditCustom"
 import ArticleEditor from "../Addbutton/ArticleEditor";
+import Editor2 from "../Addbutton/Editor2";
 
 import Editor from "../Addbutton/Editor";
 
@@ -39,8 +40,9 @@ const AdminPage = () => {
             {/* <AddButton /> */}
             <AddButtonSections />
             <AddButtonSubsections />
-            <ArticleEditor />
-            <Editor />
+            {/* <ArticleEditor /> */}
+            {/* <Editor /> */}
+            <Editor2 />
             {/* <AddButtonCustom /> */}
         </div>
     );

@@ -11,13 +11,17 @@ const AddButtonMenu = () => {
         setShowForm(true);
     };
 
+ 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
             const token = localStorage.getItem("token");
             const formData = new FormData();
             formData.append("name", name);
-            formData.append("img", img);
+
+            if (img) {
+                formData.append("img", img);
+            }
 
             const response = await axios.post(
                 "http://192.168.10.109:8000/api/v1/menu/",
@@ -39,7 +43,7 @@ const AddButtonMenu = () => {
             console.log(error);
             setError(error.response.data.img);
             console.log(error.response.data);
-
+            console.log(img)
         }
     };
 

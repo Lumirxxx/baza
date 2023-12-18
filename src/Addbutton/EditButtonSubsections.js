@@ -47,7 +47,7 @@ const EditButtonSubsection = ({ subsection, subsectionId, onUpdate }) => {
         <div className="section_button-container">
             {!showForm ? (
                 <div className="section_button section_button_edit" onClick={handleButtonClick}>
-                    <div className="section_name">ред</div>
+                    <div className="edit_menu_button edit_menu_button-black"></div>
                 </div>
             ) : (
                 <div className="modal-background">

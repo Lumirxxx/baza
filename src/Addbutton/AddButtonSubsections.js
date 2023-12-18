@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddButtonSubsections = () => {
+const AddButtonSubsections = (props) => {
+
+    const { sectionId } = props
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [menuId, setMenuId] = useState("");
+    const [menuId, setMenuId] = useState(sectionId);
     const [menus, setMenus] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newSection, setNewSection] = useState({
@@ -35,6 +37,7 @@ const AddButtonSubsections = () => {
     const handleButtonClick = () => {
         setShowModal(true);
         fetchMenus();
+        console.log(menuId)
     };
 
     const handleMenuChange = (event) => {
@@ -56,7 +59,7 @@ const AddButtonSubsections = () => {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append("section_id", menuId);
+        formData.append("section_id", sectionId);
         formData.append("name", newSection.name);
         formData.append("img", selectedImage);
 
@@ -114,12 +117,12 @@ const AddButtonSubsections = () => {
                             </div>
                             <div className="form_menu_label">
                                 <label className="form_menu_label_name" htmlFor="menu">Меню:</label>
-                                <select className="form_menu_input" required id="menu" name="menu" value={menuId} onChange={handleMenuChange} >
+                                <select className="form_menu_input" required id="menu" name="menu" value={sectionId} onChange={handleMenuChange}>
                                     <option value="" disabled selected>
                                         Выберите меню
                                     </option>
                                     {menus.map((menu) => (
-                                        <option key={menu.id} value={menu.id}>
+                                        <option key={menu.id} value={menu.id} selected>
                                             {menu.name}
                                         </option>
                                     ))}
