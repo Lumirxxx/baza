@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { Editor } from '@tinymce/tinymce-react';
+// import 'tinymce/tinymce';
+// import 'tinymce/themes/silver';
+// import 'tinymce/plugins/paste';
+// import 'tinymce/plugins/link';
+// import 'tinymce/plugins/image';
+// import 'tinymce/plugins/code';
+
 import axios from 'axios';
 
 const EditArticleButton = ({ article }) => {
-    const [content, setContent] = useState('');
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(article.text);
-    const [text, setText] = useState(article.text);
+    const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
+    const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;
 
     const handleEditClick = () => {
         setEditing(true);
@@ -19,13 +25,12 @@ const EditArticleButton = ({ article }) => {
     };
 
     const handleSaveClick = async () => {
-        const formData = new FormData();
         const token = localStorage.getItem('token');
+        const formData = new FormData();
         formData.append('text', editedContent);
         formData.append('token', token);
         // formData.append('img', selectedFile);
 
-        // обработка сохранения
         try {
             const response = await axios.patch(`http://192.168.10.109:8000/api/v1/articles/${article.id}/`, articleData, {
                 headers: {
@@ -36,11 +41,9 @@ const EditArticleButton = ({ article }) => {
             });
 
             const articleId = response.data.id;
-
             const fileFormData = new FormData();
             fileFormData.append("article_id", articleId);
             console.log('Статья изменена:', response.data);
-
         } catch (error) {
             console.log('Ошибка при загрузке статьи или изображения:', error);
             console.log(error.response.data);
@@ -64,7 +67,20 @@ const EditArticleButton = ({ article }) => {
                 <button onClick={handleEditClick}>Редактировать статью</button>
             ) : (
                 <div>
-                    <ReactQuill value={editedContent} onChange={handleChange} />
+                    <Editor
+                        value={editedContent}
+                        tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
+                        apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
+                        init={{
+                            height: 500,
+                            menubar: false,
+                            plugins: [
+                                'paste, link, image ,code',
+                            ],
+                            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
+                        }}
+                        onEditorChange={handleChange}
+                    />
                     <button onClick={handleSaveClick}>Сохранить</button>
                     <button onClick={handleCancelClick}>Отмена</button>
                 </div>

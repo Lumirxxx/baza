@@ -8,7 +8,9 @@ import AddButtonCustom from "../ArticleEditForm/ArticleEditCustom"
 import ArticleEditor from "../Addbutton/ArticleEditor";
 import Editor2 from "../Addbutton/Editor2";
 
+
 import Editor from "../Addbutton/Editor";
+import Editor3 from "../Addbutton/Editor3";
 
 const AdminPage = () => {
     const navigate = useNavigate();
@@ -43,6 +45,7 @@ const AdminPage = () => {
             {/* <ArticleEditor /> */}
             {/* <Editor /> */}
             <Editor2 />
+            {/* <Editor3/> */}
             {/* <AddButtonCustom /> */}
         </div>
     );

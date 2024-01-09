@@ -13,34 +13,23 @@ import EditButtonSubsection from "../Addbutton/EditButtonSubsections";
 import AddFilesButton from "../Addbutton/AddFilesButton";
 import EditArticleButton from "../Addbutton/EditArticleButton";
 import Files from "../Files/Files";
-
-
-
-
-
-
-
+import Editor2 from "../Addbutton/Editor2";
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [sectionId, setSectionId] = useState(null);
     const [menu, setMenu] = useState([]);
     const [sections, setSections] = useState([]);
-    const [subsections, setSubsections] = useState([]);
-    const [articles, setArticles] = useState([]);
+    const [articles, setArticles] = useState([]);//текущие статьи
     const [files, setFiles] = useState([]);
-    const [selectedArticle, setSelectedArticle] = useState(null);
     const [isSectionsOpen, setIsSectionsOpen] = useState(false); // Добавлено состояние для отслеживания открытых секций
-    // const [isArticlesOpen, setIsArticlesOpen] = useState(true);
     const navigate = useNavigate();
     const [selectedMenuItemId, setSelectedMenuItemId] = useState(null);
     const [menuName, setMenuName] = useState('');
     const [showSubsections, setShowSubsections] = useState(false);
     const [selectedSectionItemId, setSelectedSectionItemId] = useState(null);
-
-
-
+    const [subsectionId, setSubsectionId] = useState(null);
+    const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
     useEffect(() => {
-
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
@@ -78,8 +67,8 @@ const Main = () => {
                 setSections([]);
                 setIsSectionsOpen(false);
                 setArticles([]);
-                setSubsections([]);
-                setFiles([]);
+                
+       
             } else {
                 const response = await axios.get(
                     `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
@@ -100,12 +89,14 @@ const Main = () => {
                 console.log(menuName)
                 setSections(response.data);
                 setIsSectionsOpen(true);
-                setArticles([]);
-                setSubsections([]);
+                //setArticles([]);
+             
                 setSelectedSectionItemId(null);
                 setSelectedMenuItemId(menu_id);
                 console.log(menu_id)
                 setShowSubsections(true);
+                console.log(sectionId)
+               
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
@@ -116,45 +107,35 @@ const Main = () => {
             }
         }
     };
+    
 
 
-    const handleSubsectionButtonClick = async (sectionId) => {
+    const handleArticleButtonClick = async (sectionId) => {
         try {
-            const response = await axios.get(`http://192.168.10.109:8000/api/v1/subsections/?section_id=${sectionId}`, {
+            const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
             setSelectedSectionItemId(sectionId);
             setSectionId(sectionId)
-            console.log(sectionId)
-            setSubsections(response.data);
-            setArticles([]);
+         
+            // console.log(sectionId)
+            // console.log(articles)
+           
+           
+            setArticles(response.data);
+            
+        
         } catch (error) {
             console.log(error);
         }
     }
 
 
-    const handleArticleButtonClick = async (subsectionId) => {
-        try {
-            const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?subsection_id=${subsectionId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-
-            setArticles(response.data);
-            setSelectedArticle(response.data[0]); // Предполагая, что данные ответа являются массивом, выберите первую статью по умолчанию
-
-            console.log(response.data);
-
-        } catch (error) {
-            console.log(`http://192.168.10.109:8000/api/v1/articles/?subsection_id=${subsectionId}/`)
-            console.log(subsectionId)
-            console.log(error);
-        }
-    };
+   const handleSelectArticle = (articleObj) => {
+    setSelectedArticle(articleObj)
+   }
 
     const handleDeleteMenu = async (menuId) => {
         try {
@@ -181,18 +162,7 @@ const Main = () => {
             console.log(error);
         }
     };
-    const handleDeleteSubsection = async (subsectionId) => {
-        try {
-            await axios.delete(`http://192.168.10.109:8000/api/v1/subsections/${subsectionId}/`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            setSubsections(subsections.filter((subsection) => subsection.id !== subsectionId));
-        } catch (error) {
-            console.log(error);
-        }
-    }
+ 
 
     const handleDeleteArticle = async (articleId) => {
         try {
@@ -218,17 +188,7 @@ const Main = () => {
             return updatedSections;
         });
     };
-    const handleSubsectionUpdate = (updatedSubsection) => {
-        setSubsections((prevSubsections) => {
-            const updatedSubsections = prevSubsections.map((subsection) => {
-                if (subsection.id === updatedSubsection.id) {
-                    return updatedSubsection;
-                }
-                return subsection;
-            });
-            return updatedSubsections;
-        });
-    }
+   
 
 
     return (
@@ -237,9 +197,7 @@ const Main = () => {
                 <div className="main_page_logo">
                     <img src="/Headerlogomain.svg" alt="Logo" />
                 </div>
-                <div className="main_page_title">
-                    <div className="main_page_title_text">Меню</div>
-                </div>
+             
             </div>
             <div className="menu_container">
 
@@ -252,7 +210,7 @@ const Main = () => {
                                 key={menuItem.id}
                                 onClick={() => handleSectionButtonClick(menuItem.id)}
                             >
-                                <img className="menu_img" src={menuItem.img} alt="Menu Image" />
+                                <img className="menu_img" src={menuItem.img} alt="" />
                                 <div className="button_text">{menuItem.name}</div>
                             </button>
                             <div className="cl-btn-4 delete_button-menu" onClick={() => handleDeleteMenu(menuItem.id)}></div>
@@ -271,7 +229,7 @@ const Main = () => {
                                     <div
                                         className="section_button"
                                         key={section.id}
-                                        onClick={() => handleSubsectionButtonClick(section.id)}
+                                        onClick={() => handleArticleButtonClick(section.id)}
 
 
                                     >
@@ -309,80 +267,75 @@ const Main = () => {
 
                     <div className="container_position_col container_position_col-sub" >
                         {
-                            subsections.length > 0 && (
-                                <div className="subsections_container">
-                                    {subsections.map((subsection) => (
-                                        <div className="section_button" key={subsection.id} onClick={() => handleArticleButtonClick(subsection.id)}
+                         
+                                <div className="articles_container">
+                                    {articles.map((article) => (
+                                        <div className="section_button" key={article.id} 
                                         >
-                                            <div className="subsection_button_content">
+                                            <div className="subsection_button_content" onClick={() => handleSelectArticle(article)}>
                                                 <div className="section_img_container">
-                                                    {subsection.img && <img className="section_img" src={subsection.img} alt="Subsection Image" />}
+                                                    {article.img && <img className="section_img" src={article.img} alt="Subsection Image" />}
                                                 </div>
-                                                <div className="subsection_name">{subsection.name}</div>
+                                                <div className="subsection_name">{article.name}</div>
                                             </div>
                                             <div className="button_update-container">
                                                 <div className="section_button-container">
                                                     <div className="section_button_edit">
-                                                        <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div>
+                                                        {/* <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div> */}
 
                                                     </div>
 
                                                 </div>
 
                                             </div>
-                                            <EditButtonSubsection subsection={subsection} subsections={subsections} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} />
+                                            {/* <EditButtonSubsection subsection={subsection} articles={articles} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} /> */}
                                         </div>
                                     ))}
 
                                 </div>
 
 
-                            )}
+                           }
                         <div>
                             {
                                 selectedSectionItemId !== null && showSubsections && sections.length > 0 && (
-                                    <AddButtonSubsections sectionId={sectionId} subsections={subsections} />
+                                    <Editor2 subsectionId={subsectionId} sectionId={sectionId} /> 
+                                    // <AddButtonSubsections sectionId={sectionId} subsections={subsections} />
                                 )
                             }
 
 
                         </div>
                     </div >
-                    {articles.length > 0 && (
+                    {selectedArticle && (
 
                         <div className="article_container">
                             <div className="article_button_container">
-                                {articles.map((article) => (
-                                    <div key={article.id}>
+                         
+                                    <div key={selectedArticle.id}>
                                         <div className="article_content">
-                                            <div className="article_content_text" dangerouslySetInnerHTML={{ __html: article.text }}></div>
-                                            {article.items && (
-                                                <ul>
-                                                    {article.items.map((item) => (
-                                                        <div>
-                                                            <li key={item.id}>{item.text}</li>
-                                                        </div>
-                                                    ))}
-                                                </ul>
-                                            )}
+                                            <div className="article_content_text" dangerouslySetInnerHTML={{ __html: selectedArticle.text }}></div>
+                                            
                                             {files.map((file) => (
                                                 <div key={file.id}>
                                                     <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
                                                 </div>
                                             ))}
-                                            <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(article.id)}></div>
-                                            <AddFilesButton articleId={article.id} />
-                                            <Files articleId={article.id} />
-                                            <EditArticleButton article={article} />
+                                            <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(selectedArticle.id)}></div>
+                                            <AddFilesButton articleId={selectedArticle.id} />
+                                            <Files articleId={selectedArticle.id} />
+                                            <EditArticleButton article={selectedArticle} />
                                             {/* {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />} */}
 
                                         </div>
                                     </div>
-                                ))}
-
+                              
+   
                             </div>
+                        
                         </div>
                     )}
+                      
                 </div>
             </div>
             <div className="admin_button">

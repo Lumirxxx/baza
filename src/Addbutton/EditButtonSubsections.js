@@ -83,3 +83,77 @@ const EditButtonSubsection = ({ subsection, subsectionId, onUpdate }) => {
 };
 
 export default EditButtonSubsection;
+// <EditButtonSubsection subsection={subsection} subsections={subsections} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} />
+// const handleDeleteMenu = async (menuId) => {
+//     try {
+//         await axios.delete(`http://192.168.10.109:8000/api/v1/menu/${menuId}/`, {
+//             headers: {
+//                 Authorization: `Bearer ${localStorage.getItem('token')}`,
+//             },
+//         });
+//         setMenu(menu.filter((menu) => menu.id !== menuId));
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+// const handleDeleteSection = async (sectionId) => {
+//     try {
+//         await axios.delete(`http://192.168.10.109:8000/api/v1/sections/${sectionId}/`, {
+//             headers: {
+//                 Authorization: `Bearer ${localStorage.getItem('token')}`,
+//             },
+//         });
+
+//         setSections(sections.filter((section) => section.id !== sectionId));
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+// const handleDeleteSubsection = async (subsectionId) => {
+//     try {
+//         await axios.delete(`http://192.168.10.109:8000/api/v1/subsections/${subsectionId}/`, {
+//             headers: {
+//                 Authorization: `Bearer ${localStorage.getItem('token')}`,
+//             },
+//         });
+//         setSubsections(subsections.filter((subsection) => subsection.id !== subsectionId));
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+// const handleDeleteArticle = async (articleId) => {
+//     try {
+//         await axios.delete(`http://192.168.10.109:8000/api/v1/articles/${articleId}/`, {
+//             headers: {
+//                 Authorization: `Bearer ${localStorage.getItem('token')}`,
+//             },
+//         });
+
+//         setArticles(articles.filter((article) => article.id !== articleId));
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+// const handleSectionUpdate = (updatedSection) => {
+//     setSections((prevSections) => {
+//         const updatedSections = prevSections.map((section) => {
+//             if (section.id === updatedSection.id) {
+//                 return updatedSection;
+//             }
+//             return section;
+//         });
+//         return updatedSections;
+//     });
+// };
+// const handleSubsectionUpdate = (updatedSubsection) => {
+//     setSubsections((prevSubsections) => {
+//         const updatedSubsections = prevSubsections.map((subsection) => {
+//             if (subsection.id === updatedSubsection.id) {
+//                 return updatedSubsection;
+//             }
+//             return subsection;
+//         });
+//         return updatedSubsections;
+//     });
+// }
