@@ -311,10 +311,13 @@ const Main = () => {
 
                         <div className="article_container">
                             <div className="article_button_container">
-                         
+                     
                                     <div key={selectedArticle.id}>
                                         <div className="article_content">
+                                            <div>
+                                                <div className="article_content_name"dangerouslySetInnerHTML={{ __html: selectedArticle.name }} ></div>
                                             <div className="article_content_text" dangerouslySetInnerHTML={{ __html: selectedArticle.text }}></div>
+                                            </div>
                                             
                                             {files.map((file) => (
                                                 <div key={file.id}>

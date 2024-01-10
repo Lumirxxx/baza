@@ -181,7 +181,7 @@ img {
 }
 
 .button_body:hover {
-  box-shadow: inset 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 2px -1px 8px 10px rgba(0, 0, 0, 0.25);
   transition: 0.5s;
 
 }
@@ -563,6 +563,18 @@ figure {
   display: flex;
   flex-direction: column;
 
+}
+
+.article_name-input {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.button_article-editor {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 .container_position_col-sub {

@@ -11,7 +11,8 @@ const Editor2 = ({ sectionId }) => {
     const [sections, setSections] = useState([]);
     const [selectedSubsection, setSelectedSubsection] = useState('');
     const [content, setContent] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
+    const [isEditorOpen, setIsEditorOpen] = useState(false);//Строка отвечает за открытие редактора
     const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
     const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;
 
@@ -21,11 +22,11 @@ const Editor2 = ({ sectionId }) => {
         setSelectedSubsection(sectionId); // Добавьте эту строку
     }, [sectionId]);
     const handleButtonClick = () => {
-        setShowModal(true);
-        console.log(sections)
-        console.log(sectionId)
-       
-       
+        setIsEditorOpen(true);
+    };
+
+    const handleEditorClose = () => {
+        setIsEditorOpen(false);
     };
 
     const fetchSubsections = async () => {
@@ -37,21 +38,21 @@ const Editor2 = ({ sectionId }) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setSections(response.data);
+            setSections(response.data);
         } catch (error) {
             console.log('Error fetching sections:', error);
         }
     };
 
-    const handleImageUpload = async (blobInfo, success, failure , ) => {
+    const handleImageUpload = async (blobInfo, success, failure,) => {
         const token = localStorage.getItem('token');
-    
+
         const imageUrl = blobInfo.blobUri();
         const imageFile = await fetch(imageUrl).then((response) => response.blob());
-    
+
         const formData = new FormData();
         formData.append('img', imageFile, blobInfo.filename());
-    
+
         try {
             const response = await axios.post('http://192.168.10.109:8000/api/v1/images/', formData, {
                 headers: {
@@ -59,10 +60,10 @@ const Editor2 = ({ sectionId }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-    
+
             const editor = editorRef.current;
             // editor.insertContent(`<img src="${response.data.img}" alt=""/>`);
-    
+
             success(response.data.img);
             console.log(response.data.img);
         } catch (error) {
@@ -75,11 +76,11 @@ const Editor2 = ({ sectionId }) => {
         // Получить содержимое редактора
         const editor = editorRef.current;
         const content = editor.getContent();
-    
+
         // Обновить значения imgUrl и article
         setImgUrl(content);
         setArticle(content);
-    
+
         // Остальной код для отправки формы
         const formData = new FormData();
         const token = localStorage.getItem('token');
@@ -88,16 +89,16 @@ const Editor2 = ({ sectionId }) => {
         formData.append('name', name);
         formData.append('token', token);
         formData.append('section_id', selectedSubsection);
-        formData.append('menu_id', ''); 
+        formData.append('menu_id', '');
         // formData.append('section_id', '');
-    
+
         try {
             const response = await axios.post('http://192.168.10.109:8000/api/v1/articles/', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-    
+
             console.log('Результат отправки статьи:', response.data);
         } catch (error) {
             console.log(error.data);
@@ -108,40 +109,52 @@ const Editor2 = ({ sectionId }) => {
         setSelectedSubsection(event.target.value);
         console.log(selectedSubsection)
     };
-    
+
     const handleNameChange = (event) => {
         setName(event.target.value);
-      };
+    };
     return (
+
         <div>
-       <div className="section_button section_button_add" onClick={handleButtonClick}>
-              <div className="section_name">Добавить статью</div>
+
+            <div className="section_button section_button_add" onClick={handleButtonClick}>
+                <div className="section_name">Добавить статью</div>
             </div>
-            <div>
-              <select value={selectedSubsection} onChange={handleSelectSubsection}>
-                <option value="">Выбрать раздел</option>
-                {sections.map((subsection) => (
-                  <option key={subsection.id} value={subsection.id}>{subsection.name}</option>
-                ))}
-              </select>
-              <input type="text" value={name} onChange={handleNameChange} />
-              <Editor
-                tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
-                onInit={(evt, editor) => (editorRef.current = editor)}
-                apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
-                init={{
-                  plugins: 'image , paste',
-                  toolbar: 'image',
-                  images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
-                  images_upload_handler: handleImageUpload,
-                  paste_data_images: true
-                }}
-              />
-              <button onClick={handleSubmit}>Отправить</button>
-            </div>
-    
+            {isEditorOpen && (
+
+
+                <div>
+                    <div className="modal">
+                        <div className="modal-editor form_modal">
+                            <select className='form_menu_input' disabled value={selectedSubsection} onChange={handleSelectSubsection}>
+                                <option value="">Выбрать раздел</option>
+                                {sections.map((subsection) => (
+                                    <option disabled key={subsection.id} value={subsection.id}>{subsection.name}</option>
+                                ))}
+                            </select>
+                            <input required className='article_name-input form_menu_input' placeholder='Название статьи' type="text" value={name} onChange={handleNameChange} />
+                            <Editor
+                                tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
+                                onInit={(evt, editor) => (editorRef.current = editor)}
+                                apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
+                                init={{
+                                    plugins: 'image , paste',
+                                    toolbar: 'image',
+                                    images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
+                                    images_upload_handler: handleImageUpload,
+                                    paste_data_images: true
+                                }}
+                            />
+                            <div className='button_article-editor'>
+                                <button className="form_button" onClick={handleSubmit}>Отправить</button>
+                                <button className="form_button" onClick={handleEditorClose}>Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
-      );
+    );
 };
 
 export default Editor2;
