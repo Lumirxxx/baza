@@ -34,9 +34,9 @@ const AddFilesButton = ({ articleId }) => {
 
     return (
         <div>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            <input required type="text" value={name} onChange={(e) => setName(e.target.value)} />
             <input type="file" onChange={handleFileChange} />
-            <button onClick={handleButtonClick}>Добавить файлы</button>
+            <button onClick={handleButtonClick}>Загрузить файлы</button>
         </div>
     );
 };

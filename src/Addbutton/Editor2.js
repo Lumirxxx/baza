@@ -7,11 +7,9 @@ const Editor2 = ({ sectionId }) => {
     const [name, setName] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [article, setArticle] = useState('');
-    // const [subsections, setSubsections] = useState([]);
     const [sections, setSections] = useState([]);
     const [selectedSubsection, setSelectedSubsection] = useState('');
     const [content, setContent] = useState('');
-    // const [showModal, setShowModal] = useState(false);
     const [isEditorOpen, setIsEditorOpen] = useState(false);//Строка отвечает за открытие редактора
     const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
     const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;

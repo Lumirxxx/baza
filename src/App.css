@@ -522,12 +522,12 @@ figure {
   padding-right: 10px;
 }
 
-.delete_button {
+/* .delete_button {
   position: absolute !important;
   top: 0px;
   right: -10px;
   z-index: 100 !important;
-}
+} */
 
 .delete_button-menu {
   position: absolute !important;
@@ -563,6 +563,12 @@ figure {
   display: flex;
   flex-direction: column;
 
+}
+
+.edit_editor-article-container {
+  width: 30px;
+  height: 24px;
+ 
 }
 
 .article_name-input {

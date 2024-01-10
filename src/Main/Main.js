@@ -67,8 +67,8 @@ const Main = () => {
                 setSections([]);
                 setIsSectionsOpen(false);
                 setArticles([]);
-                
-       
+
+
             } else {
                 const response = await axios.get(
                     `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
@@ -90,13 +90,13 @@ const Main = () => {
                 setSections(response.data);
                 setIsSectionsOpen(true);
                 //setArticles([]);
-             
+
                 setSelectedSectionItemId(null);
                 setSelectedMenuItemId(menu_id);
                 console.log(menu_id)
                 setShowSubsections(true);
                 console.log(sectionId)
-               
+
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
@@ -107,7 +107,7 @@ const Main = () => {
             }
         }
     };
-    
+
 
 
     const handleArticleButtonClick = async (sectionId) => {
@@ -119,23 +119,23 @@ const Main = () => {
             });
             setSelectedSectionItemId(sectionId);
             setSectionId(sectionId)
-         
+
             // console.log(sectionId)
             // console.log(articles)
-           
-           
+
+
             setArticles(response.data);
-            
-        
+
+
         } catch (error) {
             console.log(error);
         }
     }
 
 
-   const handleSelectArticle = (articleObj) => {
-    setSelectedArticle(articleObj)
-   }
+    const handleSelectArticle = (articleObj) => {
+        setSelectedArticle(articleObj)
+    }
 
     const handleDeleteMenu = async (menuId) => {
         try {
@@ -162,7 +162,7 @@ const Main = () => {
             console.log(error);
         }
     };
- 
+
 
     const handleDeleteArticle = async (articleId) => {
         try {
@@ -188,7 +188,7 @@ const Main = () => {
             return updatedSections;
         });
     };
-   
+
 
 
     return (
@@ -197,7 +197,7 @@ const Main = () => {
                 <div className="main_page_logo">
                     <img src="/Headerlogomain.svg" alt="Logo" />
                 </div>
-             
+
             </div>
             <div className="menu_container">
 
@@ -267,39 +267,39 @@ const Main = () => {
 
                     <div className="container_position_col container_position_col-sub" >
                         {
-                         
-                                <div className="articles_container">
-                                    {articles.map((article) => (
-                                        <div className="section_button" key={article.id} 
-                                        >
-                                            <div className="subsection_button_content" onClick={() => handleSelectArticle(article)}>
-                                                <div className="section_img_container">
-                                                    {article.img && <img className="section_img" src={article.img} alt="Subsection Image" />}
-                                                </div>
-                                                <div className="subsection_name">{article.name}</div>
+
+                            <div className="articles_container">
+                                {articles.map((article) => (
+                                    <div className="section_button" key={article.id}
+                                    >
+                                        <div className="subsection_button_content" onClick={() => handleSelectArticle(article)}>
+                                            <div className="section_img_container">
+                                                {article.img && <img className="section_img" src={article.img} alt="Subsection Image" />}
                                             </div>
-                                            <div className="button_update-container">
-                                                <div className="section_button-container">
-                                                    <div className="section_button_edit">
-                                                        {/* <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div> */}
-
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                            {/* <EditButtonSubsection subsection={subsection} articles={articles} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} /> */}
+                                            <div className="subsection_name">{article.name}</div>
                                         </div>
-                                    ))}
+                                        <div className="button_update-container">
+                                            <div className="section_button-container">
+                                                <div className="section_button_edit">
+                                                    {/* <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div> */}
 
-                                </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        {/* <EditButtonSubsection subsection={subsection} articles={articles} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} /> */}
+                                    </div>
+                                ))}
+
+                            </div>
 
 
-                           }
+                        }
                         <div>
                             {
                                 selectedSectionItemId !== null && showSubsections && sections.length > 0 && (
-                                    <Editor2 subsectionId={subsectionId} sectionId={sectionId} /> 
+                                    <Editor2 subsectionId={subsectionId} sectionId={sectionId} />
                                     // <AddButtonSubsections sectionId={sectionId} subsections={subsections} />
                                 )
                             }
@@ -311,34 +311,37 @@ const Main = () => {
 
                         <div className="article_container">
                             <div className="article_button_container">
-                     
-                                    <div key={selectedArticle.id}>
-                                        <div className="article_content">
-                                            <div>
-                                                <div className="article_content_name"dangerouslySetInnerHTML={{ __html: selectedArticle.name }} ></div>
-                                            <div className="article_content_text" dangerouslySetInnerHTML={{ __html: selectedArticle.text }}></div>
-                                            </div>
-                                            
-                                            {files.map((file) => (
-                                                <div key={file.id}>
-                                                    <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
-                                                </div>
-                                            ))}
+
+                                <div key={selectedArticle.id}>
+                                    <div className="article_content">
+                                        <div className="article_service-buttons">
                                             <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(selectedArticle.id)}></div>
                                             <AddFilesButton articleId={selectedArticle.id} />
                                             <Files articleId={selectedArticle.id} />
                                             <EditArticleButton article={selectedArticle} />
-                                            {/* {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />} */}
-
                                         </div>
+                                        <div>
+                                            <h1 className="article_content_name" dangerouslySetInnerHTML={{ __html: selectedArticle.name }} ></h1>
+                                            <div className="article_content_text" dangerouslySetInnerHTML={{ __html: selectedArticle.text }}></div>
+                                        </div>
+
+                                        {files.map((file) => (
+                                            <div key={file.id}>
+                                                <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
+                                            </div>
+                                        ))}
+
+                                        {/* {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />} */}
+
                                     </div>
-                              
-   
+                                </div>
+
+
                             </div>
-                        
+
                         </div>
                     )}
-                      
+
                 </div>
             </div>
             <div className="admin_button">

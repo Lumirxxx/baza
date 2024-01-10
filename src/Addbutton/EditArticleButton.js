@@ -1,20 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-// import 'tinymce/tinymce';
-// import 'tinymce/themes/silver';
-// import 'tinymce/plugins/paste';
-// import 'tinymce/plugins/link';
-// import 'tinymce/plugins/image';
-// import 'tinymce/plugins/code';
-
 import axios from 'axios';
 
 const EditArticleButton = ({ article }) => {
     const editorRef = useRef(null);
-    const [editing, setEditing] = useState(false);
+    const [editing, setEditing] = useState(false);//Строка отвечает за открытие редактора
     const [editedContent, setEditedContent] = useState(article.text);
-    const [articleName, setArticleName] = useState(article.name);
-    const [isEditorOpen, setIsEditorOpen] = useState(false);//Строка отвечает за открытие редактора
+    const [articleTitle, setArticleTitle] = useState(article.name);
     const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
     const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;
 
@@ -24,15 +16,14 @@ const EditArticleButton = ({ article }) => {
 
     const articleData = {
         text: editedContent,
-        name: articleName,
-        // subsection_id: selectedSubsection,
+        name: articleTitle,
+
     };
     const handleImageUpload = async (blobInfo, success, failure,) => {
         const token = localStorage.getItem('token');
 
         const imageUrl = blobInfo.blobUri();
         const imageFile = await fetch(imageUrl).then((response) => response.blob());
-
         const formData = new FormData();
         formData.append('img', imageFile, blobInfo.filename());
 
@@ -45,8 +36,6 @@ const EditArticleButton = ({ article }) => {
             });
 
             const editor = editorRef.current;
-            // editor.insertContent(`<img src="${response.data.img}" alt=""/>`);
-
             success(response.data.img);
             console.log(response.data.img);
         } catch (error) {
@@ -60,10 +49,7 @@ const EditArticleButton = ({ article }) => {
         const token = localStorage.getItem('token');
         const formData = new FormData();
         formData.append('text', editedContent);
-        formData.append('name', articleName);
         formData.append('token', token);
-        // formData.append('img', selectedFile);
-
         try {
             const response = await axios.patch(`http://192.168.10.109:8000/api/v1/articles/${article.id}/`, articleData, {
                 headers: {
@@ -92,19 +78,27 @@ const EditArticleButton = ({ article }) => {
 
     const handleChange = (content) => {
         setEditedContent(content);
-        // setArticleName(content);
+    };
+    const handleTitleChange = (event) => {
+        setArticleTitle(event.target.value);
     };
 
     return (
-        <div>
+        <div className='edit_editor-article-container'>
             {!editing ? (
-                <button onClick={handleEditClick}>Редактировать статью</button>
+                <div className='edit_menu_button edit_menu_button-black' onClick={handleEditClick}></div>
             ) : (
                 <div>
-                    <div className='modal'>
+                    <div className="modal">
                         <div className="modal-editor form_modal">
+                            <input
+                                className='article_name-input form_menu_input'
+                                type="text"
+                                value={articleTitle}
+                                onChange={handleTitleChange}
+                            />
                             <Editor
-                                value={editedContent + articleName}
+                                value={editedContent}
                                 tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
                                 apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
                                 init={{
@@ -112,23 +106,23 @@ const EditArticleButton = ({ article }) => {
                                     menubar: false,
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,
-                                    plugins: [
-                                        'paste, link, image ,code',
-                                    ],
+                                    plugins: ['paste, link, image ,code'],
                                     toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | image',
-
                                 }}
                                 onEditorChange={handleChange}
                             />
-                            <div className='button_article-editor' >
-                                <button className="form_button" onClick={handleSaveClick}>Сохранить</button>
-                                <button className="form_button" onClick={handleCancelClick}>Отмена</button>
+                            <div className="button_article-editor">
+                                <button className="form_button" onClick={handleSaveClick}>
+                                    Сохранить
+                                </button>
+                                <button className="form_button" onClick={handleCancelClick}>
+                                    Отмена
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
