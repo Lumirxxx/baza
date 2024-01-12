@@ -63,10 +63,12 @@ img {
   background-color: #002456;
   background-image: url("/public/bgLoginPage.png");
   background-position: center;
-  background-size: 100%;
+  background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
   align-items: center;

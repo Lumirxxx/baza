@@ -399,7 +399,7 @@ const Main = () => {
                 </div>
             </div>
             <div className="admin_button">
-                <Link to="/admin">Admin Page</Link> {/* Добавить Link для перехода на AdminPage */}
+                {/* <Link to="/admin">Admin Page</Link> Добавить Link для перехода на AdminPage */}
             </div>
 
         </div>
