@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -6,9 +6,33 @@ const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [selectedOption, setSelectedOption] = useState("");
     const navigate = useNavigate();
+    // const [isStaff, setIsStaff] = useState(false);//Стейт для отслеживания состояния админа
+    // // Функция для обновления состояния isStaff
+    // useEffect(() => {
+    //     const token = localStorage.getItem("token");
+    //     axios.get("http://192.168.10.109:8000/api/v1/profile/", {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     })
+    //         .then((response) => {
+    //             const userData = response.data;
+    //             setIsStaff(userData.is_staff);
 
+    //             // Сохранение данных о пользователе в localStorage
+    //             localStorage.setItem("username", userData.username);
+    //             localStorage.setItem("admin", userData.is_staff);
+    //             localStorage.setItem("moderator", userData.is_moderate);
+    //             console.log(userData.is_staff);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }, []);
+
+    // console.log("isStaff:", isStaff);
+    // console.log("admin:", localStorage.getItem("admin"));
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -31,10 +55,12 @@ const LoginPage = () => {
                 setErrorMessage("Неправильный логин или пароль");
             });
     };
-
-    const handleSelectOption = (event) => {
-        setSelectedOption(event.target.value);
-    };
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/main");
+        }
+    }, []);
 
     return (
         <div className="login_page">
@@ -66,23 +92,7 @@ const LoginPage = () => {
                             onChange={(event) => setPassword(event.target.value)}
                         />
                     </div>
-                    <div>
-                        <select
-                            className="select_button select_button_custom"
-                            value={selectedOption}
-                            onChange={handleSelectOption}
-                        >
-                            <option value="">
-                                <div className="select_button_option">Отдел сотрудника</div>
-                            </option>
-                            <option value="option1">
-                                <div className="select_button_option">IT - Отдел</div>
-                            </option>
-                            <option value="option2">
-                                <div className="select_button_option">Отдел АСУ ТП</div>
-                            </option>
-                        </select>
-                    </div>
+
                     <button className="form_button_submit" type="submit">
                         Войти
                     </button>

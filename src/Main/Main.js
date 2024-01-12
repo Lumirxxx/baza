@@ -14,13 +14,13 @@ import AddFilesButton from "../Addbutton/AddFilesButton";
 import EditArticleButton from "../Addbutton/EditArticleButton";
 import Files from "../Files/Files";
 import Editor2 from "../Addbutton/Editor2";
+import LogoutButton from "../logout/LogoutButton";
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
-    const [sectionId, setSectionId] = useState(null);
     const [menu, setMenu] = useState([]);
+    const [sectionId, setSectionId] = useState(null);
     const [sections, setSections] = useState([]);
     const [articles, setArticles] = useState([]);//текущие статьи
-    const [files, setFiles] = useState([]);
     const [isSectionsOpen, setIsSectionsOpen] = useState(false); // Добавлено состояние для отслеживания открытых секций
     const navigate = useNavigate();
     const [selectedMenuItemId, setSelectedMenuItemId] = useState(null);
@@ -29,6 +29,43 @@ const Main = () => {
     const [selectedSectionItemId, setSelectedSectionItemId] = useState(null);
     const [subsectionId, setSubsectionId] = useState(null);
     const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
+    const [profile, setProfile] = useState(false);//Стейт для отслеживания состояния админа
+    // Функция для обновления состояния isStaff
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        axios.get("http://192.168.10.109:8000/api/v1/profile/", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then((response) => {
+
+                setProfile(response.data[0]);
+                console.log(response.data[0])
+
+            })
+            .catch((error) => {
+                console.log(error);
+
+            });
+    }, []);
+    // useEffect(() => {
+    //     axios.get("http://192.168.10.109:8000/api/v1/profile/")
+    //         .then((response) => {
+    //             const userData = response.data;
+    //             setIsStaff(userData.is_staff);
+
+    //             // Сохранение данных о пользователе в localStorage
+    //             localStorage.setItem("username", userData.username);
+    //             localStorage.setItem("admin", userData.is_staff);
+    //             localStorage.setItem("moderator" , userData.is_moderate);
+
+
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }, []);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -197,7 +234,7 @@ const Main = () => {
                 <div className="main_page_logo">
                     <img src="/Headerlogomain.svg" alt="Logo" />
                 </div>
-
+                <LogoutButton />
             </div>
             <div className="menu_container">
 
@@ -213,12 +250,26 @@ const Main = () => {
                                 <img className="menu_img" src={menuItem.img} alt="" />
                                 <div className="button_text">{menuItem.name}</div>
                             </button>
-                            <div className="cl-btn-4 delete_button-menu" onClick={() => handleDeleteMenu(menuItem.id)} title="Удалить"></div>
-                            <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} />
+                            {(profile.is_staff || profile.is_moderate) && (
+                                <div className="button_delete-container">
+                                    <div
+                                        className="cl-btn-4 delete_button"
+                                        onClick={() => handleDeleteArticle(selectedArticle.id)}
+                                        title="Удалить"
+                                    ></div>
+                                </div>
+                            )}
+                            {(profile.is_staff || profile.is_moderate) && (
+                                <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} />
+                            )}
+
                         </div>
 
                     ))}
-                    <AddButtonMenu />
+                    {(profile.is_staff || profile.is_moderate) && (
+                        <AddButtonMenu />
+                    )}
+
                 </div>
                 <div className="menu_container_right">
                     <div className="container_position_col">
@@ -242,14 +293,19 @@ const Main = () => {
                                             <div className="section_name">{section.name}</div>
                                         </div>
                                         <div className="button_update-container">
+                                            {(profile.is_staff || profile.is_moderate) && (
+                                                <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)} title="Удалить"></div>
+                                            )}
 
-                                            <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)} title="Удалить"></div>
                                         </div>
-                                        <EditButtonSection
-                                            key={section.id}
-                                            section={section}
-                                            onUpdate={handleSectionUpdate}
-                                        />
+                                        {(profile.is_staff || profile.is_moderate) && (
+                                            <EditButtonSection
+                                                key={section.id}
+                                                section={section}
+                                                onUpdate={handleSectionUpdate}
+                                            />
+                                        )}
+
                                     </div>
                                 ))}
 
@@ -259,9 +315,10 @@ const Main = () => {
 
 
                         )}
-                        {selectedMenuItemId !== null ? (
+
+                        {selectedMenuItemId !== null && (profile.is_staff || profile.is_moderate) && (
                             <AddButtonSections menu={menu} menuName={menuName} menuId={selectedMenuItemId} menu_id={menu_id} />
-                        ) : null}
+                        )}
                     </div>
 
 
@@ -296,7 +353,7 @@ const Main = () => {
                         }
                         <div>
                             {
-                                selectedSectionItemId !== null && showSubsections && sections.length > 0 && (
+                                selectedSectionItemId !== null && showSubsections && sections.length > 0 && (profile.is_staff || profile.is_moderate) && (
                                     <Editor2 subsectionId={subsectionId} sectionId={sectionId} />
                                     // <AddButtonSubsections sectionId={sectionId} subsections={subsections} />
                                 )
@@ -313,10 +370,19 @@ const Main = () => {
                                 <div key={selectedArticle.id}>
                                     <div className="article_content">
                                         <div className="article_service-buttons">
-                                            <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(selectedArticle.id)} title="Удалить"></div>
-                                            <AddFilesButton articleId={selectedArticle.id} />
+                                            {(profile.is_staff || profile.is_moderate) && (
+                                                <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(selectedArticle.id)} title="Удалить"></div>
+                                            )}
+                                            {(profile.is_staff || profile.is_moderate) && (
+                                                <AddFilesButton articleId={selectedArticle.id} />
+                                            )}
+                                            {(profile.is_staff || profile.is_moderate) && (
+                                                <EditArticleButton article={selectedArticle} />
+                                            )}
 
-                                            <EditArticleButton article={selectedArticle} />
+
+
+
                                         </div>
                                         <div>
                                             <h1 className="article_content_name" dangerouslySetInnerHTML={{ __html: selectedArticle.name }} ></h1>

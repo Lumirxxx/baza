@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
-
 const Files = ({ articleId }) => {
     const [files, setFiles] = useState([]);
 

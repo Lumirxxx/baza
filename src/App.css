@@ -301,8 +301,8 @@ img {
   display: flex;
   flex-direction: column;
 
-  max-width: 300px;
-  width: 100%;
+  width: 17.75rem;
+
   /* margin-top: 10.81rem; */
   margin-bottom: 30px;
 }
@@ -355,12 +355,25 @@ img {
 
 .header_container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.logout_button {
+  width: 100px;
+  height: 20px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.logout_button_text {
+  margin: auto;
+  color: #FFF;
 }
 
 .section_button {
   position: relative;
-
+  width: 17.75rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -368,6 +381,12 @@ img {
   padding-bottom: 15px;
   background-color: #79A0CC;
   cursor: pointer;
+}
+
+.button_delete-container {
+  position: absolute;
+  top: 5px;
+  left: 5px;
 }
 
 .form_menu_label_name {
