@@ -51,7 +51,7 @@ const EditButtonMenu = ({ menuItem, menuId }) => {
     return (
         <div className="edit_menu_button_container">
             {!showForm ? (
-                <div className="edit_menu_button" onClick={handleButtonClick}></div>
+                <div className="edit_menu_button" onClick={handleButtonClick} title="Редактировать"></div>
 
             ) : (
                 <div className="modal-background">

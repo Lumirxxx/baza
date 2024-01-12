@@ -213,7 +213,7 @@ const Main = () => {
                                 <img className="menu_img" src={menuItem.img} alt="" />
                                 <div className="button_text">{menuItem.name}</div>
                             </button>
-                            <div className="cl-btn-4 delete_button-menu" onClick={() => handleDeleteMenu(menuItem.id)}></div>
+                            <div className="cl-btn-4 delete_button-menu" onClick={() => handleDeleteMenu(menuItem.id)} title="Удалить"></div>
                             <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} />
                         </div>
 
@@ -243,7 +243,7 @@ const Main = () => {
                                         </div>
                                         <div className="button_update-container">
 
-                                            <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)}></div>
+                                            <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)} title="Удалить"></div>
                                         </div>
                                         <EditButtonSection
                                             key={section.id}
@@ -281,8 +281,6 @@ const Main = () => {
                                         <div className="button_update-container">
                                             <div className="section_button-container">
                                                 <div className="section_button_edit">
-                                                    {/* <div className="cl-btn-4" onClick={() => handleDeleteSubsection(subsection.id)}></div> */}
-
                                                 </div>
 
                                             </div>
@@ -315,28 +313,18 @@ const Main = () => {
                                 <div key={selectedArticle.id}>
                                     <div className="article_content">
                                         <div className="article_service-buttons">
-                                            <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(selectedArticle.id)}></div>
+                                            <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(selectedArticle.id)} title="Удалить"></div>
                                             <AddFilesButton articleId={selectedArticle.id} />
-                                            <Files articleId={selectedArticle.id} />
+
                                             <EditArticleButton article={selectedArticle} />
                                         </div>
                                         <div>
                                             <h1 className="article_content_name" dangerouslySetInnerHTML={{ __html: selectedArticle.name }} ></h1>
                                             <div className="article_content_text" dangerouslySetInnerHTML={{ __html: selectedArticle.text }}></div>
                                         </div>
-
-                                        {files.map((file) => (
-                                            <div key={file.id}>
-                                                <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
-                                            </div>
-                                        ))}
-
-                                        {/* {selectedArticle && <ArticleEditForm article={selectedArticle} selectedArticle={selectedArticle} />} */}
-
                                     </div>
                                 </div>
-
-
+                                <Files articleId={selectedArticle.id} />
                             </div>
 
                         </div>

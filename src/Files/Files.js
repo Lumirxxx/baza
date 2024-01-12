@@ -41,14 +41,17 @@ const Files = ({ articleId }) => {
     };
 
     return (
-        <>
-            {files.map((file) => (
-                <div key={file.id}>
-                    <a href={file.file} target="_blank" rel="noopener noreferrer" download>{file.name}</a>
-                    <button onClick={() => handleDownload(file.file, file.name)}>Скачать</button>
-                </div>
-            ))}
-        </>
+        <div className="files_container">
+            <div className="files_container-content">
+                <h4>Прикрепленные файлы доступны для скачивания</h4>
+                {files.map((file) => (
+                    <div key={file.id}>
+                        <div className="file_name-download" onClick={() => handleDownload(file.file, file.name)} target="_blank" rel="noopener noreferrer" >{file.name}</div>
+                        {/* <button onClick={() => handleDownload(file.file, file.name)}>Скачать</button> */}
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 };
 

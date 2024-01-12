@@ -84,7 +84,7 @@ const EditArticleButton = ({ article }) => {
     };
 
     return (
-        <div className='edit_editor-article-container'>
+        <div title='Редактировать' className='edit_editor-article-container'>
             {!editing ? (
                 <div className='edit_menu_button edit_menu_button-black' onClick={handleEditClick}></div>
             ) : (

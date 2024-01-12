@@ -394,8 +394,8 @@ img {
 .form_menu_label_img {
   max-width: 28px;
   width: 100%;
-  max-height: 28px;
-  height: 100%;
+
+  height: 28px;
 }
 
 .form_menu_label_img-container {
@@ -457,12 +457,13 @@ figure {
 }
 
 .edit_menu_button {
-  max-width: 24px;
+  max-width: 28px;
   width: 100%;
-  max-height: 24px;
+  max-height: 28px;
   height: 100%;
   cursor: cell;
   background-image: url("../public/editico.svg");
+  background-repeat: no-repeat;
 }
 
 .rdw-image-center {
@@ -514,12 +515,63 @@ figure {
 
 .edit_menu_button-black {
   background-image: url("../public/editblack.svg");
+  background-size: contain;
+  background-position: center;
+  width: 28px;
+  height: 28px;
 }
 
 .article_content {
   position: relative;
   padding-left: 1.06rem;
   padding-right: 10px;
+}
+
+.add_files {
+  max-width: 28px !important;
+  max-height: 28px !important;
+
+}
+
+.form_modal-buttons_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form_menu_input-download_file {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.file_name-download {
+  cursor: pointer;
+  font-style: italic;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.files_container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.add_files-button {
+  width: 28px;
+  height: 28px;
+  background-image: url("../public/imageadd.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.article_service-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 
 /* .delete_button {
@@ -541,7 +593,7 @@ figure {
   box-shadow: 0px 10 10px 10px rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   background: #131111;
-  margin-right: 20px;
+
   position: relative;
   display: block;
   z-index: 0;
@@ -568,7 +620,8 @@ figure {
 .edit_editor-article-container {
   width: 30px;
   height: 24px;
- 
+
+
 }
 
 .article_name-input {
@@ -610,6 +663,7 @@ figure {
 .cl-btn-4:hover:after {
   transform: rotate(180deg);
   background: #FFF;
+
 }
 
 @keyframes App-logo-spin {
