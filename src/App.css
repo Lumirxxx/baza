@@ -366,6 +366,12 @@ img {
   height: 20px;
   align-items: center;
   margin-top: 20px;
+  background-color: #355E8B !important;
+}
+
+.logout_button:hover {
+  box-shadow: inset 2px -1px 8px 10px rgba(0, 0, 0, 0.25) !important;
+  transition: box-shadow 0.5s;
 }
 
 .logout_button_text {
@@ -389,6 +395,16 @@ img {
   position: absolute;
   top: 5px;
   left: 5px;
+}
+
+.depart_list-block {
+  margin-bottom: 25px;
+}
+
+.header_service-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .form_menu_label_name {
@@ -589,6 +605,7 @@ figure {
 }
 
 .article_service-buttons {
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;

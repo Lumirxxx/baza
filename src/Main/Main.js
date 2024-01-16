@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -8,13 +8,12 @@ import AddButtonSections from "../Addbutton/AddButtonSections";
 import EditButtonSection from "../Addbutton/EditButtonSection";
 import AddButtonMenu from "../Addbutton/AddButtonMenu";
 import EditButtonMenu from "../Addbutton/EditButtonMenu";
-import AddButtonSubsections from "../Addbutton/AddButtonSubsections";
-import EditButtonSubsection from "../Addbutton/EditButtonSubsections";
 import AddFilesButton from "../Addbutton/AddFilesButton";
 import EditArticleButton from "../Addbutton/EditArticleButton";
 import Files from "../Files/Files";
 import Editor2 from "../Addbutton/Editor2";
 import LogoutButton from "../logout/LogoutButton";
+import DepartList from "../departList/departList";
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -30,46 +29,39 @@ const Main = () => {
     const [subsectionId, setSubsectionId] = useState(null);
     const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
     const [profile, setProfile] = useState(false);//Стейт для отслеживания состояния админа
+    let isRedirected = false;
+    const isRedirectedRef = useRef(false);
     // Функция для обновления состояния isStaff
     useEffect(() => {
         const token = localStorage.getItem("token");
+
         axios.get("http://192.168.10.109:8000/api/v1/profile/", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
             .then((response) => {
-
-                setProfile(response.data[0]);
-                console.log(response.data[0])
-
+                if (!isRedirectedRef.current) {
+                    setProfile(response.data[0]);
+                    console.log(response.data[0]);
+                }
             })
             .catch((error) => {
                 console.log(error);
+                if (error.response && error.response.status === 401 && !isRedirectedRef.current) {
+                    isRedirectedRef.current = true;
+                    localStorage.removeItem('token');
+                    navigate("/");
 
+                }
             });
-    }, []);
-    // useEffect(() => {
-    //     axios.get("http://192.168.10.109:8000/api/v1/profile/")
-    //         .then((response) => {
-    //             const userData = response.data;
-    //             setIsStaff(userData.is_staff);
-
-    //             // Сохранение данных о пользователе в localStorage
-    //             localStorage.setItem("username", userData.username);
-    //             localStorage.setItem("admin", userData.is_staff);
-    //             localStorage.setItem("moderator" , userData.is_moderate);
-
-
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // }, []);
+    }, [isRedirectedRef, navigate]);
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
+                let isRedirected = false;
+
                 const response = await axios.get("http://192.168.10.109:8000/api/v1/menu/", {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -84,8 +76,10 @@ const Main = () => {
                     console.log("isSectionsOpen:", isSectionsOpen);
                 }
             } catch (error) {
-                if (error.response && error.response.status === 401) {
+                if (error.response && error.response.status === 401 && !isRedirected) {
                     navigate("/");
+                    localStorage.removeItem('token');
+
                 } else {
                     console.log(error);
                 }
@@ -95,7 +89,7 @@ const Main = () => {
 
         fetchData();
 
-    }, []); // Пустой массив в качестве зависимости
+    }, [isRedirected]); // Пустой массив в качестве зависимости
     const handleSectionButtonClick = async (menu_id) => {
         try {
             if (isSectionsOpen) {
@@ -138,6 +132,7 @@ const Main = () => {
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
+                localStorage.removeItem('token');
             } else {
                 console.log(error);
 
@@ -165,7 +160,13 @@ const Main = () => {
 
 
         } catch (error) {
-            console.log(error);
+            if (error.response && error.response.status === 401) {
+                navigate("/");
+                localStorage.removeItem('token');
+            } else {
+                console.log(error);
+
+            }
         }
     }
 
@@ -234,7 +235,13 @@ const Main = () => {
                 <div className="main_page_logo">
                     <img src="/Headerlogomain.svg" alt="Logo" />
                 </div>
-                <LogoutButton />
+                <div className="header_service-buttons">
+                    <LogoutButton />
+                    {(profile.is_staff) && (
+                        <DepartList profile={profile} />
+                    )}
+                </div>
+
             </div>
             <div className="menu_container">
 
