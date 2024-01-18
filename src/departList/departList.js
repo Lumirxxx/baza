@@ -4,6 +4,12 @@ import axios from 'axios';
 const DepartList = ({ profile }) => {
     const [departments, setDepartments] = useState([]);
     const [profileData, setProfileData] = useState(profile);
+
+    const refresh = () => {
+
+        window.location.reload();
+        console.log("страница обновлена")
+    }
     useEffect(() => {
         setProfileData(profile);
     }, [profile]);
@@ -41,12 +47,14 @@ const DepartList = ({ profile }) => {
             }
         )
             .then((response) => {
+                // onChangeMenuItem(event);
                 console.log(profile.depart_id)
                 console.log(profileData.depart_id)
                 console.log("Подразделение обновлено:", response.data);
                 // Обновление значения depart_id у текущего пользователя в состоянии profileData
                 const updatedProfileData = { ...profileData, depart_id: departId };
                 setProfileData(updatedProfileData);
+                refresh();
 
             })
             .catch((error) => {
@@ -54,29 +62,29 @@ const DepartList = ({ profile }) => {
             });
     };
 
-    const onChangeMenuItem = async (event) => {
-        const token = localStorage.getItem("token");
-        const selectedMenuItem = event.target.value;
+    // const onChangeMenuItem = async (event) => {
+    //     const token = localStorage.getItem("token");
+    //     const selectedMenuItem = event.target.value;
 
-        try {
-            const response = await axios.get('http://192.168.10.109:8000/api/v1/menu/', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            console.log(response.data);
-        
-        } catch (error) {
-            console.error('Ошибка при получении списка меню:', error);
-        }
-    };
+    //     try {
+    //         const response = await axios.get('http://192.168.10.109:8000/api/v1/menu/', {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //         });
+    //         console.log(response.data);
+
+    //     } catch (error) {
+    //         console.error('Ошибка при получении списка меню:', error);
+    //     }
+    // };
 
 
 
     return (
         <div className='depart_list-block'>
             <select className='form_menu_input' value={profileData.depart_id} onChange={onChangeDepart}>
-                <option value="" disabled>Отдел</option>
+
                 {departments.map((depart) => (
                     <option key={depart.id} value={depart.id}>
                         {depart.name}

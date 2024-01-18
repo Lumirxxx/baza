@@ -19,6 +19,11 @@ const EditArticleButton = ({ article }) => {
         name: articleTitle,
 
     };
+    const refresh = () => {
+
+        window.location.reload();
+        console.log("страница обновлена")
+    }
     const handleImageUpload = async (blobInfo, success, failure,) => {
         const token = localStorage.getItem('token');
 
@@ -63,6 +68,7 @@ const EditArticleButton = ({ article }) => {
             const fileFormData = new FormData();
             fileFormData.append("article_id", articleId);
             console.log('Статья изменена:', response.data);
+            refresh();
         } catch (error) {
             console.log('Ошибка при загрузке статьи или изображения:', error);
             console.log(error.response.data);

@@ -37,9 +37,6 @@ const AddButton = () => {
         setContentHtml(cleanedContentHtml);
     };
 
-
-
-
     const fetchSections = () => {
         const token = localStorage.getItem("token");
         axios
@@ -84,7 +81,6 @@ const AddButton = () => {
                     fileFormData.append("name", fileName); // Обновлено: Добавить fileName в fileFormData
                     fileFormData.append("file", file); // Обновлено: Добавить file в fileFormData
                     fileFormData.append("article_id", articleId);
-
                     axios
                         .post("http://192.168.10.109:8000/api/v1/files/", fileFormData, {
                             headers: {
@@ -178,7 +174,6 @@ const AddButton = () => {
                             embedded: { options: ["image"] },
                             image: {
                                 uploadCallback: handleImageUpload,
-
                                 urlEnabled: true,
                                 uploadEnabled: true,
                                 previewImage: true,

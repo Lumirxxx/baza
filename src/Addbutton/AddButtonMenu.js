@@ -91,7 +91,7 @@ const AddButtonMenu = () => {
                             </div>
                             <div className="modal_form-button">
                                 <div className="form_button_container">
-                                    <button className="form_button" type="submit">Добавить</button>
+                                    <button className="form_button" type="submit"  >Добавить</button>
                                 </div>
 
                                 <div className="form_button_container">

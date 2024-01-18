@@ -14,7 +14,11 @@ const Editor2 = ({ sectionId }) => {
     const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
     const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;
 
+    const refresh = () => {
 
+        window.location.reload();
+        console.log("страница обновлена")
+    }
     useEffect(() => {
         fetchSubsections();
         setSelectedSubsection(sectionId); // Добавьте эту строку
@@ -96,8 +100,9 @@ const Editor2 = ({ sectionId }) => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-
+            handleEditorClose();
             console.log('Результат отправки статьи:', response.data);
+            refresh();
         } catch (error) {
             console.log(error.data);
             console.error('Ошибка отправки статьи:', error);

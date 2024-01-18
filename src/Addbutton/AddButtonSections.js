@@ -13,6 +13,11 @@ const AddButtonSections = (props) => {
         name: ""
     });
     const [selectedImage, setSelectedImage] = useState("");
+    const refresh = () => {
+
+        window.location.reload();
+        console.log("страница обновлена")
+    }
 
     const fetchMenus = () => {
         const token = localStorage.getItem("token");
@@ -30,9 +35,9 @@ const AddButtonSections = (props) => {
             });
     };
 
-    // useEffect(() => {
-    //     fetchMenus();
-    // }, []);
+    useEffect(() => {
+        fetchMenus();
+    }, []);
 
     const handleButtonClick = () => {
         setShowModal(true);
@@ -79,6 +84,9 @@ const AddButtonSections = (props) => {
             .then((response) => {
                 console.log("Новая секция добавлена:", response.data);
                 setSections((prevSections) => [...prevSections, response.data]);
+                setShowModal(false);
+                fetchMenus();
+                refresh();
             })
             .catch((error) => {
                 console.log("Ошибка при добавлении новой секции:", error);
@@ -139,7 +147,7 @@ const AddButtonSections = (props) => {
                             </div>
                             <div className="modal_form-button">
                                 <div className="form_button_container">
-                                    <button className="form_button" type="submit">Добавить</button>
+                                    <button className="form_button" type="submit" >Добавить</button>
                                 </div>
 
                                 <div className="form_button_container">

@@ -29,6 +29,10 @@ const Main = () => {
     const [subsectionId, setSubsectionId] = useState(null);
     const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
     const [profile, setProfile] = useState(false);//Стейт для отслеживания состояния админа
+    const [selectedMenuId, setSelectedMenuId] = useState(null);
+
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
     let isRedirected = false;
     const isRedirectedRef = useRef(false);
     // Функция для обновления состояния isStaff
@@ -176,17 +180,35 @@ const Main = () => {
     }
 
     const handleDeleteMenu = async (menuId) => {
+        setSelectedMenuId(menuId);
+        setShowDeleteConfirmation(true);
+    };
+
+    const confirmDeleteMenu = async () => {
         try {
-            await axios.delete(`http://192.168.10.109:8000/api/v1/menu/${menuId}/`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            setMenu(menu.filter((menu) => menu.id !== menuId));
+            await axios.delete(
+                `http://192.168.10.109:8000/api/v1/menu/${selectedMenuId}/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+            setMenu((prevMenu) =>
+                prevMenu.filter((menu) => menu.id !== selectedMenuId)
+            );
         } catch (error) {
             console.log(error);
         }
+        setSelectedMenuId(null);
+        setShowDeleteConfirmation(false);
     };
+
+    const cancelDeleteMenu = () => {
+        setSelectedMenuId(null);
+        setShowDeleteConfirmation(false);
+    };
+
     const handleDeleteSection = async (sectionId) => {
         try {
             await axios.delete(`http://192.168.10.109:8000/api/v1/sections/${sectionId}/`, {
@@ -227,8 +249,6 @@ const Main = () => {
         });
     };
 
-
-
     return (
         <div className="main_container">
             <div className="header_container">
@@ -258,12 +278,27 @@ const Main = () => {
                                 <div className="button_text">{menuItem.name}</div>
                             </button>
                             {(profile.is_staff || profile.is_moderate) && (
+
+
                                 <div className="button_delete-container">
                                     <div
                                         className="cl-btn-4 delete_button"
-                                        onClick={() => handleDeleteArticle(selectedArticle.id)}
+                                        onClick={() => handleDeleteMenu(menuItem.id)}
                                         title="Удалить"
                                     ></div>
+                                </div>
+
+                            )}
+                            {showDeleteConfirmation && (
+                                <div className="modal">
+                                    <div className="modal-content">
+                                        <h3>Удаление</h3>
+                                        <p>Вы действительно хотите удалить</p>
+                                        <div className="modal-actions">
+                                            <button onClick={confirmDeleteMenu}>Yes</button>
+                                            <button onClick={cancelDeleteMenu}>No</button>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                             {(profile.is_staff || profile.is_moderate) && (
