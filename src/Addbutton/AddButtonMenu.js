@@ -11,7 +11,13 @@ const AddButtonMenu = () => {
         setShowForm(true);
     };
 
- 
+    const refresh = () => {
+
+        window.location.reload();
+        console.log("страница обновлена")
+    }
+
+
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -36,6 +42,7 @@ const AddButtonMenu = () => {
             console.log(response.data);
 
             // Сброс значений формы
+            refresh();
             setName("");
             setImg(null);
             setShowForm(false);

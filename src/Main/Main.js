@@ -17,7 +17,7 @@ import DepartList from "../departList/departList";
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
-    const [sectionId, setSectionId] = useState(null);
+    const [sectionId, setSectionId] = useState(null);//текущая секция
     const [sections, setSections] = useState([]);
     const [articles, setArticles] = useState([]);//текущие статьи
     const [isSectionsOpen, setIsSectionsOpen] = useState(false); // Добавлено состояние для отслеживания открытых секций
@@ -30,11 +30,14 @@ const Main = () => {
     const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
     const [profile, setProfile] = useState(false);//Стейт для отслеживания состояния админа
     const [selectedMenuId, setSelectedMenuId] = useState(null);
-
+    const [selectedSectionId, setSelectedSectionId] = useState(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [showModalDeleteArticle, setShowModalDeleteArticle] = useState(false);
 
     let isRedirected = false;
     const isRedirectedRef = useRef(false);
+
     // Функция для обновления состояния isStaff
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -209,6 +212,7 @@ const Main = () => {
         setShowDeleteConfirmation(false);
     };
 
+
     const handleDeleteSection = async (sectionId) => {
         try {
             await axios.delete(`http://192.168.10.109:8000/api/v1/sections/${sectionId}/`, {
@@ -216,13 +220,31 @@ const Main = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-
+            console.group(sectionId)
             setSections(sections.filter((section) => section.id !== sectionId));
+            console.log(sections)
+            setSectionId(null);
+            cancelDeleteSection()
+
         } catch (error) {
             console.log(error);
         }
     };
+    const deleteSectionModal = (id) => {
+        setSectionId(id)
+        setShowModalDelete(true)
 
+    }
+    const cancelDeleteSection = () => {
+        setShowModalDelete(false)
+    }
+    const deleteArticleModal = () => {
+        setShowModalDeleteArticle(true)
+        console.log(articles)
+    }
+    const cancelArticleModal = () => {
+        setShowModalDeleteArticle(false)
+    }
 
     const handleDeleteArticle = async (articleId) => {
         try {
@@ -233,6 +255,8 @@ const Main = () => {
             });
 
             setArticles(articles.filter((article) => article.id !== articleId));
+            setSelectedArticle(null);
+            cancelArticleModal()
         } catch (error) {
             console.log(error);
         }
@@ -336,8 +360,12 @@ const Main = () => {
                                         </div>
                                         <div className="button_update-container">
                                             {(profile.is_staff || profile.is_moderate) && (
-                                                <div className="cl-btn-4" onClick={() => handleDeleteSection(section.id)} title="Удалить"></div>
+                                                <div>
+                                                    <div className="cl-btn-4" onClick={() => deleteSectionModal(section.id)} title="Удалить"></div>
+
+                                                </div>
                                             )}
+
 
                                         </div>
                                         {(profile.is_staff || profile.is_moderate) && (
@@ -350,6 +378,19 @@ const Main = () => {
 
                                     </div>
                                 ))}
+                                {showModalDelete && (
+                                    <div className="modal-container">
+                                        <div className="modal">
+                                            <h3>Удалить секцию</h3>
+                                            <p>Are you sure you want to delete this section?</p>
+                                            <div className="modal-actions">
+                                                <button onClick={() => handleDeleteSection(sectionId)}>Yes</button>
+                                                <button onClick={() => cancelDeleteSection()}>No</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
 
                                 {/* <AddButtonSectionsMain menuId={menu_id} /> */}
                             </div>
@@ -413,8 +454,22 @@ const Main = () => {
                                     <div className="article_content">
                                         <div className="article_service-buttons">
                                             {(profile.is_staff || profile.is_moderate) && (
-                                                <div className="cl-btn-4 delete_button" onClick={() => handleDeleteArticle(selectedArticle.id)} title="Удалить"></div>
+                                                <div className="cl-btn-4 delete_button" onClick={() => deleteArticleModal()} title="Удалить"></div>
                                             )}
+                                            {showModalDeleteArticle && (
+                                                <div className="modal-container">
+                                                    <div className="modal">
+                                                        <h3>Confirmation</h3>
+                                                        <p>Are you sure you want to delete this section?</p>
+                                                        <div className="modal-actions">
+                                                            <button onClick={() => handleDeleteArticle(selectedArticle.id)}>Yes</button>
+                                                            <button onClick={() => cancelArticleModal()}>No</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+
                                             {(profile.is_staff || profile.is_moderate) && (
                                                 <AddFilesButton articleId={selectedArticle.id} />
                                             )}

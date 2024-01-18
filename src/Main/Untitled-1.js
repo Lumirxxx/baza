@@ -1,72 +1,89 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 const Main = () => {
-  const [menu, setMenu] = useState([]);
-  const [selectedMenuId, setSelectedMenuId] = useState(null);
+  const [sections, setSections] = useState([]);
+  const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
+  const handleSectionButtonClick = async (menu_id) => {
+    try {
+      if (isSectionsOpen) {
+        setSelectedMenuItemId(null);
+        setSections([]);
+        setIsSectionsOpen(false);
+        setArticles([]);
+      } else {
         const response = await axios.get(
-          "http://192.168.10.109:8000/api/v1/menu/",
+          `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
-        setMenu(response.data);
-      } catch (error) {
+
+        const selectedMenuItem = menu.find((item) => item.id === menu_id);
+        const menuName = selectedMenuItem ? selectedMenuItem.name : "";
+        setMenuName(menuName);
+        setMenuId(menu_id);
+        setSections(response.data);
+        setIsSectionsOpen(true);
+        setSelectedSectionItemId(null);
+        setSelectedMenuItemId(menu_id);
+        setShowSubsections(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate("/");
+        localStorage.removeItem("token");
+      } else {
         console.log(error);
       }
-    };
+    }
+  };
 
-    fetchData();
-  }, []);
-
-  const handleDeleteMenu = async (menuId) => {
-    setSelectedMenuId(menuId);
+  const handleDeleteSection = async (sectionId) => {
+    setSelectedSectionId(sectionId);
     setShowDeleteConfirmation(true);
   };
 
-  const confirmDeleteMenu = async () => {
+  const confirmDeleteSection = async () => {
     try {
       await axios.delete(
-        `http://192.168.10.109:8000/api/v1/menu/${selectedMenuId}/`,
+        `http://192.168.10.109:8000/api/v1/sections/${selectedSectionId}/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      setMenu((prevMenu) =>
-        prevMenu.filter((menu) => menu.id !== selectedMenuId)
+      setSections((prevSections) =>
+        prevSections.filter((section) => section.id !== selectedSectionId)
       );
     } catch (error) {
       console.log(error);
     }
-    setSelectedMenuId(null);
+    setSelectedSectionId(null);
     setShowDeleteConfirmation(false);
   };
 
-  const cancelDeleteMenu = () => {
-    setSelectedMenuId(null);
+  const cancelDeleteSection = () => {
+    setSelectedSectionId(null);
     setShowDeleteConfirmation(false);
   };
 
   return (
     <div>
       {/* Your existing code... */}
-      {menu.map((menuItem) => (
-        <div key={menuItem.id}>
+      {sections.map((section) => (
+        <div key={section.id}>
+          {/* Render the section content */}
           {(profile.is_staff || profile.is_moderate) && (
             <div className="button_delete-container">
               <div
                 className="cl-btn-4 delete_button"
-                onClick={() => handleDeleteMenu(menuItem.id)}
+                onClick={() => handleDeleteSection(section.id)}
                 title="Удалить"
               ></div>
             </div>
@@ -78,10 +95,10 @@ const Main = () => {
         <div className="modal-container">
           <div className="modal-content">
             <h3>Confirmation</h3>
-            <p>Are you sure you want to delete this item?</p>
+            <p>Are you sure you want to delete this section?</p>
             <div className="modal-actions">
-              <button onClick={confirmDeleteMenu}>Yes</button>
-              <button onClick={cancelDeleteMenu}>No</button>
+              <button onClick={confirmDeleteSection}>Yes</button>
+              <button onClick={cancelDeleteSection}>No</button>
             </div>
           </div>
         </div>
@@ -91,3 +108,16 @@ const Main = () => {
 };
 
 export default Main;
+const handleDeleteSection = async (sectionId) => {
+    try {
+        await axios.delete(`http://192.168.10.109:8000/api/v1/sections/${sectionId}/`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+        setSections(sections.filter((section) => section.id !== sectionId));
+    } catch (error) {
+        console.log(error);
+    }
+};
