@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddButtonSections = (props) => {
+const AddButtonSections = ( props ) => {
 
     const { menu_id } = props
     const [sections, setSections] = useState([]);
@@ -87,6 +87,7 @@ const AddButtonSections = (props) => {
                 setShowModal(false);
                 fetchMenus();
                 refresh();
+
             })
             .catch((error) => {
                 console.log("Ошибка при добавлении новой секции:", error);

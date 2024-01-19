@@ -10,6 +10,11 @@ const EditButtonMenu = ({ menuItem, menuId }) => {
         setShowForm(true);
         console.log(menuItem.name);
     };
+    const refresh = () => {
+
+        window.location.reload();
+        console.log("страница обновлена")
+    }
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
@@ -17,7 +22,10 @@ const EditButtonMenu = ({ menuItem, menuId }) => {
             const token = localStorage.getItem("token");
             const formData = new FormData();
             formData.append("name", name);
-            formData.append("img", img);
+
+            if (img) { // Проверяем, выбрано ли изображение
+                formData.append("img", img);
+            }
 
             const response = await axios.patch(
                 `http://192.168.10.109:8000/api/v1/menu/${menuId}/`,
@@ -30,11 +38,13 @@ const EditButtonMenu = ({ menuItem, menuId }) => {
                 }
             );
             console.log(response.data);
-
+            // handleMenuUpdate(response.data);
             // Сброс значений формы
+            refresh();
             setName("");
             setImg(null);
             setShowForm(false);
+
         } catch (error) {
             console.log(error);
         }

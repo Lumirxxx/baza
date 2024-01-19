@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
 
-const EditArticleButton = ({ article }) => {
+const EditArticleButton = ({ article, onUpdate }) => {
     const editorRef = useRef(null);
     const [editing, setEditing] = useState(false);//Строка отвечает за открытие редактора
     const [editedContent, setEditedContent] = useState(article.text);
@@ -13,6 +13,7 @@ const EditArticleButton = ({ article }) => {
     const handleEditClick = () => {
         setEditing(true);
     };
+
 
     const articleData = {
         text: editedContent,
@@ -63,12 +64,12 @@ const EditArticleButton = ({ article }) => {
                 },
                 data: formData,
             });
-
+            onUpdate(response.data)
             const articleId = response.data.id;
             const fileFormData = new FormData();
             fileFormData.append("article_id", articleId);
             console.log('Статья изменена:', response.data);
-            refresh();
+            // refresh();
         } catch (error) {
             console.log('Ошибка при загрузке статьи или изображения:', error);
             console.log(error.response.data);

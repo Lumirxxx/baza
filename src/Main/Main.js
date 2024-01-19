@@ -185,6 +185,8 @@ const Main = () => {
     const handleDeleteMenu = async (menuId) => {
         setSelectedMenuId(menuId);
         setShowDeleteConfirmation(true);
+        setMenuName()
+        console.log(menuName)
     };
 
     const confirmDeleteMenu = async () => {
@@ -197,6 +199,7 @@ const Main = () => {
                     },
                 }
             );
+
             setMenu((prevMenu) =>
                 prevMenu.filter((menu) => menu.id !== selectedMenuId)
             );
@@ -261,6 +264,7 @@ const Main = () => {
             console.log(error);
         }
     };
+    // Обработчик обновления данных секции
     const handleSectionUpdate = (updatedSection) => {
         setSections((prevSections) => {
             const updatedSections = prevSections.map((section) => {
@@ -272,6 +276,11 @@ const Main = () => {
             return updatedSections;
         });
     };
+    // Обработчик обновления данных статьи
+    const handleArticleUpdate = (updatedArticle) => {
+        setSelectedArticle(updatedArticle);
+    };
+
 
     return (
         <div className="main_container">
@@ -315,12 +324,13 @@ const Main = () => {
                             )}
                             {showDeleteConfirmation && (
                                 <div className="modal">
-                                    <div className="modal-content">
-                                        <h3>Удаление</h3>
-                                        <p>Вы действительно хотите удалить</p>
+                                    <div className="modal_alert-content">
+
+                                        <div className="modal_alert-text">Вы уверены, что хотите удалить пункт меню?</div>
+
                                         <div className="modal-actions">
-                                            <button onClick={confirmDeleteMenu}>Yes</button>
-                                            <button onClick={cancelDeleteMenu}>No</button>
+                                            <div className="modal-actions_buttons modal-actions_buttons_red" onClick={confirmDeleteMenu}>Удалить</div>
+                                            <div className="modal-actions_buttons" onClick={cancelDeleteMenu}>Отмена</div>
                                         </div>
                                     </div>
                                 </div>
@@ -381,11 +391,12 @@ const Main = () => {
                                 {showModalDelete && (
                                     <div className="modal-container">
                                         <div className="modal">
-                                            <h3>Удалить секцию</h3>
-                                            <p>Are you sure you want to delete this section?</p>
-                                            <div className="modal-actions">
-                                                <button onClick={() => handleDeleteSection(sectionId)}>Yes</button>
-                                                <button onClick={() => cancelDeleteSection()}>No</button>
+                                            <div className="modal_alert-content">
+                                                <div className="modal_alert-text">Вы уверены, что хотите удалить пункт раздела?</div>
+                                                <div className="modal-actions">
+                                                    <div className="modal-actions_buttons modal-actions_buttons_red" onClick={() => handleDeleteSection(sectionId)}>Удалить</div>
+                                                    <div className="modal-actions_buttons" onClick={() => cancelDeleteSection()}>Отмена</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -400,7 +411,7 @@ const Main = () => {
                         )}
 
                         {selectedMenuItemId !== null && (profile.is_staff || profile.is_moderate) && (
-                            <AddButtonSections menu={menu} menuName={menuName} menuId={selectedMenuItemId} menu_id={menu_id} />
+                            <AddButtonSections menu={menu} menuName={menuName} menuId={selectedMenuItemId} menu_id={menu_id} onUpdate={handleSectionUpdate} />
                         )}
                     </div>
 
@@ -459,11 +470,12 @@ const Main = () => {
                                             {showModalDeleteArticle && (
                                                 <div className="modal-container">
                                                     <div className="modal">
-                                                        <h3>Confirmation</h3>
-                                                        <p>Are you sure you want to delete this section?</p>
-                                                        <div className="modal-actions">
-                                                            <button onClick={() => handleDeleteArticle(selectedArticle.id)}>Yes</button>
-                                                            <button onClick={() => cancelArticleModal()}>No</button>
+                                                        <div className="modal_alert-content">
+                                                            <div className="modal_alert-text">Вы уверены, что хотите удалить статью?</div>
+                                                            <div className="modal-actions">
+                                                                <div className="modal-actions_buttons modal-actions_buttons_red" onClick={() => handleDeleteArticle(selectedArticle.id)}>Удалить</div>
+                                                                <div className="modal-actions_buttons" onClick={() => cancelArticleModal()}>Отмена</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -474,7 +486,7 @@ const Main = () => {
                                                 <AddFilesButton articleId={selectedArticle.id} />
                                             )}
                                             {(profile.is_staff || profile.is_moderate) && (
-                                                <EditArticleButton article={selectedArticle} />
+                                                <EditArticleButton article={selectedArticle} onUpdate={handleArticleUpdate} />
                                             )}
 
 

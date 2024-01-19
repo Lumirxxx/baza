@@ -18,6 +18,11 @@ img {
 
 }
 
+.menu_img {
+  max-width: 3rem;
+  width: 100%;
+}
+
 .image-uploading img {
   filter: blur(0px) !important;
   opacity: 1 !important;
@@ -30,6 +35,10 @@ img {
 .main_container {
   margin-right: 3.125rem;
   margin-left: 3.125rem;
+}
+
+.articles_container {
+  margin-bottom: 25px;
 }
 
 
@@ -148,6 +157,47 @@ img {
   cursor: pointer;
 }
 
+.modal_alert-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 37.5rem;
+  width: 100%;
+  background-color: #D0E5FD;
+  text-align: center;
+
+}
+
+.modal-actions_buttons {
+  font-size: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 15px;
+  padding-bottom: 20px;
+  background-color: #79A0CC;
+  font-family: gothampro;
+}
+
+.modal_alert-text {
+  font-size: 40px;
+  font-family: gothampro;
+  margin-top: 3.75rem;
+}
+
+.modal-actions_buttons_red {
+  background-color: #FA9191;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 7.5rem;
+  margin-right: 7.5rem;
+  margin-top: 2.65rem;
+  margin-bottom: 3.75rem;
+}
+
 .form_button_submit:hover {
   box-shadow: inset 0px -10px 20px 0px rgba(0, 0, 0, 0.25);
   transition: 0.5s;
@@ -160,8 +210,7 @@ img {
   max-width: 15.3rem;
   height: 5.8rem;
   width: 100%;
-  padding-top: 5px;
-  padding-bottom: 5px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -182,11 +231,14 @@ img {
   background-position: center;
 }
 
+
 .button_body:hover {
   box-shadow: inset 2px -1px 8px 10px rgba(0, 0, 0, 0.25);
-  transition: 0.5s;
+  transition: box-shadow 0.5s;
 
 }
+
+
 
 .button_text {
   white-space: nowrap;
@@ -525,7 +577,7 @@ figure {
 }
 
 .section_button:hover {
-  box-shadow: inset 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 2px -1px 8px 10px rgba(0, 0, 0, 0.25) !important;
   transition: 0.5s;
 }
 
