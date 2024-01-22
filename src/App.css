@@ -37,8 +37,12 @@ img {
   margin-left: 3.125rem;
 }
 
-.articles_container {
-  margin-bottom: 25px;
+.section_name_add-article {
+  margin-top: 1.87rem;
+}
+
+.sections_container-articles_name {
+  margin-bottom: 36px !important;
 }
 
 
@@ -343,6 +347,7 @@ img {
 .menu_container {
   display: flex;
   flex-direction: row;
+  margin-top: 3.12rem;
 }
 
 .menu_container_right {
@@ -596,7 +601,7 @@ figure {
 
   padding-top: 0px;
   padding-bottom: 0px;
-  padding-right: 5px;
+  padding-right: 10px;
   width: 24px;
   height: 24px;
 
@@ -754,6 +759,15 @@ figure {
   transform: rotate(180deg);
   background: #FFF;
 
+}
+
+@media (max-width:1098px) {
+  .form_modal {
+    max-width: 60rem;
+    width: 100%;
+    margin-right: 30px;
+
+  }
 }
 
 @keyframes App-logo-spin {

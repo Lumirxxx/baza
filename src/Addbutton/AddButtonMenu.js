@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const AddButtonMenu = () => {
+const AddButtonMenu = ({ onUpdate }) => {
     const [name, setName] = useState("");
     const [img, setImg] = useState(null);
     const [showForm, setShowForm] = useState(false);
@@ -42,7 +42,8 @@ const AddButtonMenu = () => {
             console.log(response.data);
 
             // Сброс значений формы
-            refresh();
+            onUpdate(response.data);
+            // refresh();
             setName("");
             setImg(null);
             setShowForm(false);

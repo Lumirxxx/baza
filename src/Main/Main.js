@@ -280,6 +280,25 @@ const Main = () => {
     const handleArticleUpdate = (updatedArticle) => {
         setSelectedArticle(updatedArticle);
     };
+    // Обработчик добавления обновления статьи
+    const handleAddArticle = (newArticle) => {
+        setArticles([...articles, newArticle]);
+    };
+    const handleMenuUpdate = (updatedMenu) => {
+        setMenu((prevMenu) => {
+            const updatedMenuItems = prevMenu.map((menuItem) => {
+                if (menuItem.id === updatedMenu.id) {
+                    return updatedMenu;
+                }
+                return menuItem;
+            });
+            return updatedMenuItems;
+        });
+    }
+
+    const handleMenuAdd = (newMenu) => {
+        setMenu((prevMenu) => [...prevMenu, newMenu]);
+    }
 
 
     return (
@@ -336,14 +355,14 @@ const Main = () => {
                                 </div>
                             )}
                             {(profile.is_staff || profile.is_moderate) && (
-                                <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} />
+                                <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} onUpdate={handleMenuUpdate} />
                             )}
 
                         </div>
 
                     ))}
                     {(profile.is_staff || profile.is_moderate) && (
-                        <AddButtonMenu />
+                        <AddButtonMenu onUpdate={handleMenuAdd} />
                     )}
 
                 </div>
@@ -417,9 +436,11 @@ const Main = () => {
 
 
                     <div className="container_position_col container_position_col-sub" >
-                        {
+                        {articles.length > 0 && (
 
-                            <div className="articles_container">
+
+
+                            <div className="sections_container sections_container-articles_name">
                                 {articles.map((article) => (
                                     <div className="section_button" key={article.id}
                                     >
@@ -444,17 +465,19 @@ const Main = () => {
                             </div>
 
 
-                        }
+
+                        )}
                         <div>
                             {
                                 selectedSectionItemId !== null && showSubsections && sections.length > 0 && (profile.is_staff || profile.is_moderate) && (
-                                    <Editor2 subsectionId={subsectionId} sectionId={sectionId} />
+                                    <Editor2 subsectionId={subsectionId} sectionId={sectionId} onUpdate={handleAddArticle} />
                                     // <AddButtonSubsections sectionId={sectionId} subsections={subsections} />
                                 )
                             }
 
 
                         </div>
+
                     </div >
                     {selectedArticle && (
 
