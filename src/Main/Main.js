@@ -442,9 +442,9 @@ const Main = () => {
 
                             <div className="sections_container sections_container-articles_name">
                                 {articles.map((article) => (
-                                    <div className="section_button" key={article.id}
+                                    <div className="section_button" onClick={() => handleSelectArticle(article)} key={article.id}
                                     >
-                                        <div className="subsection_button_content" onClick={() => handleSelectArticle(article)}>
+                                        <div className="subsection_button_content" >
                                             <div className="section_img_container">
                                                 {article.img && <img className="section_img" src={article.img} alt="Subsection Image" />}
                                             </div>

@@ -10,6 +10,10 @@ const EditButtonMenu = ({ menuItem, menuId, onUpdate }) => {
         setShowForm(true);
         console.log(menuItem.name);
     };
+    const handleButtonCancel = () => {
+        setShowForm(false);
+        setName(menuItem.name)
+    }
     const refresh = () => {
 
         window.location.reload();
@@ -90,7 +94,7 @@ const EditButtonMenu = ({ menuItem, menuId, onUpdate }) => {
                                 </div>
 
                                 <div className="form_button_container">
-                                    <button className="form_button" type="button" onClick={() => setShowForm(false)}>Отмена</button>
+                                    <button className="form_button" type="button" onClick={() => handleButtonCancel()}>Отмена</button>
                                 </div>
 
 

@@ -10,6 +10,10 @@ const AddButtonMenu = ({ onUpdate }) => {
     const handleButtonClick = () => {
         setShowForm(true);
     };
+    const handleButtonCancel = () => {
+        setShowForm(false);
+        setName("")
+    }
 
     const refresh = () => {
 
@@ -103,7 +107,7 @@ const AddButtonMenu = ({ onUpdate }) => {
                                 </div>
 
                                 <div className="form_button_container">
-                                    <button className="form_button" type="button" onClick={() => setShowForm(false)}>Отмена</button>
+                                    <button className="form_button" type="button" onClick={() => handleButtonCancel()}>Отмена</button>
                                 </div>
 
 

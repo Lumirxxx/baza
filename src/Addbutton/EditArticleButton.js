@@ -7,12 +7,18 @@ const EditArticleButton = ({ article, onUpdate }) => {
     const [editing, setEditing] = useState(false);//Строка отвечает за открытие редактора
     const [editedContent, setEditedContent] = useState(article.text);
     const [articleTitle, setArticleTitle] = useState(article.name);
+    const [errorMessage, setErrorMessage] = useState("");
     const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
     const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;
 
     const handleEditClick = () => {
         setEditing(true);
     };
+    // const handleButtonCancel = () => {
+    //     setEditing(false);
+
+    //     setArticleTitle(article.name);
+    // }
 
 
     const articleData = {
@@ -69,18 +75,22 @@ const EditArticleButton = ({ article, onUpdate }) => {
             const fileFormData = new FormData();
             fileFormData.append("article_id", articleId);
             console.log('Статья изменена:', response.data);
+            setEditing(false);
             // refresh();
         } catch (error) {
             console.log('Ошибка при загрузке статьи или изображения:', error);
             console.log(error.response.data);
+            setErrorMessage(error.response.data)
         }
 
-        setEditing(false);
+
     };
 
     const handleCancelClick = () => {
         setEditing(false);
         setEditedContent(article.text);
+        setArticleTitle(article.name);
+
     };
 
     const handleChange = (content) => {
@@ -98,12 +108,14 @@ const EditArticleButton = ({ article, onUpdate }) => {
                 <div>
                     <div className="modal">
                         <div className="modal-editor form_modal">
+                            {errorMessage && <div className="error-message">{errorMessage.name}</div>}
                             <input
                                 className='article_name-input form_menu_input'
                                 type="text"
                                 value={articleTitle}
                                 onChange={handleTitleChange}
                             />
+                            {errorMessage && <div className="error-message">{errorMessage.text}</div>}
                             <Editor
                                 value={editedContent}
                                 tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}

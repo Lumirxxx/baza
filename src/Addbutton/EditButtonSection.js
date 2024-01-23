@@ -9,6 +9,10 @@ const EditButtonSection = ({ section, onUpdate }) => {
     const handleButtonClick = () => {
         setShowForm(true);
     };
+    const handleButtonCancel = () => {
+        setShowForm(false);
+        setName(section.name)
+    }
 
     const handleInputChange = (event) => {
         setName(event.target.value);
@@ -78,7 +82,7 @@ const EditButtonSection = ({ section, onUpdate }) => {
                                 </div>
 
                                 <div className="form_button_container">
-                                    <button className="form_button" type="button" onClick={() => setShowForm(false)}>Отмена</button>
+                                    <button className="form_button" type="button" onClick={() => handleButtonCancel()}>Отмена</button>
                                 </div>
 
 

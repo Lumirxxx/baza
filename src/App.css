@@ -11,6 +11,11 @@ button {
   /* cursor: pointer; */
 }
 
+p {
+  max-width: 1024px;
+  width: 100%;
+  word-break: break-word;
+}
 
 img {
   max-width: 32rem;
@@ -478,6 +483,7 @@ img {
   border-radius: 5px;
   box-sizing: border-box;
   padding-left: 10px;
+  margin-bottom: 10px;
 
 }
 
@@ -712,6 +718,13 @@ figure {
 
 }
 
+.error-message {
+  background-color: red;
+  text-align: center;
+  color: #fff;
+
+}
+
 .edit_editor-article-container {
   width: 30px;
   height: 24px;
@@ -719,10 +732,9 @@ figure {
 
 }
 
-.article_name-input {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+.article_content_text {}
+
+.article_name-input {}
 
 .button_article-editor {
   display: flex;

@@ -4,6 +4,7 @@ import axios from 'axios';
 
 const Editor2 = ({ sectionId, onUpdate }) => {
     const editorRef = useRef(null);
+    const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [article, setArticle] = useState('');
@@ -17,7 +18,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
 
     useEffect(() => {
         fetchSubsections();
-        setSelectedSubsection(sectionId); // Добавьте эту строку
+        setSelectedSubsection(sectionId);
     }, [sectionId]);
     const handleButtonClick = () => {
         setIsEditorOpen(true);
@@ -25,6 +26,8 @@ const Editor2 = ({ sectionId, onUpdate }) => {
 
     const handleEditorClose = () => {
         setIsEditorOpen(false);
+        setName('')
+        setErrorMessage('')
     };
 
     const fetchSubsections = async () => {
@@ -101,8 +104,10 @@ const Editor2 = ({ sectionId, onUpdate }) => {
             console.log('Результат отправки статьи:', response.data);
 
         } catch (error) {
-            console.log(error.data);
-            console.error('Ошибка отправки статьи:', error);
+            // console.error(error.message);
+            setErrorMessage(error.response.data)
+
+            console.error('Ошибка отправки статьи:', error.response.data);
         }
     };
     const handleSelectSubsection = (event) => {
@@ -132,7 +137,9 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                                     <option disabled key={subsection.id} value={subsection.id}>{subsection.name}</option>
                                 ))}
                             </select>
+                            {errorMessage && <div className="error-message">{errorMessage.name}</div>}
                             <input required className='article_name-input form_menu_input' placeholder='Название статьи' type="text" value={name} onChange={handleNameChange} />
+                            {errorMessage && <div className="error-message">{errorMessage.text}</div>}
                             <Editor
                                 tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
                                 onInit={(evt, editor) => (editorRef.current = editor)}
@@ -146,6 +153,8 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                                 }}
                             />
                             <div className='button_article-editor'>
+
+
                                 <button className="form_button" onClick={handleSubmit}>Отправить</button>
                                 <button className="form_button" onClick={handleEditorClose}>Закрыть</button>
                             </div>

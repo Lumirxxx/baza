@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddButtonSections = ( props ) => {
+const AddButtonSections = (props) => {
 
     const { menu_id } = props
     const [sections, setSections] = useState([]);
@@ -18,7 +18,12 @@ const AddButtonSections = ( props ) => {
         window.location.reload();
         console.log("страница обновлена")
     }
-
+    const handleButtonCancel = () => {
+        setShowModal(false);
+        setNewSection({
+            name: ""
+        });
+    }
     const fetchMenus = () => {
         const token = localStorage.getItem("token");
         axios
@@ -152,7 +157,7 @@ const AddButtonSections = ( props ) => {
                                 </div>
 
                                 <div className="form_button_container">
-                                    <button className="form_button" type="button" onClick={() => setShowModal(false)}>Отмена</button>
+                                    <button className="form_button" type="button" onClick={() => handleButtonCancel()}>Отмена</button>
                                 </div>
 
 
