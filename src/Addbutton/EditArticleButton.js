@@ -90,6 +90,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
         setEditing(false);
         setEditedContent(article.text);
         setArticleTitle(article.name);
+        setErrorMessage('')
 
     };
 
@@ -108,14 +109,15 @@ const EditArticleButton = ({ article, onUpdate }) => {
                 <div>
                     <div className="modal">
                         <div className="modal-editor form_modal">
-                            {errorMessage && <div className="error-message">{errorMessage.name}</div>}
+
                             <input
                                 className='article_name-input form_menu_input'
                                 type="text"
                                 value={articleTitle}
                                 onChange={handleTitleChange}
                             />
-                            {errorMessage && <div className="error-message">{errorMessage.text}</div>}
+                            {errorMessage && <div className="error-message">{errorMessage.name}</div>}
+
                             <Editor
                                 value={editedContent}
                                 tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
@@ -130,6 +132,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
                                 }}
                                 onEditorChange={handleChange}
                             />
+                            {errorMessage && <div className="error-message">{errorMessage.text}</div>}
                             <div className="button_article-editor">
                                 <button className="form_button" onClick={handleSaveClick}>
                                     Сохранить

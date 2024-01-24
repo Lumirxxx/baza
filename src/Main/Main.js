@@ -34,7 +34,6 @@ const Main = () => {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [showModalDeleteArticle, setShowModalDeleteArticle] = useState(false);
-
     let isRedirected = false;
     const isRedirectedRef = useRef(false);
 
@@ -97,14 +96,24 @@ const Main = () => {
         fetchData();
 
     }, [isRedirected]); // Пустой массив в качестве зависимости
-    const handleSectionButtonClick = async (menu_id) => {
+
+    const handleSectionButtonClick = async (menu_id, id) => {
         try {
+            if (menu_id === id) {
+                setMenuId(null); // очистка menu_id если значение равно id
+            } else {
+                setMenuId(id);
+            }
             if (isSectionsOpen) {
                 // setSelectedSectionItemId(null);
                 setSelectedMenuItemId(null);
                 setSections([]);
                 setIsSectionsOpen(false);
                 setArticles([]);
+                console.log(id)
+                console.log(menu_id)
+                console.lof(selectedMenuItemId)
+
 
 
             } else {
@@ -119,6 +128,7 @@ const Main = () => {
 
                 const selectedMenuItem = menu.find((item) => item.id === menu_id);
                 const menuName = selectedMenuItem ? selectedMenuItem.name : "";
+                console.log(id)
                 setMenuName(menuName);
                 setMenuId(menu_id);
                 console.log()
@@ -127,13 +137,14 @@ const Main = () => {
                 console.log(menuName)
                 setSections(response.data);
                 setIsSectionsOpen(true);
-                //setArticles([]);
 
+                //setArticles([]);
+                // handleSectionButtonClickActive(menu_id)
                 setSelectedSectionItemId(null);
                 setSelectedMenuItemId(menu_id);
                 console.log(menu_id)
                 setShowSubsections(true);
-                console.log(sectionId)
+
 
             }
         } catch (error) {
@@ -149,8 +160,13 @@ const Main = () => {
 
 
 
-    const handleArticleButtonClick = async (sectionId) => {
+    const handleArticleButtonClick = async (sectionId, id) => {
         try {
+            if (sectionId === id) {
+                setSectionId(null); // очистка sectionId если значение равно id
+            } else {
+                setSectionId(id);
+            }
             const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -158,9 +174,14 @@ const Main = () => {
             });
             setSelectedSectionItemId(sectionId);
             setSectionId(sectionId)
+            console.log(id)
+            console.log(sectionId)
+
+
+
 
             // console.log(sectionId)
-            // console.log(articles)
+            console.log(articles)
 
 
             setArticles(response.data);
@@ -179,8 +200,11 @@ const Main = () => {
 
 
     const handleSelectArticle = (articleObj) => {
-        setSelectedArticle(articleObj)
-    }
+        setSelectedArticle((prevArticle) => {
+            console.log(articleObj.id); // Вывод актуального значения articleObj
+            return articleObj;
+        });
+    };
 
     const handleDeleteMenu = async (menuId) => {
         setSelectedMenuId(menuId);
@@ -320,9 +344,9 @@ const Main = () => {
                 <div className="menu_container_left">
 
                     {menu.map((menuItem) => (
-                        <div className="menu_item">
+                        <div title={menuItem.name} className="menu_item">
                             <button
-                                className="button_body"
+                                className={`button_body ${(menu_id == menuItem.id) ? 'active' : ''}`}
                                 key={menuItem.id}
                                 onClick={() => handleSectionButtonClick(menuItem.id)}
                             >
@@ -373,7 +397,9 @@ const Main = () => {
                             <div className="sections_container">
                                 {sections.map((section) => (
                                     <div
-                                        className="section_button"
+                                        className={`section_button ${(sectionId == section.id) ? 'active' : ''}`}
+                                        title={section.name}
+
                                         key={section.id}
                                         onClick={() => handleArticleButtonClick(section.id)}
 
@@ -442,10 +468,14 @@ const Main = () => {
 
                             <div className="sections_container sections_container-articles_name">
                                 {articles.map((article) => (
-                                    <div className="section_button" onClick={() => handleSelectArticle(article)} key={article.id}
+                                    <div
+                                        title={article.name}
+                                        onClick={() => handleSelectArticle(article)}
+                                        key={article.id}
+                                        className={`section_button ${selectedArticle && selectedArticle.id === article.id ? 'active' : ''}`}
                                     >
                                         <div className="subsection_button_content" >
-                                            <div className="section_img_container">
+                                            <div className="section_img_container section_img_container-articles">
                                                 {article.img && <img className="section_img" src={article.img} alt="Subsection Image" />}
                                             </div>
                                             <div className="subsection_name">{article.name}</div>

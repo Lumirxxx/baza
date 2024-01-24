@@ -11,14 +11,22 @@ button {
   /* cursor: pointer; */
 }
 
+body {
+  font-family: gothampro;
+  font-size: 20px;
+}
+
 p {
-  max-width: 1024px;
+  /* max-width: 1024px; */
   width: 100%;
   word-break: break-word;
 }
 
 img {
-  max-width: 32rem;
+  /* width: 100%; */
+
+  max-width: 100%;
+
 
 
 }
@@ -229,6 +237,11 @@ img {
   border: none;
 
 
+}
+
+.active {
+  box-shadow: inset 0px -10px 20px 0px rgba(0, 0, 0, 0.25) !important;
+  transition: 0.5s;
 }
 
 .section_plus {
@@ -483,7 +496,8 @@ img {
   border-radius: 5px;
   box-sizing: border-box;
   padding-left: 10px;
-  margin-bottom: 10px;
+  margin-top: 10px;
+
 
 }
 
@@ -702,8 +716,27 @@ figure {
   cursor: pointer;
 }
 
+.section_name {
+  max-width: 200px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .subsection_name {
   width: 100%;
+
+
+  /* white-space: nowrap; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.section_img_container-articles {
+  width: 0px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .error_message {
@@ -718,10 +751,17 @@ figure {
 
 }
 
+.section_img {
+  max-width: 25px;
+  width: 100%;
+  padding-left: 5px;
+}
+
 .error-message {
   background-color: red;
   text-align: center;
   color: #fff;
+  margin-bottom: 10px;
 
 }
 

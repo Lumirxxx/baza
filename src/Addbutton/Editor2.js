@@ -11,6 +11,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
     const [sections, setSections] = useState([]);
     const [selectedSubsection, setSelectedSubsection] = useState('');
     const [content, setContent] = useState('');
+
     const [isEditorOpen, setIsEditorOpen] = useState(false);//Строка отвечает за открытие редактора
     const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
     const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;
@@ -137,22 +138,32 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                                     <option disabled key={subsection.id} value={subsection.id}>{subsection.name}</option>
                                 ))}
                             </select>
-                            {errorMessage && <div className="error-message">{errorMessage.name}</div>}
+
                             <input required className='article_name-input form_menu_input' placeholder='Название статьи' type="text" value={name} onChange={handleNameChange} />
-                            {errorMessage && <div className="error-message">{errorMessage.text}</div>}
+                            {errorMessage && <div className="error-message">{errorMessage.name}</div>}
+
                             <Editor
                                 tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
                                 onInit={(evt, editor) => (editorRef.current = editor)}
                                 apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
                                 init={{
-                                    plugins: 'image , paste',
+                                    plugins: 'image , paste, wordcount',
                                     toolbar: 'image',
+
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,
-                                    paste_data_images: true
+                                    paste_data_images: true,
+
+
+
                                 }}
+
                             />
+                            {errorMessage && <div className="error-message">{errorMessage.text}</div>}
                             <div className='button_article-editor'>
+
+
+
 
 
                                 <button className="form_button" onClick={handleSubmit}>Отправить</button>

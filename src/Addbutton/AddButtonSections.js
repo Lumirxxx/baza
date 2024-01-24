@@ -128,7 +128,7 @@ const AddButtonSections = (props) => {
                             </div>
                             <div className="form_menu_label">
                                 <label className="form_menu_label_name" htmlFor="menu">Меню:</label>
-                                <select className="form_menu_input" required id="menu" name="menu" value={menu_id} onChange={handleMenuChange} >
+                                <select disabled className="form_menu_input" required id="menu" name="menu" value={menu_id} onChange={handleMenuChange} >
                                     <option value="" disabled selected>
                                         Выберите меню
                                     </option>

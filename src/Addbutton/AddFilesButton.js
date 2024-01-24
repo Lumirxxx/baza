@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const AddFilesButton = ({ articleId }) => {
+    const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState('');
     const [file, setFile] = useState(null);
     const [showInputs, setShowInputs] = useState(false); // Добавленное состояние для открытия/закрытия элементов
@@ -15,6 +16,11 @@ const AddFilesButton = ({ articleId }) => {
             setName(fileName);
         }
     };
+    const handleButtonClose = () => {
+
+        setShowInputs(false);
+        setErrorMessage("");
+    }
 
     const handleButtonClick = async () => {
         try {
@@ -30,9 +36,11 @@ const AddFilesButton = ({ articleId }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            handleButtonClose()
 
             console.log(response.data);
         } catch (error) {
+            setErrorMessage(error.response.data)
             console.log(error);
         }
     };
@@ -43,7 +51,7 @@ const AddFilesButton = ({ articleId }) => {
                 <div className='modal'>
                     <div className='form_modal' >
                         <div className='form_modal-buttons_container'>
-                            <input className='form_menu_input' placeholder='введите название файла' required type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                            <input required className='form_menu_input' placeholder='введите название файла' type="text" value={name} onChange={(e) => setName(e.target.value)} />
                             <div className='form_menu_input-download_file'>
                                 <label className='form_menu_label_img' for="image">
                                     <div className='form_menu_input-image'></div>
@@ -52,12 +60,13 @@ const AddFilesButton = ({ articleId }) => {
                                 </label>
                                 <label className='form_menu_label_img-text' for="image">Загрузить файл</label>
                             </div>
+                            {errorMessage && <div className="error-message">{errorMessage.file}</div>}
                             <div className='modal_form-button'>
                                 <div className='form_button_container'>
                                     <button className='form_button' onClick={handleButtonClick}>Отправить</button>
                                 </div>
                                 <div className='form_button_container'>
-                                    <button className='form_button' onClick={() => setShowInputs(false)}> Закрыть </button>
+                                    <button className='form_button' onClick={() => handleButtonClose()}> Закрыть </button>
                                 </div>
                             </div>
                         </div>

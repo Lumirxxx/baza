@@ -5,6 +5,7 @@ const EditButtonSection = ({ section, onUpdate }) => {
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState(section.name);
     const [img, setImg] = useState();
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleButtonClick = () => {
         setShowForm(true);
@@ -12,6 +13,8 @@ const EditButtonSection = ({ section, onUpdate }) => {
     const handleButtonCancel = () => {
         setShowForm(false);
         setName(section.name)
+        setErrorMessage('')
+
     }
 
     const handleInputChange = (event) => {
@@ -43,6 +46,8 @@ const EditButtonSection = ({ section, onUpdate }) => {
             })
             .catch((error) => {
                 console.log("Ошибка при обновлении раздела:", error);
+                setErrorMessage(error.response.data)
+
             });
     };
     const handleFileChange = (e) => {
@@ -75,7 +80,9 @@ const EditButtonSection = ({ section, onUpdate }) => {
                                 <label className="form_menu_label_img" htmlFor="image"><div className="form_menu_input-image"></div></label>
                                 <label className="form_menu_label_img-text" htmlFor="image" >Загрузить файл SVG</label>
                                 <input className="form_menu_input-image_add" type="file" id="image" name="image" accept="image/*" onChange={handleFileChange} />
+
                             </div>
+                            {errorMessage && <div className="error-message">{errorMessage.img}</div>}
                             <div className="modal_form-button">
                                 <div className="form_button_container">
                                     <button className="form_button" type="submit">Добавить</button>
