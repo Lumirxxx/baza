@@ -96,64 +96,57 @@ const Main = () => {
         fetchData();
 
     }, [isRedirected]); // Пустой массив в качестве зависимости
-
     const handleSectionButtonClick = async (menu_id, id) => {
         try {
             if (menu_id === id) {
-                setMenuId(null); // очистка menu_id если значение равно id
+                if (isSectionsOpen) {
+                    if (menu_id === selectedMenuItemId) {
+                        setSelectedMenuItemId(null);
+                        setSections([]);
+                        setIsSectionsOpen(false);
+                        setArticles([]);
+                        setShowSubsections(false);
+                        return;
+                    }
+                }
+                setMenuId(null);
             } else {
                 setMenuId(id);
             }
-            if (isSectionsOpen) {
-                // setSelectedSectionItemId(null);
+
+            if (menu_id === selectedMenuItemId) {
                 setSelectedMenuItemId(null);
                 setSections([]);
                 setIsSectionsOpen(false);
                 setArticles([]);
-                console.log(id)
-                console.log(menu_id)
-                console.lof(selectedMenuItemId)
-
-
-
-            } else {
-                const response = await axios.get(
-                    `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        },
-                    }
-                );
-
-                const selectedMenuItem = menu.find((item) => item.id === menu_id);
-                const menuName = selectedMenuItem ? selectedMenuItem.name : "";
-                console.log(id)
-                setMenuName(menuName);
-                setMenuId(menu_id);
-                console.log()
-                console.log("Menu Name:", menuName);
-                console.log(menu[0].name);
-                console.log(menuName)
-                setSections(response.data);
-                setIsSectionsOpen(true);
-
-                //setArticles([]);
-                // handleSectionButtonClickActive(menu_id)
-                setSelectedSectionItemId(null);
-                setSelectedMenuItemId(menu_id);
-                console.log(menu_id)
-                setShowSubsections(true);
-
-
+                setShowSubsections(false);
+                return;
             }
+
+            const response = await axios.get(
+                `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
+            const selectedMenuItem = menu.find((item) => item.id === menu_id);
+            const menuName = selectedMenuItem ? selectedMenuItem.name : "";
+            setMenuName(menuName);
+            setMenuId(menu_id);
+            setSections(response.data);
+            setIsSectionsOpen(true);
+            setSelectedSectionItemId(null);
+            setSelectedMenuItemId(menu_id);
+            setShowSubsections(true);
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
                 localStorage.removeItem('token');
             } else {
                 console.log(error);
-
             }
         }
     };
@@ -162,6 +155,7 @@ const Main = () => {
 
     const handleArticleButtonClick = async (sectionId, id) => {
         try {
+
             if (sectionId === id) {
                 setSectionId(null); // очистка sectionId если значение равно id
             } else {
