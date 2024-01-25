@@ -155,39 +155,26 @@ const Main = () => {
 
     const handleArticleButtonClick = async (sectionId, id) => {
         try {
-
-            if (sectionId === id) {
-                setSectionId(null); // очистка sectionId если значение равно id
+            if (sectionId === selectedSectionItemId) {
+                setSelectedSectionItemId(null);
+                setArticles([]);
+                setSectionId(null);
             } else {
-                setSectionId(id);
+                setSectionId(sectionId);
+                const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                setSelectedSectionItemId(sectionId);
+                setArticles(response.data);
             }
-            const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            setSelectedSectionItemId(sectionId);
-            setSectionId(sectionId)
-            console.log(id)
-            console.log(sectionId)
-
-
-
-
-            // console.log(sectionId)
-            console.log(articles)
-
-
-            setArticles(response.data);
-
-
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
                 localStorage.removeItem('token');
             } else {
                 console.log(error);
-
             }
         }
     }
