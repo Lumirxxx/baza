@@ -141,6 +141,7 @@ const Main = () => {
             setSelectedSectionItemId(null);
             setSelectedMenuItemId(menu_id);
             setShowSubsections(true);
+            console.log(sections)
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
@@ -268,6 +269,9 @@ const Main = () => {
         } catch (error) {
             console.log(error);
         }
+    };
+    const handleAddSection = (newSectionData) => {
+        setSections(prevSections => [...prevSections, newSectionData]);
     };
     // Обработчик обновления данных секции
     const handleSectionUpdate = (updatedSection) => {
@@ -437,7 +441,7 @@ const Main = () => {
                         )}
 
                         {selectedMenuItemId !== null && (profile.is_staff || profile.is_moderate) && (
-                            <AddButtonSections menu={menu} menuName={menuName} menuId={selectedMenuItemId} menu_id={menu_id} onUpdate={handleSectionUpdate} />
+                            <AddButtonSections menu={menu} menuName={menuName} menuId={selectedMenuItemId} menu_id={menu_id} onUpdate={handleAddSection} />
                         )}
                     </div>
 

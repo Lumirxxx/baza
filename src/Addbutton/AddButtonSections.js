@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddButtonSections = (props) => {
+const AddButtonSections = ({ menu_id, onUpdate }) => {
 
-    const { menu_id } = props
+    // const { menu_id } = props
     const [sections, setSections] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [menuId, setMenuId] = useState(menu_id);
@@ -13,17 +13,14 @@ const AddButtonSections = (props) => {
         name: ""
     });
     const [selectedImage, setSelectedImage] = useState("");
-    const refresh = () => {
 
-        window.location.reload();
-        console.log("страница обновлена")
-    }
     const handleButtonCancel = () => {
         setShowModal(false);
         setNewSection({
             name: ""
         });
     }
+
     const fetchMenus = () => {
         const token = localStorage.getItem("token");
         axios
@@ -47,12 +44,15 @@ const AddButtonSections = (props) => {
     const handleButtonClick = () => {
         setShowModal(true);
         fetchMenus();
-        console.log(menu_id)
+        console.log(menu_id);
     };
+
 
     const handleMenuChange = (event) => {
         setMenuId(event.target.value);
     };
+
+
 
     const handleInputChange = (event) => {
         setNewSection({
@@ -69,7 +69,7 @@ const AddButtonSections = (props) => {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append("menu_id", menuId);
+        formData.append("menu_id", menu_id);
         formData.append("name", newSection.name);
         formData.append("img", selectedImage);
 
@@ -89,9 +89,12 @@ const AddButtonSections = (props) => {
             .then((response) => {
                 console.log("Новая секция добавлена:", response.data);
                 setSections((prevSections) => [...prevSections, response.data]);
+                // handleAddSection(response.data);
+                onUpdate(response.data);
                 setShowModal(false);
                 fetchMenus();
-                refresh();
+
+                // refresh();
 
             })
             .catch((error) => {
