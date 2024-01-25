@@ -314,13 +314,14 @@ const Main = () => {
         <div className="main_container">
             <div className="header_container">
                 <div className="main_page_logo">
-                    <img src="/Headerlogomain.svg" alt="Logo" />
+                    <img src="/HeaderlogomainNew.svg" alt="Logo" />
                 </div>
                 <div className="header_service-buttons">
-                    <LogoutButton />
                     {(profile.is_staff) && (
                         <DepartList profile={profile} />
                     )}
+                    <LogoutButton />
+
                 </div>
 
             </div>
@@ -502,9 +503,11 @@ const Main = () => {
                                 <div key={selectedArticle.id}>
                                     <div className="article_content">
                                         <div className="article_service-buttons">
+
                                             {(profile.is_staff || profile.is_moderate) && (
-                                                <div className="cl-btn-4 delete_button" onClick={() => deleteArticleModal()} title="Удалить"></div>
+                                                <EditArticleButton article={selectedArticle} onUpdate={handleArticleUpdate} />
                                             )}
+
                                             {showModalDeleteArticle && (
                                                 <div className="modal-container">
                                                     <div className="modal">
@@ -524,8 +527,9 @@ const Main = () => {
                                                 <AddFilesButton articleId={selectedArticle.id} />
                                             )}
                                             {(profile.is_staff || profile.is_moderate) && (
-                                                <EditArticleButton article={selectedArticle} onUpdate={handleArticleUpdate} />
+                                                <div className="cl-btn-4 delete_button" onClick={() => deleteArticleModal()} title="Удалить"></div>
                                             )}
+
 
 
 

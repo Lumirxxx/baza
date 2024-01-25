@@ -98,12 +98,13 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
 
 }
 
 .login_page_logo {
-  margin-top: 50px;
+  margin-top: 15px;
 }
 
 .main_page_logo {
@@ -120,26 +121,54 @@ img {
 
 }
 
+.select_button:focus {
+  outline: #4A7BAB;
+  border-color: #4A7BAB;
+
+}
+
 .login_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-left: 60px;
   padding-top: 40px;
   padding-right: 60px;
-  padding-bottom: 45px;
+  padding-bottom: 40px;
   background-color: #fff;
   border-radius: 15px;
-  margin-top: 9.75rem;
+  margin-top: 13rem;
+  max-width: 380px;
+  width: 100%;
+  margin-bottom: 15rem;
 
+
+}
+
+.login_form_button-container-submit {
+  text-align: center;
+  width: 290px;
+}
+
+.login_form_button-container {
+  text-align: center;
+}
+
+.error-message_login {
+  color: #FF4B4B;
 }
 
 .login_form_title {
   font-family: gothampro;
   font-size: 20px;
   font-weight: normal;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .select_button {
-  border: 0;
+  border: 2px solid rgba(255, 255, 255, 0);
+
   border-radius: 5px;
   background-color: #DDF0FC;
   color: #525252;
@@ -147,11 +176,12 @@ img {
   padding-bottom: 15px;
   padding-left: 0;
   padding-right: 0;
-  max-width: 257px;
+  max-width: 290px;
   width: 100%;
   text-indent: 15px;
   font-family: gothampro;
-
+  font-size: 16px;
+  /* outline: none; */
 }
 
 .select_button_password_margin {
@@ -164,7 +194,7 @@ img {
   background-color: #4A7BAB;
   color: #fff;
   font-weight: normal;
-  font-style: 16px;
+  font-style: 16px !important;
   padding-top: 17px;
   padding-bottom: 17px;
   padding-left: 103px;
@@ -227,7 +257,7 @@ img {
   max-width: 15.3rem;
   height: 5.8rem;
   width: 100%;
-
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -240,8 +270,9 @@ img {
 }
 
 .active {
-  box-shadow: inset 0px -10px 20px 0px rgba(0, 0, 0, 0.25) !important;
-  transition: 0.5s;
+  background-color: #668AB0 !important;
+  box-shadow: inset 0px 4px 0px 0px rgba(0, 0, 0, 0.25) !important;
+  transition: 0.5s !important;
 
 }
 
@@ -438,10 +469,11 @@ img {
 }
 
 .logout_button {
+  border-radius: 5px;
   width: 100px;
   height: 20px;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 0px;
   background-color: #355E8B !important;
 }
 
@@ -479,8 +511,9 @@ img {
 
 .header_service-buttons {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
+  margin-top: 79px;
 }
 
 .form_menu_label_name {
@@ -548,6 +581,7 @@ img {
 .menu_item {
   position: relative;
 
+
 }
 
 .form_menu_label {
@@ -603,7 +637,8 @@ figure {
 }
 
 .section_button:hover {
-  box-shadow: inset 2px -1px 8px 10px rgba(0, 0, 0, 0.25) !important;
+  background-color: #668AB0;
+  box-shadow: inset 0px 4px 0px 0px rgba(0, 0, 0, 0.25) !important;
   transition: 0.5s;
 }
 
@@ -645,6 +680,15 @@ figure {
 .add_files {
   max-width: 28px !important;
   max-height: 28px !important;
+  margin-right: 5px;
+  margin-left: 5px;
+
+}
+
+.form_menu_input-depart {
+  width: 284px;
+  margin-top: 0;
+  margin-right: 10px;
 
 }
 
@@ -685,9 +729,10 @@ figure {
 .article_service-buttons {
   margin-top: 5px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+
 }
 
 /* .delete_button {
@@ -782,6 +827,11 @@ figure {
   flex-direction: row;
   justify-content: space-between;
   margin-top: 10px;
+}
+
+.form_button_submit-font_size {
+  font-size: 18px !important;
+  width: 100%;
 }
 
 .container_position_col-sub {

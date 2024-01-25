@@ -52,7 +52,7 @@ const LoginPage = () => {
             })
             .catch((error) => {
                 console.log(error);
-                setErrorMessage("Неправильный логин или пароль");
+                setErrorMessage("Неверный логин или пароль");
             });
     };
     useEffect(() => {
@@ -66,13 +66,13 @@ const LoginPage = () => {
         <div className="login_page">
             <div className="login_page_logo">
                 <a href="#">
-                    <img src="/logo.svg" />
+                    <img src="/logoww.svg" />
                 </a>
             </div>
             <div className="login_form">
                 <div className="login_form_title">Авторизация</div>
                 <form onSubmit={handleSubmit}>
-                    <div>
+                    <div className="login_form_button-container">
                         <input
                             className="select_button"
                             placeholder="Логин"
@@ -82,7 +82,7 @@ const LoginPage = () => {
                             onChange={(event) => setUsername(event.target.value)}
                         />
                     </div>
-                    <div>
+                    <div className="login_form_button-container">
                         <input
                             className="select_button select_button_password_margin"
                             placeholder="Пароль"
@@ -92,11 +92,12 @@ const LoginPage = () => {
                             onChange={(event) => setPassword(event.target.value)}
                         />
                     </div>
-
-                    <button className="form_button_submit" type="submit">
-                        Войти
-                    </button>
-                    {errorMessage && <p>{errorMessage}</p>}
+                    <div className="login_form_button-container-submit">
+                        <button className="form_button_submit form_button_submit-font_size" type="submit">
+                            Войти
+                        </button>
+                    </div>
+                    {errorMessage && <p className="error-message_login">{errorMessage}</p>}
                 </form>
             </div>
         </div>

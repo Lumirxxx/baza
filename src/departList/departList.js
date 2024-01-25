@@ -83,7 +83,7 @@ const DepartList = ({ profile }) => {
 
     return (
         <div className='depart_list-block'>
-            <select className='form_menu_input' value={profileData.depart_id} onChange={onChangeDepart}>
+            <select className='form_menu_input form_menu_input-depart' value={profileData.depart_id} onChange={onChangeDepart}>
 
                 {departments.map((depart) => (
                     <option key={depart.id} value={depart.id}>
