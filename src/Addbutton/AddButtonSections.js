@@ -119,7 +119,7 @@ const AddButtonSections = ({ menu_id, onUpdate }) => {
                         <form className="form_modal"
                             onSubmit={handleSubmit}
                             action="http://192.168.10.109:8000/api/v1/sections/"
-                            enctype="multipart/form-data"
+                            encType="multipart/form-data"
                         >
                             <div className="form_title">
                                 <div className="form_title_text">Создание раздела</div>
@@ -132,7 +132,7 @@ const AddButtonSections = ({ menu_id, onUpdate }) => {
                             <div className="form_menu_label">
                                 <label className="form_menu_label_name" htmlFor="menu">Меню:</label>
                                 <select disabled className="form_menu_input" required id="menu" name="menu" value={menu_id} onChange={handleMenuChange} >
-                                    <option value="" disabled selected>
+                                    <option value="" disabled >
                                         Выберите меню
                                     </option>
                                     {menus.map((menu) => (

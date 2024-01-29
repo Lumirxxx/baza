@@ -30,7 +30,9 @@ img {
 
 
 }
-
+.section_item_container{
+  position: relative;
+}
 .menu_img {
   max-width: 3rem;
   width: 100%;
@@ -574,7 +576,7 @@ img {
   position: absolute;
 
   top: 0;
-  left: 5px;
+right: 50px;
   transform: translate(0, 50%);
 }
 
@@ -660,7 +662,13 @@ figure {
   padding-right: 10px;
   width: 24px;
   height: 24px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 
+}
+.article_content_container-name{
+  word-break: break-all;
 }
 
 .edit_menu_button-black {
@@ -675,6 +683,7 @@ figure {
   position: relative;
   padding-left: 1.06rem;
   padding-right: 10px;
+  min-width: 42.5rem;
 }
 
 .add_files {

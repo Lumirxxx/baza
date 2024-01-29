@@ -104,7 +104,7 @@ const AddButtonSubsections = (props) => {
                         <form
                             onSubmit={handleSubmit}
                             action="http://192.168.10.109:8000/api/v1/subsections/"
-                            enctype="multipart/form-data"
+                            encType="multipart/form-data"
                             className="form_modal"
                         >
                             <div className="form_title">

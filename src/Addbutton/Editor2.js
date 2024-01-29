@@ -6,7 +6,8 @@ const Editor2 = ({ sectionId, onUpdate }) => {
     const editorRef = useRef(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState('');
-    const [imgUrl, setImgUrl] = useState('');
+    const [imgUrl, setImgUrl] = useState('')
+    ;
     const [article, setArticle] = useState('');
     const [sections, setSections] = useState([]);
     const [selectedSubsection, setSelectedSubsection] = useState('');

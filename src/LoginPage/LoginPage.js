@@ -7,33 +7,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-    // const [isStaff, setIsStaff] = useState(false);//Стейт для отслеживания состояния админа
-    // // Функция для обновления состояния isStaff
-    // useEffect(() => {
-    //     const token = localStorage.getItem("token");
-    //     axios.get("http://192.168.10.109:8000/api/v1/profile/", {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`
-    //         }
-    //     })
-    //         .then((response) => {
-    //             const userData = response.data;
-    //             setIsStaff(userData.is_staff);
-
-    //             // Сохранение данных о пользователе в localStorage
-    //             localStorage.setItem("username", userData.username);
-    //             localStorage.setItem("admin", userData.is_staff);
-    //             localStorage.setItem("moderator", userData.is_moderate);
-    //             console.log(userData.is_staff);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // }, []);
-
-    // console.log("isStaff:", isStaff);
-    // console.log("admin:", localStorage.getItem("admin"));
-    const handleSubmit = (event) => {
+      const handleSubmit = (event) => {
         event.preventDefault();
 
         axios

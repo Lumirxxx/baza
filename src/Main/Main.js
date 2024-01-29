@@ -36,6 +36,12 @@ const Main = () => {
     const [showModalDeleteArticle, setShowModalDeleteArticle] = useState(false);
     let isRedirected = false;
     const isRedirectedRef = useRef(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    // const [name, setName] = useState('');
+    // useEffect(() => {
+    //     setSelectedArticle(selectedArticle);
+    //     console.log(selectedArticle)
+    // }, [selectedArticle]);
 
     // Функция для обновления состояния isStaff
     useEffect(() => {
@@ -141,7 +147,7 @@ const Main = () => {
             setSelectedSectionItemId(null);
             setSelectedMenuItemId(menu_id);
             setShowSubsections(true);
-            console.log(sections)
+           
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
@@ -205,15 +211,18 @@ const Main = () => {
                     },
                 }
             );
-
+            setShowDeleteConfirmation(false);
             setMenu((prevMenu) =>
                 prevMenu.filter((menu) => menu.id !== selectedMenuId)
             );
         } catch (error) {
+            if (error.request.status === 500) {
+                setErrorMessage('Невозможно удалить так как имеются дочерние элементы');
+            }
             console.log(error);
         }
         setSelectedMenuId(null);
-        setShowDeleteConfirmation(false);
+
     };
 
     const cancelDeleteMenu = () => {
@@ -229,19 +238,25 @@ const Main = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            console.group(sectionId)
+            setSelectedSectionItemId(null);
+            setArticles([]);
+            setSectionId(null);
             setSections(sections.filter((section) => section.id !== sectionId));
             console.log(sections)
-            setSectionId(null);
+
             cancelDeleteSection()
 
         } catch (error) {
+            if (error.request.status === 500) {
+                setErrorMessage('Невозможно удалить так как имеются дочерние элементы');
+            }
             console.log(error);
         }
     };
-    const deleteSectionModal = (id) => {
-        setSectionId(id)
+    const deleteSectionModal = (sectionId) => {
+        setSectionId(sectionId)
         setShowModalDelete(true)
+        console.log(sectionId)
 
     }
     const cancelDeleteSection = () => {
@@ -288,6 +303,8 @@ const Main = () => {
     // Обработчик обновления данных статьи
     const handleArticleUpdate = (updatedArticle) => {
         setSelectedArticle(updatedArticle);
+        console.log(updatedArticle.name)
+        console.log(selectedArticle.name)
     };
     // Обработчик добавления обновления статьи
     const handleAddArticle = (newArticle) => {
@@ -356,7 +373,7 @@ const Main = () => {
                                     <div className="modal_alert-content">
 
                                         <div className="modal_alert-text">Вы уверены, что хотите удалить пункт меню?</div>
-
+                                        {errorMessage && <p className="error-message_login">{errorMessage}</p>}
                                         <div className="modal-actions">
                                             <div className="modal-actions_buttons modal-actions_buttons_red" onClick={confirmDeleteMenu}>Удалить</div>
                                             <div className="modal-actions_buttons" onClick={cancelDeleteMenu}>Отмена</div>
@@ -382,48 +399,58 @@ const Main = () => {
 
                             <div className="sections_container">
                                 {sections.map((section) => (
-                                    <div
-                                        className={`section_button ${(sectionId == section.id) ? 'active' : ''}`}
-                                        title={section.name}
-
-                                        key={section.id}
-                                        onClick={() => handleArticleButtonClick(section.id)}
+                                    <div className="section_item_container">
+                                        <div
+                                            className={`section_button ${(sectionId == section.id) ? 'active' : ''}`}
+                                            title={section.name}
 
 
-                                    >
-                                        <div className="section_button_content" >
-                                            <div className="section_img_container">
+                                            onClick={() => handleArticleButtonClick(section.id)}
 
-                                                {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
 
+                                        >
+
+                                            <div className="section_button_content" >
+                                                <div className="section_img_container">
+
+                                                    {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
+
+                                                </div>
+                                                <div className="section_name">{section.name}</div>
                                             </div>
-                                            <div className="section_name">{section.name}</div>
+
+
                                         </div>
+
                                         <div className="button_update-container">
                                             {(profile.is_staff || profile.is_moderate) && (
                                                 <div>
-                                                    <div className="cl-btn-4" onClick={() => deleteSectionModal(section.id)} title="Удалить"></div>
+                                                    <div className="cl-btn-4" onClick={() => deleteSectionModal(sectionId)} title="Удалить"></div>
 
                                                 </div>
                                             )}
 
 
                                         </div>
+
                                         {(profile.is_staff || profile.is_moderate) && (
                                             <EditButtonSection
-                                                key={section.id}
+
                                                 section={section}
                                                 onUpdate={handleSectionUpdate}
                                             />
                                         )}
-
                                     </div>
+
                                 ))}
+
+
                                 {showModalDelete && (
                                     <div className="modal-container">
                                         <div className="modal">
                                             <div className="modal_alert-content">
                                                 <div className="modal_alert-text">Вы уверены, что хотите удалить пункт раздела?</div>
+                                                {errorMessage && <p className="error-message_login">{errorMessage}</p>}
                                                 <div className="modal-actions">
                                                     <div className="modal-actions_buttons modal-actions_buttons_red" onClick={() => handleDeleteSection(sectionId)}>Удалить</div>
                                                     <div className="modal-actions_buttons" onClick={() => cancelDeleteSection()}>Отмена</div>
@@ -487,7 +514,7 @@ const Main = () => {
                             {
                                 selectedSectionItemId !== null && showSubsections && sections.length > 0 && (profile.is_staff || profile.is_moderate) && (
                                     <Editor2 subsectionId={subsectionId} sectionId={sectionId} onUpdate={handleAddArticle} />
-                                    // <AddButtonSubsections sectionId={sectionId} subsections={subsections} />
+
                                 )
                             }
 
@@ -535,7 +562,7 @@ const Main = () => {
 
 
                                         </div>
-                                        <div>
+                                        <div className="article_content_container-name">
                                             <h1 className="article_content_name" dangerouslySetInnerHTML={{ __html: selectedArticle.name }} ></h1>
                                             <div className="article_content_text" dangerouslySetInnerHTML={{ __html: selectedArticle.text }}></div>
                                         </div>

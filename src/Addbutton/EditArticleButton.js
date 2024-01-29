@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
 
@@ -8,9 +8,10 @@ const EditArticleButton = ({ article, onUpdate }) => {
     const [editedContent, setEditedContent] = useState(article.text);
     const [articleTitle, setArticleTitle] = useState(article.name);
     const [errorMessage, setErrorMessage] = useState("");
+   
     const TINY_MCE_API_KEY = 'efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v';
     const TINY_MCE_SCRIPT_SRC = `https://cdn.tiny.cloud/1/${TINY_MCE_API_KEY}/tinymce/5/tinymce.min.js`;
-
+   
     const handleEditClick = () => {
         setEditing(true);
     };
@@ -70,12 +71,14 @@ const EditArticleButton = ({ article, onUpdate }) => {
                 },
                 data: formData,
             });
+
             onUpdate(response.data)
             const articleId = response.data.id;
             const fileFormData = new FormData();
             fileFormData.append("article_id", articleId);
             console.log('Статья изменена:', response.data);
             setEditing(false);
+            console.log(response.data)
             // refresh();
         } catch (error) {
             console.log('Ошибка при загрузке статьи или изображения:', error);
@@ -123,12 +126,15 @@ const EditArticleButton = ({ article, onUpdate }) => {
                                 tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
                                 apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
                                 init={{
-                                    height: 500,
-                                    menubar: false,
+                                    plugins: 'image , paste, wordcount',
+                                    toolbar: 'image',
+
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,
-                                    plugins: ['paste, link, image ,code'],
-                                    toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | image',
+                                    paste_data_images: true,
+
+
+
                                 }}
                                 onEditorChange={handleChange}
                             />

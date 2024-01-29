@@ -17,7 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage></LoginPage>} />
           <Route path='/main' element={<Main></Main>} />
-          <Route path='/admin' element={<AdminPage></AdminPage>} />
+   
           {/* <Route path='/release' element={<ReleasePage></ReleasePage>} /> */}
         </Routes>
       </BrowserRouter>
