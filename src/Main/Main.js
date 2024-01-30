@@ -14,6 +14,7 @@ import Files from "../Files/Files";
 import Editor2 from "../Addbutton/Editor2";
 import LogoutButton from "../logout/LogoutButton";
 import DepartList from "../departList/departList";
+import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -28,6 +29,7 @@ const Main = () => {
     const [selectedSectionItemId, setSelectedSectionItemId] = useState(null);
     const [subsectionId, setSubsectionId] = useState(null);
     const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
+    // const [articleId, setArticleId] = useState(null);//текущая статья
     const [profile, setProfile] = useState(false);//Стейт для отслеживания состояния админа
     const [selectedMenuId, setSelectedMenuId] = useState(null);
     const [selectedSectionId, setSelectedSectionId] = useState(null);
@@ -147,7 +149,7 @@ const Main = () => {
             setSelectedSectionItemId(null);
             setSelectedMenuItemId(menu_id);
             setShowSubsections(true);
-           
+
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate("/");
@@ -304,8 +306,10 @@ const Main = () => {
     const handleArticleUpdate = (updatedArticle) => {
         setSelectedArticle(updatedArticle);
         console.log(updatedArticle.name)
-        console.log(selectedArticle.name)
+
+
     };
+
     // Обработчик добавления обновления статьи
     const handleAddArticle = (newArticle) => {
         setArticles([...articles, newArticle]);
@@ -325,6 +329,8 @@ const Main = () => {
     const handleMenuAdd = (newMenu) => {
         setMenu((prevMenu) => [...prevMenu, newMenu]);
     }
+
+
 
 
     return (
@@ -391,7 +397,9 @@ const Main = () => {
                     {(profile.is_staff || profile.is_moderate) && (
                         <AddButtonMenu onUpdate={handleMenuAdd} />
                     )}
-
+                    <div>
+                        <ScrollToTopButton />
+                    </div>
                 </div>
                 <div className="menu_container_right">
                     <div className="container_position_col">

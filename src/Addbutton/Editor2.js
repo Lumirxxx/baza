@@ -7,7 +7,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState('');
     const [imgUrl, setImgUrl] = useState('')
-    ;
+        ;
     const [article, setArticle] = useState('');
     const [sections, setSections] = useState([]);
     const [selectedSubsection, setSelectedSubsection] = useState('');
@@ -149,13 +149,13 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                                 apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
                                 init={{
                                     plugins: 'image , paste, wordcount',
-                                    toolbar: 'image',
+                                    toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons',
 
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,
                                     paste_data_images: true,
 
-
+                                    height: 600,
 
                                 }}
 

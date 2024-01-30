@@ -20,6 +20,12 @@ body {
   font-weight: light;
 }
 
+@font-face {
+  font-family: mulishregular;
+  src: local(mulishregular), url(./fonts/Mulish-Regular.ttf) format('truetype');
+  font-weight: normal;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

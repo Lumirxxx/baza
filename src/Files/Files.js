@@ -42,10 +42,13 @@ const Files = ({ articleId }) => {
     return (
         <div className="files_container">
             <div className="files_container-content">
-                <h4>Прикрепленные файлы доступны для скачивания</h4>
+
                 {files.length > 0 && (
                     <div>
+                        <div className="files_title">Прикрепленные файлы доступные для скачивания</div>
                         {files.map((file) => (
+
+
                             <div key={file.id}>
                                 <div className="file_name-download" onClick={() => handleDownload(file.file, file.name)} target="_blank" rel="noopener noreferrer">{file.name}</div>
                             </div>

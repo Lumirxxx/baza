@@ -8,6 +8,7 @@ import './fonts/gothampro_black.ttf'
 import './fonts/gothampro_bold.ttf'
 import './fonts/gothampro_medium.ttf'
 import './fonts/gothampro_light.ttf'
+import './fonts/Mulish-Regular.ttf'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
