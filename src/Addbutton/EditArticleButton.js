@@ -120,6 +120,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
                                 value={articleTitle}
                                 onChange={handleTitleChange}
                             />
+                            {errorMessage && <div className="error-message">{errorMessage.detail}</div>}
                             {errorMessage && <div className="error-message">{errorMessage.name}</div>}
 
                             <Editor
@@ -142,6 +143,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
                             />
                             {errorMessage && <div className="error-message">{errorMessage.text}</div>}
                             <div className="button_article-editor">
+
                                 <button className="form_button" onClick={handleSaveClick}>
                                     Сохранить
                                 </button>

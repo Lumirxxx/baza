@@ -15,6 +15,7 @@ import Editor2 from "../Addbutton/Editor2";
 import LogoutButton from "../logout/LogoutButton";
 import DepartList from "../departList/departList";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
+import DeleteMenuButton from "../DeleteButton/DeleteButton";
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -354,18 +355,19 @@ const Main = () => {
 
                     {menu.map((menuItem) => (
                         <div title={menuItem.name} className="menu_item">
-                            <button
+                            {/* <button
                                 className={`button_body ${(menu_id == menuItem.id) ? 'active' : ''}`}
                                 key={menuItem.id}
                                 onClick={() => handleSectionButtonClick(menuItem.id)}
                             >
                                 <img className="menu_img" src={menuItem.img} alt="" />
                                 <div className="button_text">{menuItem.name}</div>
-                            </button>
-                            {(profile.is_staff || profile.is_moderate) && (
+                            </button> */}
+                            {/* {(profile.is_staff || profile.is_moderate) && (
 
 
                                 <div className="button_delete-container">
+
                                     <div
                                         className="cl-btn-4 delete_button"
                                         onClick={() => handleDeleteMenu(menuItem.id)}
@@ -373,7 +375,8 @@ const Main = () => {
                                     ></div>
                                 </div>
 
-                            )}
+                            )} */}
+                            <DeleteMenuButton handleSectionButtonClick={handleSectionButtonClick} handleDeleteMenu={handleDeleteMenu} profile={profile} menu_id={menuItem.id} menuItem={menuItem} selectedMenuId={selectedMenuId} menuId={menuItem.id} onUpdate={handleMenuUpdate} />
                             {showDeleteConfirmation && (
                                 <div className="modal">
                                     <div className="modal_alert-content">
