@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
+import DeleteArticleButton from '../DeleteButton/DeleteArticleButton';
 
 const EditArticleButton = ({ article, onUpdate }) => {
     const editorRef = useRef(null);
@@ -113,7 +114,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
                 <div>
                     <div className="modal">
                         <div className="modal-editor form_modal">
-
+                            <DeleteArticleButton />
                             <input
                                 className='article_name-input form_menu_input'
                                 type="text"
