@@ -739,12 +739,22 @@ figure {
   margin-bottom: 10px;
 }
 
+.files_title {
+  margin-bottom: 10px;
+}
+
 .file_name-download {
   cursor: pointer;
   font-style: italic;
   display: inline-block;
   margin-bottom: 10px;
+  color: #0645AD;
 }
+
+.file_name-download:hover {
+  text-decoration: underline;
+}
+
 
 .files_container {
   padding-left: 20px;

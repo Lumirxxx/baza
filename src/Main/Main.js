@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,8 @@ import LogoutButton from "../logout/LogoutButton";
 import DepartList from "../departList/departList";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 import DeleteMenuButton from "../DeleteButton/DeleteMenuButton";
+import DeleteSectionButton from "../DeleteButton/DeleteSectionButton";
+export const DeleteSectionButtonContext = React.createContext();
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -40,6 +42,7 @@ const Main = () => {
     let isRedirected = false;
     const isRedirectedRef = useRef(false);
     const [errorMessage, setErrorMessage] = useState("");
+  
     // const [name, setName] = useState('');
     // useEffect(() => {
     //     setSelectedArticle(selectedArticle);
@@ -420,12 +423,9 @@ const Main = () => {
                                         </div>
 
                                         <div className="button_update-container">
-                                            {(profile.is_staff || profile.is_moderate) && (
-                                                <div>
-                                                    <div className="cl-btn-4" onClick={() => deleteSectionModal(sectionId)} title="Удалить"></div>
-
-                                                </div>
-                                            )}
+                                            <DeleteSectionButtonContext.Provider value={{ profile, deleteSectionModal, sectionId }}>
+                                                <DeleteSectionButton />
+                                            </DeleteSectionButtonContext.Provider>
 
 
                                         </div>
@@ -582,4 +582,5 @@ const Main = () => {
 };
 
 export default Main;
+
 

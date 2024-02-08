@@ -45,12 +45,12 @@ const Files = ({ articleId }) => {
 
                 {files.length > 0 && (
                     <div>
-                        <div className="files_title">Прикрепленные файлы доступные для скачивания</div>
+                        <div className="files_title">Прикрепленные файлы доступные для скачивания:</div>
                         {files.map((file) => (
 
 
                             <div key={file.id}>
-                                <div className="file_name-download" onClick={() => handleDownload(file.file, file.name)} target="_blank" rel="noopener noreferrer">{file.name}</div>
+                                <div title="Скачать" className="file_name-download" onClick={() => handleDownload(file.file, file.name)} target="_blank" rel="noopener noreferrer">{file.name}</div>
                             </div>
                         ))}
                     </div>
