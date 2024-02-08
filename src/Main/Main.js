@@ -16,7 +16,7 @@ import LogoutButton from "../logout/LogoutButton";
 import DepartList from "../departList/departList";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 import DeleteMenuButton from "../DeleteButton/DeleteMenuButton";
-import DeleteSectionButton from "../DeleteButton/DeleteSectionButton";
+
 export const DeleteSectionButtonContext = React.createContext();
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
@@ -42,12 +42,6 @@ const Main = () => {
     let isRedirected = false;
     const isRedirectedRef = useRef(false);
     const [errorMessage, setErrorMessage] = useState("");
-  
-    // const [name, setName] = useState('');
-    // useEffect(() => {
-    //     setSelectedArticle(selectedArticle);
-    //     console.log(selectedArticle)
-    // }, [selectedArticle]);
 
     // Функция для обновления состояния isStaff
     useEffect(() => {
@@ -191,7 +185,6 @@ const Main = () => {
             }
         }
     }
-
 
     const handleSelectArticle = (articleObj) => {
         setSelectedArticle((prevArticle) => {
@@ -423,19 +416,23 @@ const Main = () => {
                                         </div>
 
                                         <div className="button_update-container">
-                                            <DeleteSectionButtonContext.Provider value={{ profile, deleteSectionModal, sectionId }}>
-                                                <DeleteSectionButton />
-                                            </DeleteSectionButtonContext.Provider>
+
+
+
 
 
                                         </div>
 
                                         {(profile.is_staff || profile.is_moderate) && (
-                                            <EditButtonSection
+                                            <div>
+                                                <DeleteSectionButtonContext.Provider value={{ profile, deleteSectionModal, sectionId, section }}>
+                                                    <EditButtonSection
 
-                                                section={section}
-                                                onUpdate={handleSectionUpdate}
-                                            />
+                                                        section={section}
+                                                        onUpdate={handleSectionUpdate}
+                                                    />
+                                                </DeleteSectionButtonContext.Provider>
+                                            </div>
                                         )}
                                     </div>
 

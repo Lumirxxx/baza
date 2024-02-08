@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import DeleteSectionButton from "../DeleteButton/DeleteSectionButton";
 
 const EditButtonSection = ({ section, onUpdate }) => {
     const [showForm, setShowForm] = useState(false);
@@ -75,6 +76,7 @@ const EditButtonSection = ({ section, onUpdate }) => {
                                     onChange={handleInputChange}
                                 />
                             </div>
+                            <DeleteSectionButton />
                             <div className="form_menu_label form_menu_label_img-container">
 
                                 <label className="form_menu_label_img" htmlFor="image"><div className="form_menu_input-image"></div></label>
