@@ -359,6 +359,10 @@ const Main = () => {
                                 <img className="menu_img" src={menuItem.img} alt="" />
                                 <div className="button_text">{menuItem.name}</div>
                             </button>
+
+                            {(profile.is_staff || profile.is_moderate) && (
+                                <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} onUpdate={handleMenuUpdate} deleteMenuButtonComponent={<DeleteMenuButton handleSectionButtonClick={handleSectionButtonClick} handleDeleteMenu={handleDeleteMenu} profile={profile} menu_id={menu_id} menuItem={menuItem} selectedMenuId={selectedMenuId} menuId={menuItem.id} onUpdate={handleMenuUpdate} />} />
+                            )}
                             {showDeleteConfirmation && (
                                 <div className="modal">
                                     <div className="modal_alert-content">
@@ -371,9 +375,6 @@ const Main = () => {
                                         </div>
                                     </div>
                                 </div>
-                            )}
-                            {(profile.is_staff || profile.is_moderate) && (
-                                <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} onUpdate={handleMenuUpdate} deleteMenuButtonComponent={<DeleteMenuButton handleSectionButtonClick={handleSectionButtonClick} handleDeleteMenu={handleDeleteMenu} profile={profile} menu_id={menu_id} menuItem={menuItem} selectedMenuId={selectedMenuId} menuId={menuItem.id} onUpdate={handleMenuUpdate} />} />
                             )}
 
                         </div>
