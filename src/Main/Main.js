@@ -20,6 +20,7 @@ import ModalAllertDeleteMenu from "../ModalAllert/ModalAllertDeleteMenu";
 import ModalAllertDeleteSection from "../ModalAllert/ModalAllertDeleteSection";
 import ButtonMenu from "../MainButton/ButtonMenu";
 import ButtonSection from "../MainButton/ButtonSection";
+import ButtonArticleName from "../MainButton/ButtonArticleName";
 
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
@@ -28,6 +29,7 @@ export const ModalAllertDeleteMenuContext = React.createContext();
 export const ModalAllertDeleteSectionContext = React.createContext();
 export const ButtonMenuContext = React.createContext();
 export const ButtonSectionContext = React.createContext();
+export const ButtonArticleNameContext = React.createContext();
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -428,28 +430,9 @@ const Main = () => {
 
                             <div className="sections_container sections_container-articles_name">
                                 {articles.map((article) => (
-                                    <div
-                                        title={article.name}
-                                        onClick={() => handleSelectArticle(article)}
-                                        key={article.id}
-                                        className={`section_button ${selectedArticle && selectedArticle.id === article.id ? 'active' : ''}`}
-                                    >
-                                        <div className="subsection_button_content" >
-                                            <div className="section_img_container section_img_container-articles">
-                                                {article.img && <img className="section_img" src={article.img} alt="Subsection Image" />}
-                                            </div>
-                                            <div className="subsection_name">{article.name}</div>
-                                        </div>
-                                        <div className="button_update-container">
-                                            <div className="section_button-container">
-                                                <div className="section_button_edit">
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        {/* <EditButtonSubsection subsection={subsection} articles={articles} subsectionId={subsection.id} onUpdate={handleSubsectionUpdate} /> */}
-                                    </div>
+                                    <ButtonArticleNameContext.Provider value={{ handleSelectArticle, selectedArticle,article }}>
+                                        <ButtonArticleName />
+                                    </ButtonArticleNameContext.Provider>
                                 ))}
 
                             </div>
