@@ -19,6 +19,7 @@ import DeleteMenuButton from "../DeleteButton/DeleteMenuButton";
 import ModalAllertDeleteMenu from "../ModalAllert/ModalAllertDeleteMenu";
 import ModalAllertDeleteSection from "../ModalAllert/ModalAllertDeleteSection";
 import ButtonMenu from "../MainButton/ButtonMenu";
+import ButtonSection from "../MainButton/ButtonSection";
 
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
@@ -26,6 +27,7 @@ export const DeleteArticleButtonContext = React.createContext();
 export const ModalAllertDeleteMenuContext = React.createContext();
 export const ModalAllertDeleteSectionContext = React.createContext();
 export const ButtonMenuContext = React.createContext();
+export const ButtonSectionContext = React.createContext();
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -383,19 +385,10 @@ const Main = () => {
                             <div className="sections_container">
                                 {sections.map((section) => (
                                     <div className="section_item_container">
-                                        <div
-                                            className={`section_button ${(sectionId == section.id) ? 'active' : ''}`}
-                                            title={section.name}
-                                            onClick={() => handleArticleButtonClick(section.id)}
-                                        >
-                                            <div className="section_button_content" >
-                                                <div className="section_img_container">
-
-                                                    {section.img && <img className="section_img" src={section.img} alt="Section Image" />}
-
-                                                </div>
-                                                <div className="section_name">{section.name}</div>
-                                            </div>
+                                        <div>
+                                            <ButtonSectionContext.Provider value={{ ButtonMenuContext, sectionId, section, handleArticleButtonClick }}>
+                                                <ButtonSection />
+                                            </ButtonSectionContext.Provider>
                                         </div>
                                         {(profile.is_staff || profile.is_moderate) && (
                                             <div>
@@ -412,7 +405,7 @@ const Main = () => {
 
                                 ))}
                                 {showModalDelete && (
-                                    <ModalAllertDeleteSectionContext.Provider value={{ handleDeleteSection, sectionId }}>
+                                    <ModalAllertDeleteSectionContext.Provider value={{ handleDeleteSection, sectionId, cancelDeleteSection }}>
                                         <ModalAllertDeleteSection />
                                     </ModalAllertDeleteSectionContext.Provider>
                                 )}
