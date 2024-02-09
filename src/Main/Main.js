@@ -17,12 +17,13 @@ import DepartList from "../departList/departList";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 import DeleteMenuButton from "../DeleteButton/DeleteMenuButton";
 import ModalAllertDeleteMenu from "../ModalAllert/ModalAllertDeleteMenu";
-
+import ModalAllertDeleteSection from "../ModalAllert/ModalAllertDeleteSection";
 
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
 export const DeleteArticleButtonContext = React.createContext();
 export const ModalAllertDeleteMenuContext = React.createContext();
+export const ModalAllertDeleteSectionContext = React.createContext();
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -331,10 +332,6 @@ const Main = () => {
     const handleMenuAdd = (newMenu) => {
         setMenu((prevMenu) => [...prevMenu, newMenu]);
     }
-
-
-
-
     return (
         <div className="main_container">
             <div className="header_container">
@@ -411,14 +408,6 @@ const Main = () => {
 
                                         </div>
 
-                                        <div className="button_update-container">
-
-
-
-
-
-                                        </div>
-
                                         {(profile.is_staff || profile.is_moderate) && (
                                             <div>
                                                 <DeleteSectionButtonContext.Provider value={{ profile, deleteSectionModal, sectionId, section }}>
@@ -436,18 +425,9 @@ const Main = () => {
 
 
                                 {showModalDelete && (
-                                    <div className="modal-container">
-                                        <div className="modal">
-                                            <div className="modal_alert-content">
-                                                <div className="modal_alert-text">Вы уверены, что хотите удалить пункт раздела?</div>
-                                                {errorMessage && <p className="error-message_login">{errorMessage}</p>}
-                                                <div className="modal-actions">
-                                                    <div className="modal-actions_buttons modal-actions_buttons_red" onClick={() => handleDeleteSection(sectionId)}>Удалить</div>
-                                                    <div className="modal-actions_buttons" onClick={() => cancelDeleteSection()}>Отмена</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <ModalAllertDeleteSectionContext.Provider value={{ handleDeleteSection, sectionId }}>
+                                        <ModalAllertDeleteSection />
+                                    </ModalAllertDeleteSectionContext.Provider>
                                 )}
 
 
@@ -545,11 +525,6 @@ const Main = () => {
                                             {(profile.is_staff || profile.is_moderate) && (
                                                 <AddFilesButton articleId={selectedArticle.id} />
                                             )}
-
-
-
-
-
 
                                         </div>
                                         <div className="article_content_container-name">
