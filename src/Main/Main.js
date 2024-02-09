@@ -18,12 +18,14 @@ import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 import DeleteMenuButton from "../DeleteButton/DeleteMenuButton";
 import ModalAllertDeleteMenu from "../ModalAllert/ModalAllertDeleteMenu";
 import ModalAllertDeleteSection from "../ModalAllert/ModalAllertDeleteSection";
+import ButtonMenu from "../MainButton/ButtonMenu";
 
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
 export const DeleteArticleButtonContext = React.createContext();
 export const ModalAllertDeleteMenuContext = React.createContext();
 export const ModalAllertDeleteSectionContext = React.createContext();
+export const ButtonMenuContext = React.createContext();
 const Main = () => {
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
@@ -353,14 +355,9 @@ const Main = () => {
 
                     {menu.map((menuItem) => (
                         <div title={menuItem.name} className="menu_item">
-                            <button
-                                className={`button_body ${(menu_id == menuItem.id) ? 'active' : ''}`}
-                                key={menuItem.id}
-                                onClick={() => handleSectionButtonClick(menuItem.id)}
-                            >
-                                <img className="menu_img" src={menuItem.img} alt="" />
-                                <div className="button_text">{menuItem.name}</div>
-                            </button>
+                            <ButtonMenuContext.Provider value={{ menuItem, handleSectionButtonClick, menu_id }}>
+                                <ButtonMenu />
+                            </ButtonMenuContext.Provider>
 
                             {(profile.is_staff || profile.is_moderate) && (
                                 <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} onUpdate={handleMenuUpdate} deleteMenuButtonComponent={<DeleteMenuButton handleSectionButtonClick={handleSectionButtonClick} handleDeleteMenu={handleDeleteMenu} profile={profile} menu_id={menu_id} menuItem={menuItem} selectedMenuId={selectedMenuId} menuId={menuItem.id} onUpdate={handleMenuUpdate} />} />
@@ -389,13 +386,8 @@ const Main = () => {
                                         <div
                                             className={`section_button ${(sectionId == section.id) ? 'active' : ''}`}
                                             title={section.name}
-
-
                                             onClick={() => handleArticleButtonClick(section.id)}
-
-
                                         >
-
                                             <div className="section_button_content" >
                                                 <div className="section_img_container">
 
@@ -404,10 +396,7 @@ const Main = () => {
                                                 </div>
                                                 <div className="section_name">{section.name}</div>
                                             </div>
-
-
                                         </div>
-
                                         {(profile.is_staff || profile.is_moderate) && (
                                             <div>
                                                 <DeleteSectionButtonContext.Provider value={{ profile, deleteSectionModal, sectionId, section }}>
@@ -422,16 +411,11 @@ const Main = () => {
                                     </div>
 
                                 ))}
-
-
                                 {showModalDelete && (
                                     <ModalAllertDeleteSectionContext.Provider value={{ handleDeleteSection, sectionId }}>
                                         <ModalAllertDeleteSection />
                                     </ModalAllertDeleteSectionContext.Provider>
                                 )}
-
-
-                                {/* <AddButtonSectionsMain menuId={menu_id} /> */}
                             </div>
 
 
