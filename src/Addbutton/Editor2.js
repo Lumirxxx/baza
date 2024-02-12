@@ -65,7 +65,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
             });
 
             const editor = editorRef.current;
-            // editor.insertContent(`<img src="${response.data.img}" alt=""/>`);
+
 
             success(response.data.img);
             console.log(response.data.img);
@@ -74,6 +74,30 @@ const Editor2 = ({ sectionId, onUpdate }) => {
             failure('Ошибка загрузки изображения из-за ошибки сервера.');
         }
     };
+
+
+    const handleVideoUploaded = async (blobInfo, success, failure) => {
+        const token = localStorage.getItem('token');
+        const videoUrl = blobInfo.blobUri();
+
+        const videoFile = await fetch(videoUrl).then((response) => response.blob());
+        const formData = new FormData();
+        formData.append('video', videoFile, blobInfo.filename());
+
+        try {
+            const response = await axios.post('http://192.168.10.109:8000/api/v1/videos/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            success(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Ошибка отправки видео:', error);
+            failure('Ошибка загрузки видео из-за ошибки сервера.');
+        }
+    }
 
     const handleSubmit = async () => {
         // Получить содержимое редактора
@@ -87,6 +111,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
         // Остальной код для отправки формы
         const formData = new FormData();
         const token = localStorage.getItem('token');
+        formData.append('video', content)
         formData.append('img', content);
         formData.append('text', content);
         formData.append('name', name);
@@ -153,6 +178,22 @@ const Editor2 = ({ sectionId, onUpdate }) => {
 
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,
+                                    file_picker_callback: function (callback, value, meta) {
+                                        /* Provide file and text for the link dialog */
+                                        if (meta.filetype === 'file') {
+                                            callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+                                        }
+
+                                        /* Provide image and alt text for the image dialog */
+                                        if (meta.filetype === 'image') {
+                                            callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+                                        }
+
+                                        /* Provide alternative source and posted for the media dialog */
+                                        if (meta.filetype === 'media') {
+                                            callback('movie.mp4', { source2: 'alt.ogg', poster: 'http://192.168.10.109:8000/media/files/video_2024-02-12_14-17-41_pOyX8Ct.mp4' });
+                                        }
+                                    },
                                     paste_data_images: true,
                                     media_live_embeds: true,
 
@@ -180,3 +221,4 @@ const Editor2 = ({ sectionId, onUpdate }) => {
 };
 
 export default Editor2;
+
