@@ -148,12 +148,13 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                                 onInit={(evt, editor) => (editorRef.current = editor)}
                                 apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
                                 init={{
-                                    plugins: 'image , paste, wordcount',
-                                    toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons',
+                                    plugins: 'image , paste, wordcount ,media',
+                                    toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons | media',
 
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,
                                     paste_data_images: true,
+                                    media_live_embeds: true,
 
                                     height: 600,
 

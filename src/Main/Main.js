@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef, createContext } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import ArticleEditForm from "../ArticleEditForm/ArticleEditForm";
-import AddButtonSectionsMain from "../Addbutton/AddButtonSectionsMain";
 import AddButtonSections from "../Addbutton/AddButtonSections";
 import EditButtonSection from "../Addbutton/EditButtonSection";
 import AddButtonMenu from "../Addbutton/AddButtonMenu";
@@ -18,6 +15,7 @@ import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 import DeleteMenuButton from "../DeleteButton/DeleteMenuButton";
 import ModalAllertDeleteMenu from "../ModalAllert/ModalAllertDeleteMenu";
 import ModalAllertDeleteSection from "../ModalAllert/ModalAllertDeleteSection";
+import ModalAllertDeleteArticle from "../ModalAllert/ModalAllerDeleteArticle";
 import ButtonMenu from "../MainButton/ButtonMenu";
 import ButtonSection from "../MainButton/ButtonSection";
 import ButtonArticleName from "../MainButton/ButtonArticleName";
@@ -27,6 +25,7 @@ export const DeleteSectionButtonContext = React.createContext();
 export const DeleteArticleButtonContext = React.createContext();
 export const ModalAllertDeleteMenuContext = React.createContext();
 export const ModalAllertDeleteSectionContext = React.createContext();
+export const ModalAllertDeleteArticleContext = React.createContext();
 export const ButtonMenuContext = React.createContext();
 export const ButtonSectionContext = React.createContext();
 export const ButtonArticleNameContext = React.createContext();
@@ -44,7 +43,6 @@ const Main = () => {
     const [selectedSectionItemId, setSelectedSectionItemId] = useState(null);
     const [subsectionId, setSubsectionId] = useState(null);
     const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
-    // const [articleId, setArticleId] = useState(null);//текущая статья
     const [profile, setProfile] = useState(false);//Стейт для отслеживания состояния админа
     const [selectedMenuId, setSelectedMenuId] = useState(null);
     const [selectedSectionId, setSelectedSectionId] = useState(null);
@@ -430,7 +428,7 @@ const Main = () => {
 
                             <div className="sections_container sections_container-articles_name">
                                 {articles.map((article) => (
-                                    <ButtonArticleNameContext.Provider value={{ handleSelectArticle, selectedArticle,article }}>
+                                    <ButtonArticleNameContext.Provider value={{ handleSelectArticle, selectedArticle, article }}>
                                         <ButtonArticleName />
                                     </ButtonArticleNameContext.Provider>
                                 ))}
@@ -468,17 +466,9 @@ const Main = () => {
                                             )}
 
                                             {showModalDeleteArticle && (
-                                                <div className="modal-container">
-                                                    <div className="modal">
-                                                        <div className="modal_alert-content">
-                                                            <div className="modal_alert-text">Вы уверены, что хотите удалить статью?</div>
-                                                            <div className="modal-actions">
-                                                                <div className="modal-actions_buttons modal-actions_buttons_red" onClick={() => handleDeleteArticle(selectedArticle.id)}>Удалить</div>
-                                                                <div className="modal-actions_buttons" onClick={() => cancelArticleModal()}>Отмена</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <ModalAllertDeleteArticleContext.Provider value={{ handleDeleteArticle, selectedArticle, cancelArticleModal, handleDeleteArticle }}>
+                                                    <ModalAllertDeleteArticle />
+                                                </ModalAllertDeleteArticleContext.Provider>
                                             )}
 
 
