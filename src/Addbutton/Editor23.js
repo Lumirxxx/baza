@@ -64,7 +64,6 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                 },
             });
 
-            const editor = editorRef.current;
 
 
             success(response.data.img);
@@ -74,15 +73,10 @@ const Editor2 = ({ sectionId, onUpdate }) => {
             failure('Ошибка загрузки изображения из-за ошибки сервера.');
         }
     };
-
-
-    const handleVideoUploaded = async (blobInfo, success, failure) => {
+    const handleVideoUpload = async (videoFile, success, failureFunc) => {
         const token = localStorage.getItem('token');
-        const videoUrl = blobInfo.blobUri();
-
-        const videoFile = await fetch(videoUrl).then((response) => response.blob());
         const formData = new FormData();
-        formData.append('video', videoFile, blobInfo.filename());
+        formData.append('video', videoFile);
 
         try {
             const response = await axios.post('http://192.168.10.109:8000/api/v1/videos/', formData, {
@@ -91,13 +85,17 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            success(response.data);
-            console.log(response.data);
+
+            success(response.data.video);
+            console.log('Видео успешно загружено:', response.data.video);
         } catch (error) {
-            console.error('Ошибка отправки видео:', error);
-            failure('Ошибка загрузки видео из-за ошибки сервера.');
+            console.error('Ошибка при загрузке видео:', error);
+            // failureFunc('Ошибка загрузки видео из-за ошибки сервера.');
         }
-    }
+    };
+
+
+
 
     const handleSubmit = async () => {
         // Получить содержимое редактора
@@ -111,7 +109,6 @@ const Editor2 = ({ sectionId, onUpdate }) => {
         // Остальной код для отправки формы
         const formData = new FormData();
         const token = localStorage.getItem('token');
-        formData.append('video', content)
         formData.append('img', content);
         formData.append('text', content);
         formData.append('name', name);
@@ -171,25 +168,35 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                             <Editor
                                 tinymceScriptSrc={TINY_MCE_SCRIPT_SRC}
                                 onInit={(evt, editor) => (editorRef.current = editor)}
-                                apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
+                                apiKey={TINY_MCE_API_KEY}
                                 init={{
-                                    plugins: 'image , paste, wordcount ,media',
-                                    toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons | media',
-
+                                    plugins: 'image media',
+                                    toolbar: 'image media',
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,
-                                    videos_upload_handler: handleVideoUploaded,
-                                    paste_data_images: true,
+                                    // video_upload_url: 'http://192.168.10.109:8000/api/v1/videos/',
+
+                                    file_picker_types: 'image',
+                                    file_picker_types: 'media',
+                                    automatic_uploads: true,
+                                    file_picker_callback: function (callback, value, meta) {
+                                        if (meta.filetype === 'media') {
+                                            document.getElementById('file-input').click();
+                                        }
+                                    },
                                     media_live_embeds: true,
 
-                                    height: 600,
-
                                 }}
-
                             />
                             {errorMessage && <div className="error-message">{errorMessage.text}</div>}
                             <div className='button_article-editor'>
-
+                                <input
+                                    id="file-input"
+                                    type="file"
+                                    accept="video/*"
+                                    style={{ display: 'none' }}
+                                    onChange={handleVideoUpload}
+                                />
 
 
 
@@ -206,4 +213,3 @@ const Editor2 = ({ sectionId, onUpdate }) => {
 };
 
 export default Editor2;
-

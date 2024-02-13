@@ -19,6 +19,7 @@ import ModalAllertDeleteArticle from "../ModalAllert/ModalAllerDeleteArticle";
 import ButtonMenu from "../MainButton/ButtonMenu";
 import ButtonSection from "../MainButton/ButtonSection";
 import ButtonArticleName from "../MainButton/ButtonArticleName";
+import GanttChart from "../GanttComponent/Gantt";
 
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
@@ -492,6 +493,7 @@ const Main = () => {
                 </div>
             </div>
             <div className="admin_button">
+                <GanttChart />
                 {/* <Link to="/admin">Admin Page</Link> Добавить Link для перехода на AdminPage */}
             </div>
 
