@@ -26,6 +26,26 @@ body {
   font-weight: normal;
 }
 
+@font-face {
+  font-family: nunito;
+  src: local(nunito), url(./fonts/Nunito-Regular.ttf) format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: nunito_semibold;
+  src: local(nunito), url(./fonts/Nunito-SemiBold.ttf) format('truetype');
+  font-weight: bold;
+
+}
+
+@font-face {
+  font-family: nunito_extrabold;
+  src: local(nunito), url(./fonts/Nunito-ExtraBold.ttf) format('truetype');
+  font-weight: bold;
+
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

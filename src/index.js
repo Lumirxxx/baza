@@ -9,6 +9,21 @@ import './fonts/gothampro_bold.ttf'
 import './fonts/gothampro_medium.ttf'
 import './fonts/gothampro_light.ttf'
 import './fonts/Mulish-Regular.ttf'
+import './fonts/Nunito-Black.ttf'
+import './fonts/Nunito-BlackItalic.ttf'
+import './fonts/Nunito-Bold.ttf'
+import './fonts/Nunito-BoldItalic.ttf'
+import './fonts/Nunito-ExtraBold.ttf'
+import './fonts/Nunito-ExtraBoldItalic.ttf'
+import './fonts/Nunito-ExtraLight.ttf'
+import './fonts/Nunito-ExtraLightItalic.ttf'
+import './fonts/Nunito-Italic.ttf'
+import './fonts/Nunito-Light.ttf'
+import './fonts/Nunito-LightItalic.ttf'
+import './fonts/Nunito-Regular.ttf'
+import './fonts/Nunito-SemiBold.ttf'
+import './fonts/Nunito-SemiBoldItalic.ttf'
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

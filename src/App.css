@@ -910,6 +910,64 @@ figure {
 
 }
 
+
+
+
+/* gant style*/
+._WuQ0f {
+
+  padding-left: 16px;
+  padding-right: 16px;
+  font-family: nunito_extrabold;
+  font-size: 16px;
+}
+
+._9w8d5 {
+  font-size: 16px;
+  font-family: nunito_extrabold;
+}
+
+._2q1Kt {
+  font-size: 16px;
+  font-family: nunito_extrabold;
+}
+
+._nI1Xw {
+  font-size: 16px;
+}
+
+._3ZbQT {
+  width: 100%;
+  border-bottom-left-radius: 5px;
+}
+
+._3lLk3 {
+  white-space: wrap !important;
+  padding-left: 16px;
+  font-size: 16px;
+
+}
+
+._1nBOt {
+  width: 800px;
+}
+
+._3_ygE {
+  width: 600px;
+  border-top-left-radius: 5px;
+}
+
+._2TfEi {
+  margin-left: -16px;
+}
+
+._nI1Xw {
+  line-height: 20px;
+  font-weight: bold;
+}
+
+
+
 @media (max-width:1098px) {
   .form_modal {
     max-width: 60rem;

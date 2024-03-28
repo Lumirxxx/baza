@@ -98,6 +98,29 @@ const Editor2 = ({ sectionId, onUpdate }) => {
             failure('Ошибка загрузки видео из-за ошибки сервера.');
         }
     }
+    const handleVideoUploadedFromFile = async (file) => {
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+        formData.append('video', file);
+
+        try {
+            const response = await axios.post('http://192.168.10.109:8000/api/v1/videos/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            // Тут вы можете решить, как использовать URL загруженного видео.
+            if (editorRef.current) {
+                editorRef.current.insertContent(`<video controls src="${response.data.video}"></video>`);
+                console.log('Загруженное видео URL:', response.data.video);
+            }
+        } catch (error) {
+            console.error('Ошибка отправки видео:', error);
+            // Здесь можно обработать ошибку загрузки
+        }
+    }
+
 
     const handleSubmit = async () => {
         // Получить содержимое редактора
@@ -174,7 +197,31 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                                 apiKey="efmk99udzjlbefwmmwhnslhwuza5j24xnv0xoq9r6mauop7v"
                                 init={{
                                     plugins: 'image , paste, wordcount ,media',
-                                    toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons | media',
+                                    setup: (editor) => {
+                                        editor.ui.registry.addButton('customUploadVideo', {
+                                            text: 'My Custom Button',
+                                            tooltip: 'Загрузить видео',
+                                            onAction: () => {
+                                                console.log('Нажата кнопка загрузки видео');
+                                                // Реализация логики выбора файла и его загрузки
+                                                const input = document.createElement('input');
+                                                input.setAttribute('type', 'file');
+                                                input.setAttribute('accept', 'video/*');
+                                                input.onchange = async (e) => {
+                                                    const file = e.target.files[0];
+                                                    if (!file) return;
+
+                                                    // Используйте здесь вашу функцию handleVideoUploaded
+                                                    // Вам возможно потребуется адаптировать эту функцию,
+                                                    // чтобы она могла работать с файлом напрямую, а не с blobInfo
+                                                    await handleVideoUploadedFromFile(file);
+                                                };
+                                                input.click();
+                                            },
+                                        });
+                                    },
+                                    toolbar: 'undo redo | customUploadVideo | bold italic underline',
+
 
                                     images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
                                     images_upload_handler: handleImageUpload,

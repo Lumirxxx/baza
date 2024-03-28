@@ -7,7 +7,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-      const handleSubmit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
 
         axios
