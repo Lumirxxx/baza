@@ -20,7 +20,7 @@ import ButtonMenu from "../MainButton/ButtonMenu";
 import ButtonSection from "../MainButton/ButtonSection";
 import ButtonArticleName from "../MainButton/ButtonArticleName";
 import GanttChart from "../GanttComponent/Gantt";
-
+import { apiserver } from "../config";
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
 export const DeleteArticleButtonContext = React.createContext();
@@ -58,7 +58,7 @@ const Main = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        axios.get("http://192.168.10.109:8000/api/v1/profile/", {
+        axios.get(`${apiserver}/profile/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

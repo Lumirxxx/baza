@@ -76,7 +76,7 @@ const GanttChart = () => {
         {
             start: new Date(2024, 2, 1), // February 1, 2024
             end: new Date(2024, 2, 13),
-
+            todayColor: 'red',
             project: 'Project 1',
             name: 'Предварительное проектирование КО',
             project: 'Project 1',
@@ -188,7 +188,7 @@ const GanttChart = () => {
             project: 'Project 1',
             id: 'Task 2',
             type: 'task',
-
+            
             isDisabled: true,
             todayMarker: true,
             hideChildren: true,
@@ -223,7 +223,7 @@ const GanttChart = () => {
         {
             start: new Date(2024, 4, 21),
             end: new Date(2024, 4, 25),
-            name: 'Сборочные работы',
+            name: 'Сборочне работы',
             project: 'Project 1',
             id: 'Task 2',
             type: 'task',
@@ -248,7 +248,20 @@ const GanttChart = () => {
         },
 
     ];
+    const currentDate = new Date();
 
+    // Модифицируем задачи, добавляя кастомные стили для шкалы выполнения
+    const modifiedTasks = data.map(task => {
+        const isOverdue = new Date(task.end) < currentDate; // Проверяем, просрочена ли задача
+        return {
+            ...task,
+            styles: {
+                ...task.styles,
+                progressColor: task.progress === 100 ? 'green' : (isOverdue ? 'red' : 'rgba(0, 0, 255, 0.5)'), // Если задача просрочена и не выполнена полностью, прогресс будет красным
+                // backgroundColor: 'rgba(0, 0, 255, 0.1)', // Цвет фона задачи, можно настроить по своему усмотрению
+            },
+        };
+    });
 
 
 
@@ -263,7 +276,7 @@ const GanttChart = () => {
                 // viewMode={viewMode}
                 fontSize='12px'
                 fontFamily='Nunito'
-                tasks={data}
+                tasks={modifiedTasks}
                 // columns={columns}
                 locale={ru} // Установка локали для диаграммы
             // Дополнительные параметры конфигурации...
