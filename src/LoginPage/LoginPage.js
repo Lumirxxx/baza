@@ -18,9 +18,9 @@ const LoginPage = () => {
             .then((response) => {
                 // Сохранение токена в локальном хранилище
                 localStorage.setItem("token", response.data.access);
-                console.log("Токен получен", response.data.access);
+
                 localStorage.setItem("refresh", response.data.refresh);
-                console.log("Токен получен рефреш", response.data.refresh);
+
                 navigate("/main");
                 console.log("Вы успешно авторизовались!");
             })
