@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { apiserver } from "../config";
 const DepartList = ({ profile }) => {
     const [departments, setDepartments] = useState([]);
     const [profileData, setProfileData] = useState(profile);
@@ -17,7 +17,7 @@ const DepartList = ({ profile }) => {
         const fetchDepartments = async () => {
             const token = localStorage.getItem("token");
             try {
-                const response = await axios.get('http://192.168.10.109:8000/api/v1/departmens/', {
+                const response = await axios.get(`${apiserver}/api/v1/departmens/`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -38,7 +38,7 @@ const DepartList = ({ profile }) => {
         const departId = event.target.value;
 
         axios.patch(
-            `http://192.168.10.109:8000/api/v1/users/${profile.id}/`,
+            `${apiserver}/api/v1/users/${profile.id}/`,
             { depart_id: departId },
             {
                 headers: {
@@ -62,22 +62,6 @@ const DepartList = ({ profile }) => {
             });
     };
 
-    // const onChangeMenuItem = async (event) => {
-    //     const token = localStorage.getItem("token");
-    //     const selectedMenuItem = event.target.value;
-
-    //     try {
-    //         const response = await axios.get('http://192.168.10.109:8000/api/v1/menu/', {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //         console.log(response.data);
-
-    //     } catch (error) {
-    //         console.error('Ошибка при получении списка меню:', error);
-    //     }
-    // };
 
 
 

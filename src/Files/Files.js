@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
+import { apiserver } from "../config";
 const Files = ({ articleId }) => {
     const [files, setFiles] = useState([]);
 
     const fetchFiles = () => {
         const token = localStorage.getItem("token");
         axios
-            .get(`http://192.168.10.109:8000/api/v1/files/?article_id=${articleId}`, {
+            .get(`${apiserver}/api/v1/files/?article_id=${articleId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

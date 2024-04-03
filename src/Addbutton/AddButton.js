@@ -4,7 +4,7 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, ContentState, convertFromRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
+import { apiserver } from "../config";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 // Компонент кнопки "Добавить "
@@ -40,7 +40,7 @@ const AddButton = () => {
     const fetchSections = () => {
         const token = localStorage.getItem("token");
         axios
-            .get("http://192.168.10.109:8000/api/v1/subsections/", {
+            .get(`${apiserver}/api/v1/subsections/`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -68,7 +68,7 @@ const AddButton = () => {
             });
 
             axios
-                .post("http://192.168.10.109:8000/api/v1/articles/", formData, {
+                .post(`${apiserver}/api/v1/articles/`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "multipart/form-data",
@@ -82,7 +82,7 @@ const AddButton = () => {
                     fileFormData.append("file", file); // Обновлено: Добавить file в fileFormData
                     fileFormData.append("article_id", articleId);
                     axios
-                        .post("http://192.168.10.109:8000/api/v1/files/", fileFormData, {
+                        .post(`${apiserver}/api/v1/files/`, fileFormData, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                                 "Content-Type": "multipart/form-data",
@@ -124,7 +124,7 @@ const AddButton = () => {
         formData.append("img", file);
 
         try {
-            const response = await axios.post("http://192.168.10.109:8000/api/v1/images/", formData, {
+            const response = await axios.post(`${apiserver}/api/v1/images/`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",

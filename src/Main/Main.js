@@ -85,7 +85,7 @@ const Main = () => {
                 const token = localStorage.getItem("token");
                 let isRedirected = false;
 
-                const response = await axios.get("http://192.168.10.109:8000/api/v1/menu/", {
+                const response = await axios.get(`${apiserver}/api/v1/menu/`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -141,7 +141,7 @@ const Main = () => {
             }
 
             const response = await axios.get(
-                `http://192.168.10.109:8000/api/v1/sections/?menu_id=${menu_id}`,
+                `${apiserver}/api/v1/sections/?menu_id=${menu_id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -179,7 +179,7 @@ const Main = () => {
                 setSectionId(null);
             } else {
                 setSectionId(sectionId);
-                const response = await axios.get(`http://192.168.10.109:8000/api/v1/articles/?section_id=${sectionId}`, {
+                const response = await axios.get(`${apiserver}/api/v1/articles/?section_id=${sectionId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -214,7 +214,7 @@ const Main = () => {
     const confirmDeleteMenu = async () => {
         try {
             await axios.delete(
-                `http://192.168.10.109:8000/api/v1/menu/${selectedMenuId}/`,
+                `${apiserver}/api/v1/menu/${selectedMenuId}/`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -243,7 +243,7 @@ const Main = () => {
 
     const handleDeleteSection = async (sectionId) => {
         try {
-            await axios.delete(`http://192.168.10.109:8000/api/v1/sections/${sectionId}/`, {
+            await axios.delete(`${apiserver}/api/v1/sections/${sectionId}/`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -282,7 +282,7 @@ const Main = () => {
 
     const handleDeleteArticle = async (articleId) => {
         try {
-            await axios.delete(`http://192.168.10.109:8000/api/v1/articles/${articleId}/`, {
+            await axios.delete(`${apiserver}/api/v1/articles/${articleId}/`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -493,7 +493,7 @@ const Main = () => {
                 </div>
             </div>
             <div className="admin_button">
-                <GanttChart />
+                {/* <GanttChart /> */}
                 {/* <Link to="/admin">Admin Page</Link> Добавить Link для перехода на AdminPage */}
             </div>
 

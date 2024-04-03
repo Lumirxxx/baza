@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { apiserver } from "../config";
 const AddButtonSubsections = (props) => {
 
     const { sectionId } = props
@@ -17,7 +17,7 @@ const AddButtonSubsections = (props) => {
     const fetchMenus = () => {
         const token = localStorage.getItem("token");
         axios
-            .get("http://192.168.10.109:8000/api/v1/sections/", {
+            .get(`${apiserver}/api/v1/sections/`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -67,7 +67,7 @@ const AddButtonSubsections = (props) => {
 
         axios
             .post(
-                "http://192.168.10.109:8000/api/v1/subsections/",
+                `${apiserver}/api/v1/subsections/`,
                 formData,
                 {
                     headers: {
@@ -103,7 +103,7 @@ const AddButtonSubsections = (props) => {
                     <div className="modal">
                         <form
                             onSubmit={handleSubmit}
-                            action="http://192.168.10.109:8000/api/v1/subsections/"
+                            action={`${apiserver}/api/v1/subsections/`}
                             encType="multipart/form-data"
                             className="form_modal"
                         >

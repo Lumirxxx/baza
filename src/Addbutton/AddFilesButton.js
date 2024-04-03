@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { apiserver } from "../config";
 const AddFilesButton = ({ articleId }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState('');
@@ -30,7 +30,7 @@ const AddFilesButton = ({ articleId }) => {
             formData.append('file', file);
             formData.append('article_id', articleId);
 
-            const response = await axios.post('http://192.168.10.109:8000/api/v1/files/', formData, {
+            const response = await axios.post(`${apiserver}/api/v1/files/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,

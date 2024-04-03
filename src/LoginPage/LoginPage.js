@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { apiserver } from "../config";
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -11,7 +11,7 @@ const LoginPage = () => {
         event.preventDefault();
 
         axios
-            .post("http://192.168.10.109:8000/api/v1/token/", {
+            .post(`${apiserver}/api/v1/token/`, {
                 username,
                 password,
             })

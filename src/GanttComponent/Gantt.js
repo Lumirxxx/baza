@@ -3,7 +3,7 @@ import "gantt-task-react/dist/index.css";
 import React, { useEffect, useRef, useState } from 'react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale'; // Импорт русской локали
-
+import { apiserver } from "../config";
 const GanttChart = () => {
     const ganttLocaleRef = useRef(null); // Создаем ref для блока ganttlocale
     // const [viewMode, setViewMode] = useState("Day");

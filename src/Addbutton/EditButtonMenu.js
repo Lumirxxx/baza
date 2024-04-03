@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { apiserver } from "../config";
 const EditButtonMenu = ({ menuItem, menuId, onUpdate, deleteMenuButtonComponent }) => {
     const [name, setName] = useState(menuItem.name);
     const [img, setImg] = useState(null);
@@ -32,7 +32,7 @@ const EditButtonMenu = ({ menuItem, menuId, onUpdate, deleteMenuButtonComponent 
             }
 
             const response = await axios.patch(
-                `http://192.168.10.109:8000/api/v1/menu/${menuId}/`,
+                `${apiserver}/api/v1/menu/${menuId}/`,
                 formData,
                 {
                     headers: {

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
 import DeleteArticleButton from '../DeleteButton/DeleteArticleButton';
-
+import { apiserver } from "../config";
 const EditArticleButton = ({ article, onUpdate }) => {
     const editorRef = useRef(null);
     const [editing, setEditing] = useState(false);//Строка отвечает за открытие редактора
@@ -41,7 +41,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
         formData.append('img', imageFile, blobInfo.filename());
 
         try {
-            const response = await axios.post('http://192.168.10.109:8000/api/v1/images/', formData, {
+            const response = await axios.post(`${apiserver}/api/v1/images/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
         formData.append('token', token);
         // formData.append('name', articleTitle)
         try {
-            const response = await axios.patch(`http://192.168.10.109:8000/api/v1/articles/${article.id}/`, articleData, {
+            const response = await axios.patch(`${apiserver}/api/v1/articles/${article.id}/`, articleData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
@@ -132,7 +132,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
                                     plugins: 'image , paste, wordcount',
                                     toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons',
 
-                                    images_upload_url: 'http://192.168.10.109:8000/api/v1/images/',
+                                    images_upload_url: `${apiserver}/api/v1/images/`,
                                     images_upload_handler: handleImageUpload,
                                     paste_data_images: true,
                                     height: 600,

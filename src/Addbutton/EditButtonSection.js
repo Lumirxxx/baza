@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import DeleteSectionButton from "../DeleteButton/DeleteSectionButton";
-
+import { apiserver } from "../config";
 const EditButtonSection = ({ section, onUpdate }) => {
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState(section.name);
@@ -30,7 +30,7 @@ const EditButtonSection = ({ section, onUpdate }) => {
         formData.append("img", img);
         axios
             .patch(
-                `http://192.168.10.109:8000/api/v1/sections/${section.id}/`,
+                `${apiserver}/api/v1/sections/${section.id}/`,
                 { name, img },
                 {
                     headers: {
