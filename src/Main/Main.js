@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, createContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import AddButtonSections from "../Addbutton/AddButtonSections";
 import EditButtonSection from "../Addbutton/EditButtonSection";
 import AddButtonMenu from "../Addbutton/AddButtonMenu";
@@ -21,6 +21,8 @@ import ButtonSection from "../MainButton/ButtonSection";
 import ButtonArticleName from "../MainButton/ButtonArticleName";
 import GanttChart from "../GanttComponent/Gantt";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
+
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
 export const DeleteArticleButtonContext = React.createContext();
@@ -53,7 +55,8 @@ const Main = () => {
     let isRedirected = false;
     const isRedirectedRef = useRef(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const location = useLocation();
+    const wikiId = location.state?.wikiId;
     // Функция для обновления состояния isStaff
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -85,7 +88,7 @@ const Main = () => {
                 const token = localStorage.getItem("token");
                 let isRedirected = false;
 
-                const response = await axios.get(`${apiserver}/api/v1/menu/`, {
+                const response = await axios.get(`${apiserverwiki}/menu/?wiki_id=${wikiId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -112,7 +115,7 @@ const Main = () => {
 
         fetchData();
 
-    }, [isRedirected]); // Пустой массив в качестве зависимости
+    }, [isRedirected], [wikiId]); // Пустой массив в качестве зависимости
     const handleSectionButtonClick = async (menu_id, id) => {
         try {
             if (menu_id === id) {
@@ -141,7 +144,7 @@ const Main = () => {
             }
 
             const response = await axios.get(
-                `${apiserver}/api/v1/sections/?menu_id=${menu_id}`,
+                `${apiserverwiki}/sections/?menu_id=${menu_id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -179,7 +182,7 @@ const Main = () => {
                 setSectionId(null);
             } else {
                 setSectionId(sectionId);
-                const response = await axios.get(`${apiserver}/api/v1/articles/?section_id=${sectionId}`, {
+                const response = await axios.get(`${apiserverwiki}/articles/?section_id=${sectionId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -214,7 +217,7 @@ const Main = () => {
     const confirmDeleteMenu = async () => {
         try {
             await axios.delete(
-                `${apiserver}/api/v1/menu/${selectedMenuId}/`,
+                `${apiserverwiki}/menu/${selectedMenuId}/`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -243,7 +246,7 @@ const Main = () => {
 
     const handleDeleteSection = async (sectionId) => {
         try {
-            await axios.delete(`${apiserver}/api/v1/sections/${sectionId}/`, {
+            await axios.delete(`${apiserverwiki}/sections/${sectionId}/`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -282,7 +285,7 @@ const Main = () => {
 
     const handleDeleteArticle = async (articleId) => {
         try {
-            await axios.delete(`${apiserver}/api/v1/articles/${articleId}/`, {
+            await axios.delete(`${apiserverwiki}/articles/${articleId}/`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },

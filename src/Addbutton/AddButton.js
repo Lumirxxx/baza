@@ -5,6 +5,7 @@ import { EditorState, convertToRaw, ContentState, convertFromRaw } from "draft-j
 import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 // Компонент кнопки "Добавить "
@@ -40,7 +41,7 @@ const AddButton = () => {
     const fetchSections = () => {
         const token = localStorage.getItem("token");
         axios
-            .get(`${apiserver}/api/v1/subsections/`, {
+            .get(`${apiserverwiki}/subsections/`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -68,7 +69,7 @@ const AddButton = () => {
             });
 
             axios
-                .post(`${apiserver}/api/v1/articles/`, formData, {
+                .post(`${apiserverwiki}/articles/`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "multipart/form-data",
@@ -82,7 +83,7 @@ const AddButton = () => {
                     fileFormData.append("file", file); // Обновлено: Добавить file в fileFormData
                     fileFormData.append("article_id", articleId);
                     axios
-                        .post(`${apiserver}/api/v1/files/`, fileFormData, {
+                        .post(`${apiserverwiki}/files/`, fileFormData, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                                 "Content-Type": "multipart/form-data",
@@ -124,7 +125,7 @@ const AddButton = () => {
         formData.append("img", file);
 
         try {
-            const response = await axios.post(`${apiserver}/api/v1/images/`, formData, {
+            const response = await axios.post(`${apiserverwiki}/images/`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",

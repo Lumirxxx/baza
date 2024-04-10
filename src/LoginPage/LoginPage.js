@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -11,7 +12,7 @@ const LoginPage = () => {
         event.preventDefault();
 
         axios
-            .post(`${apiserver}/api/v1/token/`, {
+            .post(`${apiserver}/token/`, {
                 username,
                 password,
             })
@@ -21,7 +22,7 @@ const LoginPage = () => {
 
                 localStorage.setItem("refresh", response.data.refresh);
 
-                navigate("/main");
+                navigate("/MainNews");
                 console.log("Вы успешно авторизовались!");
             })
             .catch((error) => {
@@ -32,7 +33,7 @@ const LoginPage = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            navigate("/main");
+            navigate("/MainNews");
         }
     }, []);
 

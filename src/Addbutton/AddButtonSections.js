@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const AddButtonSections = ({ menu_id, onUpdate }) => {
 
     // const { menu_id } = props
@@ -24,7 +25,7 @@ const AddButtonSections = ({ menu_id, onUpdate }) => {
     const fetchMenus = () => {
         const token = localStorage.getItem("token");
         axios
-            .get(`${apiserver}/api/v1/menu/`, {
+            .get(`${apiserverwiki}/menu/`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -77,7 +78,7 @@ const AddButtonSections = ({ menu_id, onUpdate }) => {
 
         axios
             .post(
-                `${apiserver}/api/v1/sections/`,
+                `${apiserverwiki}/sections/`,
                 formData,
                 {
                     headers: {
@@ -118,7 +119,7 @@ const AddButtonSections = ({ menu_id, onUpdate }) => {
                     <div className="modal">
                         <form className="form_modal"
                             onSubmit={handleSubmit}
-                            action={`${apiserver}/api/v1/sections/`}
+                            action={`${apiserverwiki}/sections/`}
                             encType="multipart/form-data"
                         >
                             <div className="form_title">

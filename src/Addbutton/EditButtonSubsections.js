@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const EditButtonSubsection = ({ subsection, subsectionId, onUpdate }) => {
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState(subsection.name);
@@ -22,7 +23,7 @@ const EditButtonSubsection = ({ subsection, subsectionId, onUpdate }) => {
 
         axios
             .patch(
-                `${apiserver}/api/v1/subsections/${subsectionId}/`,
+                `${apiserverwiki}/subsections/${subsectionId}/`,
                 { name },
                 {
                     headers: {
@@ -52,7 +53,7 @@ const EditButtonSubsection = ({ subsection, subsectionId, onUpdate }) => {
             ) : (
                 <div className="modal-background">
                     <div className="modal">
-                        <form className="form_edit form_modal" onSubmit={handleSubmit} action={`${apiserver}/api/v1/subsections/`}>
+                        <form className="form_edit form_modal" onSubmit={handleSubmit} action={`${apiserverwiki}/subsections/`}>
                             <div className="form_menu_label">
                                 <label className="form_menu_label_name" htmlFor="name">Название:</label>
                                 <input

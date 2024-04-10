@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const Editor2 = ({ sectionId, onUpdate }) => {
     const editorRef = useRef(null);
     const [errorMessage, setErrorMessage] = useState("");
@@ -35,7 +36,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
     const fetchSubsections = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get(`${apiserver}/api/v1/sections/`,
+            const response = await axios.get(`${apiserverwiki}/sections/`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -57,7 +58,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
         formData.append('img', imageFile, blobInfo.filename());
 
         try {
-            const response = await axios.post(`${apiserver}/api/v1/images/`, formData, {
+            const response = await axios.post(`${apiserverwiki}/images/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,
@@ -85,7 +86,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
         formData.append('video', videoFile, blobInfo.filename());
 
         try {
-            const response = await axios.post(`${apiserver}/api/v1/videos/`, formData, {
+            const response = await axios.post(`${apiserverwiki}/videos/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,
@@ -104,7 +105,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
         formData.append('video', file);
 
         try {
-            const response = await axios.post(`${apiserver}/api/v1/videos/`, formData, {
+            const response = await axios.post(`${apiserverwiki}/videos/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,
@@ -144,7 +145,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
         // formData.append('section_id', '');
 
         try {
-            const response = await axios.post(`${apiserver}/api/v1/articles/`, formData, {
+            const response = await axios.post(`${apiserverwiki}/articles/`, formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -223,7 +224,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
                                     toolbar: 'undo redo | customUploadVideo | bold italic underline',
 
 
-                                    images_upload_url: `${apiserver}/api/v1/images/`,
+                                    images_upload_url: `${apiserverwiki}/images/`,
                                     images_upload_handler: handleImageUpload,
                                     videos_upload_handler: handleVideoUploaded,
                                     paste_data_images: true,

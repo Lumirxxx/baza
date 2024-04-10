@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const EditButtonMenu = ({ menuItem, menuId, onUpdate, deleteMenuButtonComponent }) => {
     const [name, setName] = useState(menuItem.name);
     const [img, setImg] = useState(null);
@@ -32,7 +33,7 @@ const EditButtonMenu = ({ menuItem, menuId, onUpdate, deleteMenuButtonComponent 
             }
 
             const response = await axios.patch(
-                `${apiserver}/api/v1/menu/${menuId}/`,
+                `${apiserverwiki}/menu/${menuId}/`,
                 formData,
                 {
                     headers: {

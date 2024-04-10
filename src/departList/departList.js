@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const DepartList = ({ profile }) => {
     const [departments, setDepartments] = useState([]);
     const [profileData, setProfileData] = useState(profile);
@@ -17,7 +18,7 @@ const DepartList = ({ profile }) => {
         const fetchDepartments = async () => {
             const token = localStorage.getItem("token");
             try {
-                const response = await axios.get(`${apiserver}/api/v1/departmens/`, {
+                const response = await axios.get(`${apiserverwiki}/departmens/`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -38,7 +39,7 @@ const DepartList = ({ profile }) => {
         const departId = event.target.value;
 
         axios.patch(
-            `${apiserver}/api/v1/users/${profile.id}/`,
+            `${apiserver}/users/${profile.id}/`,
             { depart_id: departId },
             {
                 headers: {

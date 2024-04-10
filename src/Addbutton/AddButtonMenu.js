@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const AddButtonMenu = ({ onUpdate }) => {
     const [name, setName] = useState("");
     const [img, setImg] = useState(null);
@@ -34,7 +35,7 @@ const AddButtonMenu = ({ onUpdate }) => {
             }
 
             const response = await axios.post(
-                `${apiserver}/api/v1/menu/`,
+                `${apiserverwiki}/menu/`,
                 formData,
                 {
                     headers: {

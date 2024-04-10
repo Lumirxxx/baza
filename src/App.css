@@ -901,6 +901,13 @@ figure {
   margin-right: 30px;
 }
 
+.main_news_container {
+  background-image: url("../public/Mainb.svg");
+  background-repeat: no-repeat;
+
+  height: 100vh;
+}
+
 /* .cl-btn-4:before,
 .cl-btn-4:after {
   content: '';

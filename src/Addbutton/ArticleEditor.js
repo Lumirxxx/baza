@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 
 import axios from 'axios';
 // #1 import quill-image-uploader
@@ -17,7 +18,7 @@ const ArticleEditor = () => {
     const [selectedSubsection, setSelectedSubsection] = useState('');
     const [fileName, setFileName] = useState("");
     const [file, setFile] = useState(null);
-    
+
 
     useEffect(() => {
         fetchSubsections();
@@ -26,7 +27,7 @@ const ArticleEditor = () => {
     const fetchSubsections = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get(`${apiserver}/api/v1/subsections/`,
+            const response = await axios.get(`${apiserverwiki}/subsections/`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -60,7 +61,7 @@ const ArticleEditor = () => {
         formData.append("image", selectedFile);
 
         try {
-            await axios.post(`${apiserver}/api/v1/articles/`, articleData, {
+            await axios.post(`${apiserverwiki}/articles/`, articleData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -73,7 +74,7 @@ const ArticleEditor = () => {
                 fileFormData.append("file", file);
                 fileFormData.append("article_id", articleId);
 
-                axios.post(`${apiserver}/api/v1/files/`, fileFormData, {
+                axios.post(`${apiserverwiki}/files/`, fileFormData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "multipart/form-data",
@@ -130,9 +131,9 @@ const ArticleEditor = () => {
 
                     formData.append('token', token);
                     formData.append("img", file);
-              
+
                     fetch(
-                        `${apiserver}/api/v1/images/`,
+                        `${apiserverwiki}/images/`,
                         {
                             method: "POST",
                             body: formData,
@@ -156,7 +157,7 @@ const ArticleEditor = () => {
             }
         },
 
-      
+
 
     };
     return (
@@ -166,8 +167,8 @@ const ArticleEditor = () => {
                 value={content}
                 onChange={setContent}
                 modules={modules}
-             
-                
+
+
             // handlers={handlers}
             />
             <select value={selectedSubsection} onChange={handleSelectSubsection}>

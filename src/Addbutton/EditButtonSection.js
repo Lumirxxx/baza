@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import DeleteSectionButton from "../DeleteButton/DeleteSectionButton";
 import { apiserver } from "../config";
+import { apiserverwiki } from "../config";
 const EditButtonSection = ({ section, onUpdate }) => {
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState(section.name);
@@ -30,7 +31,7 @@ const EditButtonSection = ({ section, onUpdate }) => {
         formData.append("img", img);
         axios
             .patch(
-                `${apiserver}/api/v1/sections/${section.id}/`,
+                `${apiserverwiki}/sections/${section.id}/`,
                 { name, img },
                 {
                     headers: {
