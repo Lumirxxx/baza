@@ -480,6 +480,10 @@ h1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-right: 21.375rem;
+  margin-left: 21.375rem;
+  padding-top: 14px;
+  align-items: center;
 }
 
 .logout_button {
@@ -907,6 +911,59 @@ figure {
 
   height: 100vh;
 }
+
+.header_menu-container {
+  max-width: 27.625rem;
+  width: 100%
+}
+
+.header_menu {
+  display: flex;
+  max-width: 27.625rem;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heder_menu-object:hover,
+.heder_menu-object:focus,
+.heder_menu-object:active {
+  /* Добавляем :active для стиля при нажатии */
+  color: #022B94;
+  /* Изменение цвета текста при наведении, фокусе и активации */
+}
+
+.heder_menu-object:after {
+  background-color: #022B94;
+  display: block;
+  content: "";
+  height: 2px;
+  width: 0%;
+  transition: width .3s ease-in-out;
+  /* Раскомментировал transition для плавного изменения ширины */
+}
+
+.heder_menu-object:hover:after,
+.heder_menu-object:focus:after,
+.heder_menu-object:active:after {
+  /* Добавляем :active для анимации линии при нажатии */
+  width: 100%;
+  /* Линия растягивается до полной ширины при наведении, фокусе и активации */
+}
+
+.isActive {
+  color: #022B94;
+}
+
+.isActive:after {
+  width: 100%;
+}
+
+
+
+
+
+
 
 /* .cl-btn-4:before,
 .cl-btn-4:after {

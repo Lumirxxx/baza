@@ -22,6 +22,7 @@ import ButtonArticleName from "../MainButton/ButtonArticleName";
 import GanttChart from "../GanttComponent/Gantt";
 import { apiserver } from "../config";
 import { apiserverwiki } from "../config";
+import { refreshAuthToken } from "../authService"
 
 //Экспортируем контекст
 export const DeleteSectionButtonContext = React.createContext();
@@ -57,31 +58,61 @@ const Main = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const location = useLocation();
     const wikiId = location.state?.wikiId;
+
     // Функция для обновления состояния isStaff
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const fetchData = async () => {
+            const token = localStorage.getItem("token");
 
-        axios.get(`${apiserver}/profile/`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then((response) => {
+            try {
+                const response = await axios.get(`${apiserver}/auth/profile/`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 if (!isRedirectedRef.current) {
                     setProfile(response.data[0]);
                     console.log(response.data[0]);
                 }
-            })
-            .catch((error) => {
-                console.log(error);
-                if (error.response && error.response.status === 401 && !isRedirectedRef.current) {
-                    isRedirectedRef.current = true;
-                    localStorage.removeItem('token');
-                    navigate("/");
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    // Попытка обновить токен
+                    const refreshTokenSuccess = await refreshAuthToken(navigate);
+                    if (refreshTokenSuccess) {
+                        // Если токен успешно обновлён, повторяем запрос
+                        fetchData();
+                    } else {
+                        console.error("Не удалось обновить токен.");
 
+                        // Ошибка обновления токена или другие действия
+                    }
+                } else {
+                    console.error("Ошибка при получении данных: ", error);
                 }
-            });
-    }, [isRedirectedRef, navigate]);
+            }
+        };
+
+        fetchData();
+    }, [isRedirectedRef], [navigate]);
+
+    // Функция для обновления токена
+    // const refreshAuthToken = async () => {
+    //     const refreshToken = localStorage.getItem("refreshToken");
+    //     try {
+    //         const response = await axios.post(`${apiserver}/token/refresh/`, {
+    //             refreshToken: refreshToken
+    //         });
+    //         // Сохраняем новый токен в localStorage
+    //         localStorage.setItem("token", response.data.token);
+    //         // Возвращаем true, указывая на успешное обновление токена
+    //         return true;
+    //     } catch (error) {
+    //         console.error("Ошибка при обновлении токена:", error);
+    //         // В случае ошибки при обновлении токена возвращаем false
+    //         return false;
+    //     }
+    // };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -102,12 +133,19 @@ const Main = () => {
                     console.log("isSectionsOpen:", isSectionsOpen);
                 }
             } catch (error) {
-                if (error.response && error.response.status === 401 && !isRedirected) {
-                    navigate("/");
-                    localStorage.removeItem('token');
+                if (error.response && error.response.status === 401) {
+                    // Попытка обновить токен
+                    const refreshTokenSuccess = await refreshAuthToken(navigate);
+                    if (refreshTokenSuccess) {
+                        // Если токен успешно обновлён, повторяем запрос
+                        fetchData();
+                    } else {
+                        console.error("Не удалось обновить токен.");
 
+                        // Ошибка обновления токена или другие действия
+                    }
                 } else {
-                    console.log(error);
+                    console.error("Ошибка при получении данных: ", error);
                 }
             }
 

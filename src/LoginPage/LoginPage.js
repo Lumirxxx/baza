@@ -12,16 +12,16 @@ const LoginPage = () => {
         event.preventDefault();
 
         axios
-            .post(`${apiserver}/token/`, {
+            .post(`${apiserver}/auth/token/`, {
                 username,
                 password,
             })
             .then((response) => {
                 // Сохранение токена в локальном хранилище
                 localStorage.setItem("token", response.data.access);
-
-                localStorage.setItem("refresh", response.data.refresh);
-
+                console.log("token", response.data.access)
+                localStorage.setItem("refreshToken", response.data.refresh);
+                console.log("refreshToken", response.data.refresh)
                 navigate("/MainNews");
                 console.log("Вы успешно авторизовались!");
             })
