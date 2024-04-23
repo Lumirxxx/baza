@@ -14,7 +14,7 @@ button {
 body {
   font-family: mulishregular !important;
   font-weight: normal;
-  font-size: 20px;
+  font-size: 20px !important;
 }
 
 p {
@@ -480,8 +480,11 @@ h1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-right: 21.375rem;
-  margin-left: 21.375rem;
+  max-width: 1236px;
+  width: 100%;
+  margin: auto;
+  /* margin-right: 21.375rem;
+  margin-left: 21.375rem; */
   padding-top: 14px;
   align-items: center;
 }
@@ -884,9 +887,87 @@ figure {
   position: relative;
 }
 
-.article_content_text {}
 
-.article_name-input {}
+.slider_img_container {
+  max-width: 12.5rem;
+  min-width: 196px;
+  width: 100%;
+  height: 145px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  margin-right: 10px;
+}
+
+.slider_container_background {
+  background-color: #001854;
+  margin-top: 25px;
+}
+
+
+
+.slider_title {
+  color: #fff;
+  font-family: nunito_semibold;
+  font-size: 16px;
+}
+
+.slider_img {
+  max-width: 12.5rem;
+  width: 100%;
+}
+
+.slick-slider {
+  max-width: 77.25rem;
+  margin: auto;
+}
+
+.slick-slider::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  /* Ширина градиентной полосы */
+  height: 100%;
+  background: linear-gradient(to left, rgba(0, 24, 84, 1), rgba(0, 24, 84, 0));
+  /* Пример градиента */
+  pointer-events: none;
+  /* Элемент не будет влиять на события мыши */
+}
+
+.slick-next {
+  width: 36px !important;
+  height: 36px !important;
+  right: -40px !important;
+}
+
+.slick-prev {
+  width: 36px !important;
+  height: 36px !important;
+  left: -40px !important;
+}
+
+.slick-next:before {
+  font-size: 36px !important;
+  opacity: 1 !important;
+}
+
+.slick-prev:before {
+  font-size: 36px !important;
+  opacity: 1 !important;
+}
+
+.slider_container {
+  display: flex !important;
+  flex-direction: row;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.slick-disabled {
+  display: none !important;
+}
 
 .button_article-editor {
   display: flex;
@@ -907,14 +988,65 @@ figure {
 
 .main_news_container {
   background-image: url("../public/Mainb.svg");
+  background-attachment: fixed;
+  background-position: 50%;
   background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
 
-  height: 100vh;
+}
+
+.main_news-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.big_news_container {}
+
+.news_title {
+  font-family: nunito_semibold;
+  font-size: 26px;
+  text-transform: uppercase;
+}
+
+.news_item {
+  display: flex;
+  flex-direction: column;
+  max-width: 60.25rem;
+  border-bottom: 1px solid #959595;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.partners_container {
+  max-width: 13.93rem;
+  width: 100%;
+  margin-left: 50px;
+
+}
+
+.news_item_row {
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.news_img {
+  max-width: 196px;
+  width: 100%;
 }
 
 .header_menu-container {
   max-width: 27.625rem;
   width: 100%
+}
+
+.container-partners_main {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .header_menu {
@@ -923,6 +1055,10 @@ figure {
   width: 100%;
   justify-content: space-between;
   align-items: center;
+}
+
+.heder_menu-object {
+  font-family: nunito_medium;
 }
 
 .heder_menu-object:hover,

@@ -46,6 +46,12 @@ body {
 
 }
 
+@font-face {
+  font-family: nunito_medium;
+  src: local(nunito), url(./fonts/Nunito-Medium.ttf) format('truetype');
+  font-weight: medium;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

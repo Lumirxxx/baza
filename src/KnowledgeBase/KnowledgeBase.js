@@ -17,7 +17,7 @@ const KnowledgeBase = () => {
         const fetchData = async () => {
             const token = localStorage.getItem("token");
             try {
-                const response = await axios.get('http://192.168.10.109:8080/api/v1/wiki/main/', {
+                const response = await axios.get('http://192.168.10.109:8080/api/v1/wiki/list/', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
