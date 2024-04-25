@@ -325,7 +325,7 @@ h1 {
   height: 100%;
 }
 
-.modal {
+.modal_main-window {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -895,7 +895,7 @@ figure {
   height: 145px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: auto 100%;
+  background-size: cover;
   margin-right: 10px;
 }
 
@@ -922,6 +922,29 @@ figure {
   margin: auto;
 }
 
+.slick-slide {
+  max-width: 412px !important;
+}
+
+.slick-list {
+  padding-left: 50px !important;
+}
+
+.slick-slider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50px;
+  width: 100px;
+  /* Ширина сплошной заливки */
+  height: 100%;
+  background-color: #001854;
+  /* Цвет заливки */
+  pointer-events: none;
+  /* Элемент не будет влиять на события мыши */
+  z-index: 1;
+}
+
 .slick-slider::after {
   content: '';
   position: absolute;
@@ -939,13 +962,31 @@ figure {
 .slick-next {
   width: 36px !important;
   height: 36px !important;
-  right: -40px !important;
+  right: 0px !important;
+  z-index: 1;
 }
+
+.slick-current {
+  /* padding-left: 40px; */
+}
+
+.news_title_content {
+  font-size: 26px !important;
+  font-family: nunito_semibold;
+}
+
+.news_date {
+  font-size: 20px;
+  font-family: nunito;
+}
+
+
 
 .slick-prev {
   width: 36px !important;
   height: 36px !important;
-  left: -40px !important;
+  left: 0px !important;
+  z-index: 1;
 }
 
 .slick-next:before {
@@ -963,7 +1004,10 @@ figure {
   flex-direction: row;
   padding-top: 15px;
   padding-bottom: 15px;
+  padding-right: 15px;
+
 }
+
 
 .slick-disabled {
   display: none !important;

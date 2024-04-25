@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiserver } from "../config";
 import { refreshAuthToken } from "../authService";
-
+import MainHeader from "../MainHeader/MainHeader";
+import NewsSlider from "../NewsSlider/NewsSlider";
 const FullNews = () => {
     const { id } = useParams();
     const [news, setNews] = useState(null);
@@ -45,7 +46,10 @@ const FullNews = () => {
     if (!news) return <div>Loading...</div>;
 
     return (
-        <div className="full_news_container">
+
+        <div className="full_news_container main_news_container">
+            <MainHeader />
+            <NewsSlider />
             <h1>{news ? news.title : 'Loading...'}</h1>
             <p>{news ? news.text : 'Loading...'}</p>
             {media.map((m, index) => (

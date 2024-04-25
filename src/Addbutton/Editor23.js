@@ -154,7 +154,7 @@ const Editor2 = ({ sectionId, onUpdate }) => {
 
 
                 <div>
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <div className="modal-editor form_modal">
                             <select className='form_menu_input' disabled value={selectedSubsection} onChange={handleSelectSubsection}>
                                 <option value="">Выбрать раздел</option>

@@ -8,7 +8,7 @@ const ModalAllertDeleteArticle = () => {
     return (
         <div>
             <div className="modal-container">
-                <div className="modal">
+                <div className="modal_main-window">
                     <div className="modal_alert-content">
                         <div className="modal_alert-text">Вы уверены, что хотите удалить статью?</div>
                         <div className="modal-actions">

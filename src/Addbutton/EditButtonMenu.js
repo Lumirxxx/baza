@@ -72,7 +72,7 @@ const EditButtonMenu = ({ menuItem, menuId, onUpdate, deleteMenuButtonComponent 
 
             ) : (
                 <div className="modal-background">
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <form className="form_modal" onSubmit={handleFormSubmit}>
                             <div className="delete_button_position_container">
                                 <div className="form_menu_label">

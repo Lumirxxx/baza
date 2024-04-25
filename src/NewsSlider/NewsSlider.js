@@ -27,6 +27,7 @@ const NewsSlider = () => {
                 const mediaResponse = await axios.get(`${apiserver}/news/media/`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
+
                 setMedia(mediaResponse.data);
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -48,6 +49,21 @@ const NewsSlider = () => {
         const newsMedia = media.filter(m => m.news_id === newsId);
         return newsMedia.length > 0 ? newsMedia[0].media : null;
     };
+    function hideInactiveSlides() {
+        // Получаем все элементы с классом slick-slide
+        const slides = document.querySelectorAll('.slick-slide');
+
+        slides.forEach(slide => {
+            // Проверяем, имеет ли слайд классы slick-active или slick-current
+            if (!slide.classList.contains('slick-active') && !slide.classList.contains('slick-current')) {
+                // Присваиваем свойство display: none, если не содержит эти классы
+                slide.style.display = 'none';
+            } else {
+                // Убираем свойство display, если оно было установлено ранее
+                slide.style.display = '';
+            }
+        });
+    }
 
     const settings = {
         dots: false,
@@ -60,9 +76,10 @@ const NewsSlider = () => {
     };
 
 
+
     return (
         <div className='slider_container_background'>
-            <Slider {...settings}>
+            <Slider  {...settings}>
                 {news.map((item, index) => (
                     <div >
                         <div className='slider_container' key={index}>

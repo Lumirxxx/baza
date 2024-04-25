@@ -5,7 +5,7 @@ const ModalAllertDeleteSection = () => {
     return (
         <div>
             <div className="modal-container">
-                <div className="modal">
+                <div className="modal_main-window">
                     <div className="modal_alert-content">
                         <div className="modal_alert-text">Вы уверены, что хотите удалить пункт раздела?</div>
                         {errorMessage && <p className="error-message_login">{errorMessage}</p>}

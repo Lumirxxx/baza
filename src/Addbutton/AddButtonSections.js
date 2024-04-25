@@ -116,7 +116,7 @@ const AddButtonSections = ({ menu_id, onUpdate }) => {
                 <div className="section_button section_button_add" onClick={handleButtonClick}><div className="section_name">Добавить раздел</div></div>
             ) : (
                 <div className="modal-background">
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <form className="form_modal"
                             onSubmit={handleSubmit}
                             action={`${apiserverwiki}/sections/`}

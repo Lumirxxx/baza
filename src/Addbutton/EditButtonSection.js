@@ -65,7 +65,7 @@ const EditButtonSection = ({ section, onUpdate }) => {
                 </div>
             ) : (
                 <div className="modal-background">
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <form className="form_edit form_modal" onSubmit={handleSubmit}>
                             <div className="delete_button_position_container">
                                 <div className="form_menu_label">

@@ -52,7 +52,7 @@ const EditButtonSubsection = ({ subsection, subsectionId, onUpdate }) => {
                 </div>
             ) : (
                 <div className="modal-background">
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <form className="form_edit form_modal" onSubmit={handleSubmit} action={`${apiserverwiki}/subsections/`}>
                             <div className="form_menu_label">
                                 <label className="form_menu_label_name" htmlFor="name">Название:</label>

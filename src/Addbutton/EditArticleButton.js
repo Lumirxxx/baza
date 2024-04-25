@@ -113,7 +113,7 @@ const EditArticleButton = ({ article, onUpdate }) => {
                 <div className='edit_menu_button edit_menu_button-black' onClick={handleEditClick}></div>
             ) : (
                 <div>
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <div className="modal-editor form_modal">
                             <DeleteArticleButton />
                             <input

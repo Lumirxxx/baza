@@ -7,7 +7,7 @@ const ModalAllertDeleteMenu = () => {
     return (
         <div>
             {showDeleteConfirmation && (
-                <div className="modal">
+                <div className="modal_main-window">
                     <div className="modal_alert-content">
 
                         <div className="modal_alert-text">Вы уверены, что хотите удалить пункт меню?</div>

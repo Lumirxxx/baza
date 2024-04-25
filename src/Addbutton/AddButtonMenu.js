@@ -73,7 +73,7 @@ const AddButtonMenu = ({ onUpdate }) => {
                     <div className="button_text">Добавить меню</div> </div>
             ) : (
                 <div className="modal-background">
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <form className="form_modal" onSubmit={handleFormSubmit}>
                             {error && <div className="error_message" >{error}</div>}
                             <div className="form_title">

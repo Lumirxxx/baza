@@ -101,7 +101,7 @@ const AddButtonSubsections = (props) => {
                 </div>
             ) : (
                 <div className="modal-background">
-                    <div className="modal">
+                    <div className="modal_main-window">
                         <form
                             onSubmit={handleSubmit}
                             action={`${apiserverwiki}/subsections/`}
