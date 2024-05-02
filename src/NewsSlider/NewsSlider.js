@@ -82,7 +82,7 @@ const NewsSlider = () => {
             <Slider  {...settings}>
                 {news.map((item, index) => (
                     <div >
-                        <div className='slider_container' key={index}>
+                        <div onClick={() => navigate(`/news/${item.id}`)} className='slider_container' key={index}>
 
                             <div style={{ backgroundImage: `url(${getFirstMediaForNews(item.id)})` }} className='slider_img_container'>
                                 {/* <img className='slider_img' src={getFirstMediaForNews(item.id)} alt="News" /> */}

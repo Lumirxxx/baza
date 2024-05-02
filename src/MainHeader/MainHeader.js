@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import FeedBack from "../feedback/feedback";
 
 const MainHeader = () => {
     const navigate = useNavigate();
     const location = useLocation(); // Получаем текущий маршрут
+    const [feedbackVisible, setFeedbackVisible] = useState(false);
 
     const handleMenuClick = (path) => {
         navigate(path);
+    };
+
+    const toggleFeedback = () => {
+        setFeedbackVisible(!feedbackVisible);
     };
 
     const isActive = (path) => {
@@ -16,6 +22,7 @@ const MainHeader = () => {
     return (
         <div className="header">
             <div className="header_container">
+              <FeedBack toggleFeedback={toggleFeedback} feedbackVisible={feedbackVisible} />
                 <div className="header_logo">
                     <img src="/MainLogon.svg" alt="Logo" />
                 </div>
@@ -39,8 +46,8 @@ const MainHeader = () => {
                         >
                             База знаний
                         </div>
-                        <div className="heder_menu-object_form-feedback">
-                            <img src="/feedback.svg" alt="Feedback" />
+                        <div className="heder_menu-object_form-feedback" onClick={toggleFeedback}>
+                            {/* <img src="/feedback.svg" alt="Feedback" /> */}
                         </div>
                     </div>
                 </div>

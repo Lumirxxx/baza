@@ -15,13 +15,16 @@ const BigNews = () => {
             try {
                 const newsResponse = await axios.get(`${apiserver}/news/list/`, {
                     headers: { Authorization: `Bearer ${token}` }
+
                 });
                 setNews(newsResponse.data);
+                // console.log(newsResponse.data)
 
                 const mediaResponse = await axios.get(`${apiserver}/news/media/`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setMedia(mediaResponse.data);
+                // console.log(mediaResponse.data)
             } catch (error) {
                 if (error.response && error.response.status === 401) {
                     const refreshTokenSuccess = await refreshAuthToken(navigate);
