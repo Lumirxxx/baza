@@ -47,6 +47,18 @@ const Partners = () => {
                     <Col xs={6} md={6}><img className="partners_img" src="/client_ya-mk.png" alt="Partner" /></Col>
                     <Col xs={6} md={6}><img className="partners_img" src="/client_stavvinzavod.png" alt="Partner" /></Col>
                 </Row>
+                <Row>
+                    <Col xs={6} md={6}><img className="partners_img" src="/client_ya-mk.png" alt="Partner" /></Col>
+                    <Col xs={6} md={6}><img className="partners_img" src="/client_stavvinzavod.png" alt="Partner" /></Col>
+                </Row>
+                <Row>
+                    <Col xs={6} md={6}><img className="partners_img" src="/client_ya-mk.png" alt="Partner" /></Col>
+                    <Col xs={6} md={6}><img className="partners_img" src="/client_stavvinzavod.png" alt="Partner" /></Col>
+                </Row>
+                <Row>
+                    <Col xs={6} md={6}><img className="partners_img" src="/client_ya-mk.png" alt="Partner" /></Col>
+                    <Col xs={6} md={6}><img className="partners_img" src="/client_stavvinzavod.png" alt="Partner" /></Col>
+                </Row>
             </Container>
         </div>
     )

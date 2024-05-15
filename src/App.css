@@ -15,6 +15,7 @@ body {
   font-family: mulishregular !important;
   font-weight: normal;
   font-size: 20px !important;
+  /* overflow: hidden; */
 }
 
 p {
@@ -966,6 +967,8 @@ figure {
   z-index: 1;
 }
 
+
+
 .slick-current {
   /* padding-left: 40px; */
 }
@@ -1008,9 +1011,14 @@ figure {
 
 }
 
+.slick-arrow {
+  fill: rgba(250, 250, 250, 1);
+}
+
 
 .slick-disabled {
-  display: none !important;
+  /* display: none !important; */
+  fill: rgba(125, 137, 167, 1);
 }
 
 .button_article-editor {
@@ -1044,15 +1052,45 @@ figure {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 30px;
+  /* margin-top: 30px; */
+
 }
 
-.big_news_container {}
+.big_news_container {
+  max-height: 705px;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+}
+
+.media_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.small_media_container {
+  display: flex;
+  justify-content: space-between;
+  width: 694px;
+  /* Ширина контейнера со всеми маленькими изображениями */
+}
 
 .news_title {
   font-family: nunito_semibold;
   font-size: 26px;
   text-transform: uppercase;
+}
+
+.news_main-content_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.full_news_img-big {
+  width: 694px;
+  height: 394px;
 }
 
 .news_item {
@@ -1091,6 +1129,9 @@ figure {
 .container-partners_main {
   padding-left: 0 !important;
   padding-right: 0 !important;
+  height: 705px;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
 .header_menu {
@@ -1142,6 +1183,50 @@ figure {
 .full_news-content {
   display: flex;
   flex-direction: column;
+  max-width: 1236px;
+  margin: auto;
+}
+
+.full_news_img-bg {
+  width: 694px;
+  height: 394px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.news_title_full {
+  line-height: 1;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.slider-media {
+  width: 100%;
+}
+
+.slider-img_full-news {
+  width: 300px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 200px;
+
+}
+
+.news_text {
+  padding-right: 36px;
+  font-family: nunito;
+  font-size: 20px;
+}
+
+.full_news_img-bg_small {
+  width: 220px;
+  height: 150px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.small_media_container {
+  padding-top: 17px;
 }
 
 .feedback_form-container {

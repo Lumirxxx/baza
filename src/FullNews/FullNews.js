@@ -58,12 +58,23 @@ const FullNews = () => {
             <NewsSlider />
             <div className='full_news-content'>
                 <div className='news_title news_title_full'>{news ? news.title : 'Loading...'}</div>
-                <div>{news ? news.text : 'Loading...'}</div>
-                {media.slice(0, showAllMedia ? media.length : 4).map((m, index) => (
-                    <div className='full_news_img' key={index} style={{ width: index === 0 ? '694px' : '220px' }}>
-                        <img src={m.media} alt={`Media ${index + 1}`} />
+                <div className='news_main-content_container'>
+                    <div className='news_text'>{news ? news.text : 'Loading...'}</div>
+                    <div className="media_container">
+                        <div className='full_news_img' style={{ width: '694px', height: '394px' }}>
+                            <div className='full_news_img-bg' style={{ backgroundImage: `url(${media.length > 0 ? media[0].media : ''})` }} alt={`Media 1`}></div>
+                            {/* <img className='full_news_img-big' src={media.length > 0 ? media[0].media : ''} alt={`Media 1`} /> */}
+                        </div>
+                        <div className="small_media_container">
+                            {media.slice(1, 4).map((m, index) => (
+                                <div className='full_news_img small_media' key={index}>
+                                    <div className='full_news_img-bg_small' style={{ backgroundImage: `url(${m.media})` }} alt={`Media ${index + 2}`}></div>
+                                    {/* <img src={m.media} alt={`Media ${index + 2}`} /> */}
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                ))}
+                </div>
                 {!showAllMedia && (
                     <button onClick={toggleShowAllMedia}>Смотреть все</button>
                 )}

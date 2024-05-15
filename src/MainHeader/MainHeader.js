@@ -20,9 +20,9 @@ const MainHeader = () => {
     };
 
     return (
-        <div className="header">
+        <div className="header" >
             <div className="header_container">
-              <FeedBack toggleFeedback={toggleFeedback} feedbackVisible={feedbackVisible} />
+                <FeedBack toggleFeedback={toggleFeedback} feedbackVisible={feedbackVisible} />
                 <div className="header_logo">
                     <img src="/MainLogon.svg" alt="Logo" />
                 </div>

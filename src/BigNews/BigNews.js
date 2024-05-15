@@ -48,18 +48,23 @@ const BigNews = () => {
     };
 
     return (
-        <div className="big_news_container">
+        <div>
             <div className='news_title'>Новости</div>
-            {news.map((item) => (
-                <div key={item.id} className="news_item" onClick={() => navigate(`/news/${item.id}`)}>
-                    <div className='news_item_row'>
-                        <div className='news_title_content'>{item.title}</div>
-                        <img className='news_img' src={getFirstMediaForNews(item.id)} alt="News" />
 
+
+            <div className="big_news_container">
+
+                {news.map((item) => (
+                    <div key={item.id} className="news_item" onClick={() => navigate(`/news/${item.id}`)}>
+                        <div className='news_item_row'>
+                            <div className='news_title_content'>{item.title}</div>
+                            <img className='news_img' src={getFirstMediaForNews(item.id)} alt="News" />
+
+                        </div>
+                        <div className='news_date'>{item.created_at.split(' ')[0]}</div>
                     </div>
-                    <div className='news_date'>{item.created_at.split(' ')[0]}</div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 };

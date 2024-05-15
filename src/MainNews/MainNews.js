@@ -7,10 +7,12 @@ const MainNews = () => {
 
     return (
         <div className="main_news_container">
+            <div className="heder_slider_position" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000 }}>
+                <MainHeader />
+                <NewsSlider />
+            </div>
 
-            <MainHeader />
-            <NewsSlider />
-            <div className="main_news-row">
+            <div className="main_news-row" style={{ paddingTop: "340px" }}>
                 <BigNews />
                 <Partners />
             </div>
