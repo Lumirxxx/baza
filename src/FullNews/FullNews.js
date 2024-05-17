@@ -12,6 +12,7 @@ const FullNews = () => {
     const [news, setNews] = useState(null);
     const [media, setMedia] = useState([]);
     const [showAllMedia, setShowAllMedia] = useState(false);
+    const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,8 +49,9 @@ const FullNews = () => {
 
     if (!news) return <div>Loading...</div>;
 
-    const toggleShowAllMedia = () => {
-        setShowAllMedia(!showAllMedia);
+    const openSliderAtIndex = (index) => {
+        setCurrentMediaIndex(index);
+        setShowAllMedia(true);
     };
 
     return (
@@ -61,25 +63,30 @@ const FullNews = () => {
                 <div className='news_main-content_container'>
                     <div className='news_text'>{news ? news.text : 'Loading...'}</div>
                     <div className="media_container">
-                        <div className='full_news_img' style={{ width: '694px', height: '394px' }}>
+                        <div className='full_news_img' style={{ width: '694px', height: '394px' }} onClick={() => openSliderAtIndex(0)}>
                             <div className='full_news_img-bg' style={{ backgroundImage: `url(${media.length > 0 ? media[0].media : ''})` }} alt={`Media 1`}></div>
-                            {/* <img className='full_news_img-big' src={media.length > 0 ? media[0].media : ''} alt={`Media 1`} /> */}
                         </div>
                         <div className="small_media_container">
                             {media.slice(1, 4).map((m, index) => (
-                                <div className='full_news_img small_media' key={index}>
+                                <div className='full_news_img small_media' key={index} onClick={() => openSliderAtIndex(index + 1)}>
                                     <div className='full_news_img-bg_small' style={{ backgroundImage: `url(${m.media})` }} alt={`Media ${index + 2}`}></div>
-                                    {/* <img src={m.media} alt={`Media ${index + 2}`} /> */}
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
                 {!showAllMedia && (
-                    <button onClick={toggleShowAllMedia}>Смотреть все</button>
+                    <button onClick={() => openSliderAtIndex(0)}>Смотреть все</button>
                 )}
             </div>
-            {showAllMedia && <SliderComponent media={media} onClose={toggleShowAllMedia} />}
+            {showAllMedia && (
+                <div className="modal-slider_full-news">
+                    <div className="modal-content">
+                        <SliderComponent media={media} initialSlide={currentMediaIndex} onClose={() => setShowAllMedia(false)} />
+                    </div>
+                    
+                </div>
+            )}
         </div>
     );
 };

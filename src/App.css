@@ -1202,15 +1202,41 @@ figure {
 
 .slider-media {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
 }
 
 .slider-img_full-news {
-  width: 300px;
+  width: 100%;
+  max-width: 875px;
   background-repeat: no-repeat;
-  background-size: cover;
-  height: 200px;
+  background-size: contain;
+  background-position: center;
+  height: 500px;
 
 }
+
+/* Стили для кастомных стрелок */
+.swiper-button-next-custom,
+.swiper-button-prev-custom {
+  position: absolute;
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.swiper-button-next-custom {
+  right: 10px;
+}
+
+.swiper-button-prev-custom {
+  left: 10px;
+}
+
 
 .news_text {
   padding-right: 36px;
@@ -1343,6 +1369,48 @@ figure {
 
   cursor: pointer;
   z-index: 1;
+}
+
+/* Общие стили */
+body.modal-open {
+  overflow: hidden;
+  /* Отключает прокрутку при открытом модальном окне */
+}
+
+/* Стили модального окна */
+.modal-slider_full-news {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Полупрозрачный черный фон */
+  z-index: 1000;
+  /* Убедитесь, что модальное окно поверх всех других элементов */
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  /* Добавьте прокрутку, если контент превышает размер окна */
+}
+
+.hidden_arrow {
+  display: none;
+}
+
+.close-btn-container {
+  position: absolute;
+  top: 0;
+  right: 10px;
 }
 
 

@@ -1,36 +1,75 @@
-import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import React, { useState, useEffect } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
+import { ReactComponent as NextArrow } from '../icons/nextArrowblack.svg';
+import { ReactComponent as PrevArrow } from '../icons/prevArrowblack.svg';
 
-const SliderComponent = ({ media, onClose }) => {
-    const settings = {
-        dots: false,
-        infinite: true, // Здесь изменение
-        speed: 500,
-        slidesToScroll: 1,
-        slidesToShow: 1,
-        initialSlide: 0
+const SliderComponent = ({ media, initialSlide, onClose }) => {
+    const [isEnd, setIsEnd] = useState(false);
+    const [isBeginning, setIsBeginning] = useState(true);
+    const swiperRef = React.useRef(null);
+
+    const goNext = () => {
+        if (swiperRef.current !== null) {
+            swiperRef.current.swiper.slideNext();
+        }
     };
 
+    const goPrev = () => {
+        if (swiperRef.current !== null) {
+            swiperRef.current.swiper.slidePrev();
+        }
+    };
+
+    const handleSlideChange = () => {
+        if (swiperRef.current !== null) {
+            const swiperInstance = swiperRef.current.swiper;
+            setIsEnd(swiperInstance.isEnd);
+            setIsBeginning(swiperInstance.isBeginning);
+        }
+    };
+
+    useEffect(() => {
+        // Вызываем handleSlideChange для инициализации начального состояния слайдера
+        handleSlideChange();
+    }, []);
 
     return (
         <div className="slider">
-            <Slider className='slider_full_news' {...settings}>
+            <Swiper
+                ref={swiperRef}
+                spaceBetween={0}
+                slidesPerView={1}
+                loop={false}
+                speed={500}
+                initialSlide={initialSlide}
+                onSlideChange={handleSlideChange}
+            >
                 {media.map((m, index) => (
-                    <div key={index}>
+                    <SwiperSlide key={index}>
                         <div className="slider-media">
-                            <div className='slider-img_full-news' style={{ backgroundImage: `url(${m.media})` }} alt={`Media ${index + 1}`}></div>
-                            {/* <img src={m.media} alt={`Media ${index + 1}`} /> */}
+                            <div
+                                className='slider-img_full-news'
+                                style={{ backgroundImage: `url(${m.media})` }}
+                                alt={`Media ${index + 1}`}
+                            ></div>
                         </div>
-                    </div>
+                    </SwiperSlide>
                 ))}
-            </Slider>
+            </Swiper>
 
-            <button onClick={onClose}>Закрыть</button>
+            <div className={`swiper-button-next-custom ${isEnd ? 'hidden_arrow' : ''}`} onClick={goNext}>
+                <NextArrow />
+            </div>
+            <div className={`swiper-button-prev-custom ${isBeginning ? 'hidden_arrow' : ''}`} onClick={goPrev}>
+                <PrevArrow />
+            </div>
+
+            <div className="close-btn-container" onClick={onClose}>
+                <img className="close-btn" src="/closeblack.svg" alt="Close" />
+            </div>
         </div>
     );
 };
 
 export default SliderComponent;
-
