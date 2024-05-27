@@ -98,7 +98,7 @@ h1 {
 
 .login_page {
   background-color: #002456;
-  background-image: url("/public/bgLoginPage.png");
+  background-image: url("/public/bgLoginPage3.svg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -110,12 +110,16 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
 
 
 }
 
 .login_page_logo {
   margin-top: 15px;
+  position: absolute;
+  top: 0;
+  left: 342px;
 }
 
 .main_page_logo {
@@ -146,7 +150,7 @@ h1 {
   padding-top: 40px;
   padding-right: 60px;
   padding-bottom: 40px;
-  background-color: #fff;
+  background-color: #F3F3F3;
   border-radius: 15px;
   margin-top: 13rem;
   max-width: 380px;
@@ -1192,6 +1196,8 @@ figure {
   height: 394px;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
+  border-radius: 5px;
 }
 
 .news_title_full {
@@ -1204,7 +1210,17 @@ figure {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 200px;
+}
+
+.show_all-news_btn {
+  font-family: nunito;
+  font-size: 20px;
+  width: 173px;
+  margin-left: auto;
+  text-align: right;
+  margin-top: 17px;
+  cursor: pointer;
 }
 
 .slider-img_full-news {
@@ -1249,6 +1265,8 @@ figure {
   height: 150px;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
+  border-radius: 5px;
 }
 
 .small_media_container {
@@ -1400,6 +1418,7 @@ body.modal-open {
   max-width: 90%;
   max-height: 90%;
   overflow: auto;
+  height: 100%;
   /* Добавьте прокрутку, если контент превышает размер окна */
 }
 
@@ -1474,6 +1493,51 @@ body.modal-open {
   line-height: 20px;
   font-weight: bold;
 }
+
+/* styles.css */
+
+/* .fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+ 
+}
+
+.fixed-news-slider {
+  position: fixed;
+  top: 130px;
+
+  left: 0;
+  width: 100%;
+  z-index: 999;
+
+}
+
+.full_news_container {
+  margin-top: 302px;
+
+  overflow-y: auto;
+
+  height: calc(100vh - 120px);
+ 
+}
+
+.modal-slider_full-news {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
 
 
 

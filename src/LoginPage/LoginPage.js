@@ -41,7 +41,7 @@ const LoginPage = () => {
         <div className="login_page">
             <div className="login_page_logo">
                 <a href="#">
-                    <img src="/logoww.svg" />
+                    <img src="/logoww2.svg" />
                 </a>
             </div>
             <div className="login_form">
