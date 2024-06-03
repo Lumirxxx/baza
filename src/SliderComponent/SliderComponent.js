@@ -34,6 +34,10 @@ const SliderComponent = ({ media, initialSlide, onClose }) => {
         handleSlideChange();
     }, []);
 
+    const isVideo = (url) => {
+        return url.match(/\.(mp4|webm|ogg)$/);
+    };
+
     return (
         <div className="slider">
             <Swiper
@@ -48,11 +52,18 @@ const SliderComponent = ({ media, initialSlide, onClose }) => {
                 {media.map((m, index) => (
                     <SwiperSlide key={index}>
                         <div className="slider-media">
-                            <div
-                                className='slider-img_full-news'
-                                style={{ backgroundImage: `url(${m.media})` }}
-                                alt={`Media ${index + 1}`}
-                            ></div>
+                            {isVideo(m.media) ? (
+                                <video controls className="slider-media-content slider-media-content_video">
+                                    <source src={m.media} type="video/mp4" />
+                                    Ваш браузер не поддерживает элемент <code>video</code>.
+                                </video>
+                            ) : (
+                                <div
+                                    className="slider-img_full-news slider-media-content"
+                                    style={{ backgroundImage: `url(${m.media})` }}
+                                    alt={`Media ${index + 1}`}
+                                ></div>
+                            )}
                         </div>
                     </SwiperSlide>
                 ))}

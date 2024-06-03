@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiserver } from "../config";
 import { apiserverwiki } from "../config";
+
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -19,9 +21,7 @@ const LoginPage = () => {
             .then((response) => {
                 // Сохранение токена в локальном хранилище
                 localStorage.setItem("token", response.data.access);
-                console.log("token", response.data.access)
                 localStorage.setItem("refreshToken", response.data.refresh);
-                console.log("refreshToken", response.data.refresh)
                 navigate("/MainNews");
                 console.log("Вы успешно авторизовались!");
             })
@@ -30,18 +30,21 @@ const LoginPage = () => {
                 setErrorMessage("Неверный логин или пароль");
             });
     };
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
             navigate("/MainNews");
         }
-    }, []);
+    }, [navigate]);
+
+    const isFormValid = username && password;
 
     return (
         <div className="login_page">
             <div className="login_page_logo">
                 <a href="#">
-                    <img src="/logoww2.svg" />
+                    <img src="/logoww2.svg" alt="Logo" />
                 </a>
             </div>
             <div className="login_form">
@@ -50,7 +53,7 @@ const LoginPage = () => {
                     <div className="login_form_button-container">
                         <input
                             className="select_button"
-                            placeholder="Логин"
+                            placeholder="Номер проекта"
                             type="text"
                             id="username"
                             value={username}
@@ -68,7 +71,12 @@ const LoginPage = () => {
                         />
                     </div>
                     <div className="login_form_button-container-submit">
-                        <button className="form_button_submit form_button_submit-font_size" type="submit">
+                        <button
+                            className="form_button_submit form_button_submit-font_size"
+                            type="submit"
+                            style={{ backgroundColor: isFormValid ? "#022B94" : "#5F6982" }}
+                            disabled={!isFormValid}
+                        >
                             Войти
                         </button>
                     </div>
