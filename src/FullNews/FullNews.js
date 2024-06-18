@@ -65,7 +65,11 @@ const FullNews = () => {
                 <div className='full_news-content'>
                     <div className='news_title news_title_full'>{news ? news.title : 'Loading...'}</div>
                     <div className='news_main-content_container'>
-                        <div className='news_text'>{news ? news.text : 'Loading...'}</div>
+                        <div className='news_text'>
+                            {news ? news.text.split('\n').map((item, key) => {
+                                return <span key={key}>{item}<br /></span>
+                            }) : 'Loading...'}
+                        </div>
                         <div className="media_container">
                             <div className='full_news_img' style={{ width: '694px', height: '394px' }} onClick={() => openSliderAtIndex(0)}>
                                 <div className='full_news_img-bg' style={{ backgroundImage: `url(${media.length > 0 ? media[0].media : ''})` }} alt={`Media 1`}></div>
@@ -87,7 +91,6 @@ const FullNews = () => {
                     <div className="modal-slider_full-news">
                         <div className="modal-content">
                             <SliderComponent media={media} initialSlide={currentMediaIndex} onClose={() => setShowAllMedia(false)} />
-
                         </div>
                     </div>
                 )}
@@ -97,3 +100,4 @@ const FullNews = () => {
 };
 
 export default FullNews;
+

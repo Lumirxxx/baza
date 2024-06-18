@@ -7,6 +7,7 @@ import MainNews from './MainNews/MainNews';
 import KnowledgeBase from './KnowledgeBase/KnowledgeBase';
 import MainProjects from './MainProjects/MainProjects';
 import FullNews from './FullNews/FullNews';
+import AdminPage from './AdminPage/AdminPage';
 function App() {
 
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/KnowledgeBase' element={<KnowledgeBase></KnowledgeBase>} />
           <Route path='/MainProjects' element={<MainProjects></MainProjects>} />
           <Route path="/news/:id" element={<FullNews />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </BrowserRouter>
 

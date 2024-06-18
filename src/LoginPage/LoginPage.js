@@ -53,7 +53,7 @@ const LoginPage = () => {
                     <div className="login_form_button-container">
                         <input
                             className="select_button"
-                            placeholder="Номер проекта"
+                            placeholder="Логин"
                             type="text"
                             id="username"
                             value={username}
