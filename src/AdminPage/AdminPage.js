@@ -9,29 +9,64 @@ const AdminPage = () => {
     const [showForm, setShowForm] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const [files, setFiles] = useState([]);
+    const [mediaIds, setMediaIds] = useState([]);
+
+    const handleMediaUpload = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const mediaPromises = files.map(file => {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                return axios.post(`${apiserver}/news/media/`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+            });
+
+            const responses = await Promise.all(mediaPromises);
+            return responses.map(response => response.data.id);
+        } catch (error) {
+            console.error("Ошибка при загрузке медиа-файлов: ", error);
+            throw error;
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
+            const mediaIds = await handleMediaUpload();
+
             const token = localStorage.getItem("token");
-            const response = await axios.post(`${apiserver}/news/list/`, {
+            await axios.post(`${apiserver}/news/list/`, {
                 title,
                 text,
-                newsline
+                newsline,
+                media: mediaIds
             }, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
 
             setSuccessMessage("Новость успешно добавлена!");
             setTitle("");
             setText("");
             setNewsline(false);
+            setFiles([]);
             setShowForm(false);
         } catch (error) {
             console.error("Ошибка при добавлении новости: ", error);
             setErrorMessage("Не удалось добавить новость");
         }
+    };
+
+    const handleFileChange = (event) => {
+        setFiles([...event.target.files]);
     };
 
     return (
@@ -69,6 +104,36 @@ const AdminPage = () => {
                             />
                             Добавить в мини ленту
                         </label>
+                    </div>
+                    <div className="form_group">
+                        <label htmlFor="files">Добавить файлы</label>
+                        <input
+                            type="file"
+                            id="files"
+                            multiple
+                            onChange={handleFileChange}
+                        />
+                    </div>
+                    <div className="file_preview_container">
+                        {files.length > 0 && files.map((file, index) => (
+                            <div key={index} className="file_preview">
+                                {file.type.startsWith("image/") ? (
+                                    <img
+                                        src={URL.createObjectURL(file)}
+                                        alt={`preview-${index}`}
+                                        width="50"
+                                        height="50"
+                                    />
+                                ) : (
+                                    <video
+                                        src={URL.createObjectURL(file)}
+                                        width="50"
+                                        height="50"
+                                        controls
+                                    />
+                                )}
+                            </div>
+                        ))}
                     </div>
                     <button type="submit">Сохранить</button>
                 </form>
