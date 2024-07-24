@@ -291,9 +291,9 @@ h1 {
 }
 
 .active {
-  background-color: #668AB0 !important;
+  /* background-color: #668AB0 !important;
   box-shadow: inset 0px 4px 0px 0px rgba(0, 0, 0, 0.25) !important;
-  transition: 0.5s !important;
+  transition: 0.5s !important; */
 
 }
 
@@ -985,6 +985,7 @@ figure {
 .news_title_content {
   font-size: 26px !important;
   font-family: nunito_semibold;
+  margin-right: 15px;
 }
 
 .news_date {
@@ -1544,6 +1545,341 @@ body.modal-open {
 } */
 
 
+
+.admin-page {
+  display: flex;
+  height: 100vh;
+  position: relative;
+}
+
+.sidebar {
+  width: 352px;
+  background-color: #022B94;
+  color: white;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+
+}
+
+.sidebar h2 {
+  color: #f0f0f0;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+
+  cursor: pointer;
+
+  position: relative;
+}
+
+.sidebar li.active {
+  /* background-color: #2c5282; */
+  position: relative;
+}
+
+.sidebar li.active::before {
+  content: '';
+  position: absolute;
+  right: -32px;
+  /* Подкорректируйте значение в зависимости от размеров вашей иконки */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 108px;
+  /* Подкорректируйте значение в зависимости от размеров вашей иконки */
+  height: 65px;
+  /* Подкорректируйте значение в зависимости от размеров вашей иконки */
+  background: url('./icons/toggle2.svg') no-repeat center center;
+  background-size: contain;
+}
+
+.sidebar li:hover {
+  /* background-color: #2c5282; */
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  background-color: #E3EBFF;
+  border-bottom-left-radius: 30px;
+  border-top-left-radius: 30px;
+  position: relative;
+  z-index: 2;
+  margin-left: -30px;
+}
+
+.add-news {
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 750px;
+  width: 100%;
+}
+
+
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.label_add_news {
+  display: block;
+  margin-bottom: 10px;
+
+}
+
+.file-input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.custom-file-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+  background-color: #fff;
+  color: #959595;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: nunito;
+  align-items: baseline;
+
+}
+
+.custom-file-button img {
+  margin-right: 10px;
+}
+
+.custom-file-button:hover {
+  /* background-color: #2b6cb0; */
+
+}
+
+.file-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.file-preview {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="datetime-local"],
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.form-group input[type="file"] {
+  display: block;
+  margin-top: 10px;
+}
+
+.file-preview-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.file-preview img {
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.save-button {
+  background-image: linear-gradient(to right, rgb(2 43 148), rgb(57 144 254));
+  border: 0;
+  color: #fff;
+  font-size: 18px;
+  font-family: nunito_semibold;
+  padding-left: 57.5px;
+  padding-right: 57.5px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  border-radius: 5px;
+}
+
+.save-button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.save-button:hover {
+  /* background-color: #2563eb; */
+}
+
+.add-news_title {
+  font-size: 18px;
+  font-family: nunito_semibold;
+  margin-bottom: 30px;
+}
+
+.label_add_news {
+  font-size: 16px;
+  font-family: nunito;
+}
+
+.add_news_text {
+  height: 192px;
+  font-size: 16px;
+  font-family: nunito;
+}
+
+.add_news_textarea {
+  outline: none;
+}
+
+.add_news_checkbox {
+  width: 23px;
+  height: 23px;
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.add_news_checkbox+label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+
+.add_news_checkbox+label::before {
+  content: '';
+  display: inline-block;
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border: 1px solid #181818;
+  border-radius: 0.45em;
+  margin-right: 0.5em;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 50% 50%;
+}
+
+.add_news_checkbox:checked+label::before {
+  border-color: #181818;
+  background-color: #388FFD;
+  background-image: url(./icons/check.svg);
+}
+
+.sidebar-title {
+  font-size: 22px;
+  font-family: nunito_medium;
+  margin-left: 34px;
+}
+
+.sidebar_heder_icon {
+  position: relative;
+}
+
+.blure_circle {
+  width: 70px;
+  height: 70px;
+  /* background-image: linear-gradient(to right, rgb(255 255 255 /0%), rgb(255 255 255 /100%)); */
+  background: rgba(62, 160, 254, 0.35);
+  /* Полупрозрачный фон */
+  backdrop-filter: blur(24px);
+  border-radius: 50%;
+  position: relative;
+  z-index: 3;
+}
+
+.small_circle {
+  width: 55px;
+  height: 55px;
+  background: #4096FE;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 20%;
+  transform: translate(30%, -50%);
+  z-index: 1;
+}
+
+.small_circle-inside {
+  width: 26px;
+  height: 26px;
+  background: rgba(0, 98, 255, 1);
+  filter: blur(18px);
+  /* Изменено с backdrop-filter на filter */
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  opacity: 0.5;
+}
+
+.union_circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-30%, -40%);
+  z-index: 4;
+
+}
+
+.sidebar_header {
+  display: flex;
+  align-items: center;
+
+}
+
+.sidebar-menu li {
+  font-size: 18px;
+  font-family: nunito_medium;
+  margin-bottom: 60px;
+}
+
+.sidebar-menu-content {
+  display: flex;
+}
+
+.sidebar-menu-icon {
+  margin-right: 15px;
+}
+
+.sidebar_title_menu {
+  font-size: 16px;
+  font-family: nunito_medium;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
 
 
 @media (max-width:1098px) {
