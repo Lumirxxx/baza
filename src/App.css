@@ -1695,11 +1695,53 @@ body.modal-open {
 .form-group input[type="datetime-local"],
 .form-group textarea {
   width: 100%;
-  padding: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   box-sizing: border-box;
   border: 1px solid #cbd5e0;
-  border-radius: 4px;
+  border-radius: 5px;
 }
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="datetime-local"]:focus,
+.form-group textarea:focus {
+  border: 1px solid #022B94;
+  outline: none;
+}
+
+/* AddNews.css */
+.success-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #20AC47;
+  /* Зелёный фон */
+  color: white;
+  /* Белый текст */
+  padding: 10px 20px;
+  border-radius: 5px;
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+
+  z-index: 1000;
+  transition: opacity 0.3s ease-in-out;
+  max-width: 69.4375rem;
+  width: 100%;
+  font-family: nunito;
+  font-size: 20px;
+}
+
+.success-icon {
+
+  margin-right: 10px;
+}
+
 
 .form-group input[type="file"] {
   display: block;
@@ -1757,9 +1799,7 @@ body.modal-open {
   font-family: nunito;
 }
 
-.add_news_textarea {
-  outline: none;
-}
+.add_news_textarea {}
 
 .add_news_checkbox {
   width: 23px;

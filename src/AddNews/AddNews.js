@@ -8,23 +8,37 @@ const AddNews = () => {
     const [publicatedAt, setPublicatedAt] = useState('');
     const [mediaFiles, setMediaFiles] = useState([]);
     const [filePreviews, setFilePreviews] = useState([]);
+    const [coverFile, setCoverFile] = useState(null); // Состояние для файла обложки
+    const [coverPreview, setCoverPreview] = useState(null); // Состояние для URL обложки
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const isFormComplete = title && publicatedAt && text;
 
     const handleAddNews = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`${apiserver}/news/list-admin/`, { title, text, publicated_at: publicatedAt }, {
-                headers: { 'Authorization': `Bearer ${token}` },
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('text', text);
+            formData.append('publicated_at', publicatedAt);
+            if (coverFile) {
+                formData.append('cover', coverFile);
+            }
+
+            const response = await axios.post(`${apiserver}/news/list-admin/`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
             });
 
             const newsId = response.data.id;
             const uploadPromises = mediaFiles.map(file => {
-                const formData = new FormData();
-                formData.append('news_id', newsId);
-                formData.append('media', file);
+                const mediaFormData = new FormData();
+                mediaFormData.append('news_id', newsId);
+                mediaFormData.append('media', file);
 
-                return axios.post(`${apiserver}/news/media/`, formData, {
+                return axios.post(`${apiserver}/news/media/`, mediaFormData, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data',
@@ -34,11 +48,18 @@ const AddNews = () => {
 
             await Promise.all(uploadPromises);
             console.log('Новость добавлена:', response.data);
+
+            setShowSuccessMessage(true);
+            setTimeout(() => setShowSuccessMessage(false), 3000);
+
+            // Очистка полей формы
             setTitle('');
             setText('');
             setPublicatedAt('');
             setMediaFiles([]);
             setFilePreviews([]);
+            setCoverFile(null);
+            setCoverPreview(null); // Очистить состояние обложки
         } catch (error) {
             console.error('Error adding news:', error);
         }
@@ -49,6 +70,12 @@ const AddNews = () => {
         setMediaFiles(files);
         const previews = files.map(file => URL.createObjectURL(file));
         setFilePreviews(previews);
+    };
+
+    const handleCoverChange = (e) => {
+        const file = e.target.files[0];
+        setCoverFile(file);
+        setCoverPreview(URL.createObjectURL(file));
     };
 
     return (
@@ -77,6 +104,21 @@ const AddNews = () => {
                 </div>
             </div>
 
+            <div className="form-group">
+                <div className="file-input-wrapper">
+                    <input type="file" onChange={handleCoverChange} />
+                    <button className="custom-file-button">
+                        <img src="/filedownload.svg" alt="Загрузить обложку" />
+                        Загрузить обложку
+                    </button>
+                </div>
+                {coverPreview && (
+                    <div className="cover-preview">
+                        <img src={coverPreview} alt="Cover preview" width="100" />
+                    </div>
+                )}
+            </div>
+
             {filePreviews.length > 0 && (
                 <div className="file-preview-container">
                     {filePreviews.map((preview, index) => (
@@ -95,6 +137,16 @@ const AddNews = () => {
                 onClick={handleAddNews}
                 disabled={!isFormComplete}
             >Сохранить</button>
+
+            {/* Сообщение об успешном сохранении */}
+            {showSuccessMessage && (
+                <div className="success-message">
+                    <div className='success-icon'>
+                        <img src="/tick-square.svg" alt="Success" />
+                    </div>
+                    <div className='success-text'>Данные успешно сохранены.</div>
+                </div>
+            )}
         </div>
     );
 };

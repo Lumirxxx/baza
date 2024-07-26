@@ -47,7 +47,7 @@ const Sidebar = ({ selectedSection, onSelectSection }) => {
                 >
                     <div className='sidebar-menu-content'>
                         <div className='sidebar-menu-icon'>
-                            <img src='/user-edit.svg' alt="" />
+                            <img src='/IPM_Wiki.svg' alt="" />
                         </div>
                         <div>IPM Wiki</div>
                     </div>
