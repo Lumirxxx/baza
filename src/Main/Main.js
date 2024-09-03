@@ -34,6 +34,7 @@ export const ButtonMenuContext = React.createContext();
 export const ButtonSectionContext = React.createContext();
 export const ButtonArticleNameContext = React.createContext();
 const Main = () => {
+    
     const [menu_id, setMenuId] = useState(null);
     const [menu, setMenu] = useState([]);
     const [sectionId, setSectionId] = useState(null);//текущая секция
@@ -47,7 +48,7 @@ const Main = () => {
     const [selectedSectionItemId, setSelectedSectionItemId] = useState(null);
     const [subsectionId, setSubsectionId] = useState(null);
     const [selectedArticle, setSelectedArticle] = useState(null);//текущая статья
-    const [profile, setProfile] = useState(false);//Стейт для отслеживания состояния админа
+    const [profile, setProfile] = useState(null); 
     const [selectedMenuId, setSelectedMenuId] = useState(null);
     const [selectedSectionId, setSelectedSectionId] = useState(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -70,21 +71,14 @@ const Main = () => {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                if (!isRedirectedRef.current) {
-                    setProfile(response.data[0]);
-                    console.log(response.data[0]);
-                }
+                setProfile(response.data[0]);
             } catch (error) {
                 if (error.response && error.response.status === 401) {
-                    // Попытка обновить токен
                     const refreshTokenSuccess = await refreshAuthToken(navigate);
                     if (refreshTokenSuccess) {
-                        // Если токен успешно обновлён, повторяем запрос
                         fetchData();
                     } else {
                         console.error("Не удалось обновить токен.");
-
-                        // Ошибка обновления токена или другие действия
                     }
                 } else {
                     console.error("Ошибка при получении данных: ", error);
@@ -93,7 +87,7 @@ const Main = () => {
         };
 
         fetchData();
-    }, [isRedirectedRef], [navigate]);
+    }, [navigate]);
 
     // Функция для обновления токена
     // const refreshAuthToken = async () => {
@@ -385,9 +379,9 @@ const Main = () => {
                     <img src="/HeaderlogomainNew.svg" alt="Logo" />
                 </div>
                 <div className="header_service-buttons">
-                    {(profile.is_staff) && (
+                    {/* {(profile.is_staff) && (
                         <DepartList profile={profile} />
-                    )}
+                    )} */}
                     <LogoutButton />
 
                 </div>
@@ -400,12 +394,13 @@ const Main = () => {
                     {menu.map((menuItem) => (
                         <div title={menuItem.name} className="menu_item">
                             <ButtonMenuContext.Provider value={{ menuItem, handleSectionButtonClick, menu_id }}>
+                                
                                 <ButtonMenu />
                             </ButtonMenuContext.Provider>
 
-                            {(profile.is_staff || profile.is_moderate) && (
+                       
                                 <EditButtonMenu menuItem={menuItem} menuId={menuItem.id} onUpdate={handleMenuUpdate} deleteMenuButtonComponent={<DeleteMenuButton handleSectionButtonClick={handleSectionButtonClick} handleDeleteMenu={handleDeleteMenu} profile={profile} menu_id={menu_id} menuItem={menuItem} selectedMenuId={selectedMenuId} menuId={menuItem.id} onUpdate={handleMenuUpdate} />} />
-                            )}
+                  
                             <ModalAllertDeleteMenuContext.Provider value={{ showDeleteConfirmation, errorMessage, confirmDeleteMenu, cancelDeleteMenu }}>
                                 <ModalAllertDeleteMenu />
                             </ModalAllertDeleteMenuContext.Provider>
@@ -413,9 +408,13 @@ const Main = () => {
                         </div>
 
                     ))}
-                    {(profile.is_staff || profile.is_moderate) && (
-                        <AddButtonMenu onUpdate={handleMenuAdd} />
-                    )}
+               {profile && ( // Проверка перед использованием profile
+                    <div>
+                     
+                            <AddButtonMenu onUpdate={handleMenuAdd} />
+                  
+                    </div>
+                )}
                     <div>
                         <ScrollToTopButton />
                     </div>
@@ -432,7 +431,7 @@ const Main = () => {
                                                 <ButtonSection />
                                             </ButtonSectionContext.Provider>
                                         </div>
-                                        {(profile.is_staff || profile.is_moderate) && (
+                                    
                                             <div>
                                                 <DeleteSectionButtonContext.Provider value={{ profile, deleteSectionModal, sectionId, section }}>
                                                     <EditButtonSection
@@ -442,7 +441,7 @@ const Main = () => {
                                                     />
                                                 </DeleteSectionButtonContext.Provider>
                                             </div>
-                                        )}
+                              
                                     </div>
 
                                 ))}
@@ -457,9 +456,9 @@ const Main = () => {
 
                         )}
 
-                        {selectedMenuItemId !== null && (profile.is_staff || profile.is_moderate) && (
+                 
                             <AddButtonSections menu={menu} menuName={menuName} menuId={selectedMenuItemId} menu_id={menu_id} onUpdate={handleAddSection} />
-                        )}
+                  
                     </div>
 
 
@@ -481,12 +480,10 @@ const Main = () => {
 
                         )}
                         <div>
-                            {
-                                selectedSectionItemId !== null && showSubsections && sections.length > 0 && (profile.is_staff || profile.is_moderate) && (
+                            
                                     <Editor2 subsectionId={subsectionId} sectionId={sectionId} onUpdate={handleAddArticle} />
 
-                                )
-                            }
+                           
 
 
                         </div>
@@ -501,11 +498,11 @@ const Main = () => {
                                     <div className="article_content">
                                         <div className="article_service-buttons">
 
-                                            {(profile.is_staff || profile.is_moderate) && (
+                                        
                                                 <DeleteArticleButtonContext.Provider value={{ profile, deleteArticleModal, article: selectedArticle }} >
                                                     <EditArticleButton article={selectedArticle} onUpdate={handleArticleUpdate} />
                                                 </DeleteArticleButtonContext.Provider>
-                                            )}
+                                      
 
                                             {showModalDeleteArticle && (
                                                 <ModalAllertDeleteArticleContext.Provider value={{ handleDeleteArticle, selectedArticle, cancelArticleModal, handleDeleteArticle }}>
@@ -514,9 +511,9 @@ const Main = () => {
                                             )}
 
 
-                                            {(profile.is_staff || profile.is_moderate) && (
+                                        
                                                 <AddFilesButton articleId={selectedArticle.id} />
-                                            )}
+                                       
 
                                         </div>
                                         <div className="article_content_container-name">

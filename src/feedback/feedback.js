@@ -16,9 +16,18 @@ const FeedBack = ({ toggleFeedback, feedbackVisible }) => {
         setFeedbackText("");
     };
 
+    const handleToggleFeedback = () => {
+        if (feedbackVisible) {
+            // Если форма была видимой, и мы ее закрываем, сбросим состояние
+            setIsMessageSent(false);
+            setFeedbackText("");
+        }
+        toggleFeedback();
+    };
+
     return (
-        <div  className={`feedback_form-modal ${feedbackVisible ? 'visible_form' : 'hidden'}`}>
-            <div className="feedback_form-close" onClick={toggleFeedback}>
+        <div className={`feedback_form-modal ${feedbackVisible ? 'visible_form' : 'hidden'}`}>
+            <div className="feedback_form-close" onClick={handleToggleFeedback}>
                 <img src="/close.svg" alt="Feedback" />
             </div>
             <div className="feedback_form">

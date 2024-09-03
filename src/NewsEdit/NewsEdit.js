@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { apiserver } from "../config";
 
-const AddNews = () => {
+const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [publicatedAt, setPublicatedAt] = useState('');
@@ -12,9 +12,32 @@ const AddNews = () => {
     const [coverPreview, setCoverPreview] = useState(null);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-    const isFormComplete = title && publicatedAt && text;
+    useEffect(() => {
+        const fetchNewsData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${apiserver}/news/list-admin/${newsId}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+    
+                const newsData = response.data;
+                setTitle(newsData.title);
+                setText(newsData.text);
+                setPublicatedAt(newsData.publicated_at);
+                setCoverPreview(newsData.cover); // Assuming the cover URL is returned
+                setFilePreviews(newsData.media.map(file => file.url)); // Assuming media URLs are returned
+            } catch (error) {
+                console.error('Error fetching news data:', error);
+            }
+        };
+    
+        fetchNewsData();
+    }, [newsId]);
+    
 
-    const handleAddNews = async () => {
+    const handleEditNews = async () => {
         try {
             const token = localStorage.getItem('token');
             const formData = new FormData();
@@ -24,53 +47,49 @@ const AddNews = () => {
             if (coverFile) {
                 formData.append('cover', coverFile);
             }
-
-            const response = await axios.post(`${apiserver}/news/list-admin/`, formData, {
+    
+            const response = await axios.patch(`${apiserver}/news/list-admin/${newsId}/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
-            const newsId = response.data.id;
-            const uploadPromises = mediaFiles.map(file => {
-                const mediaFormData = new FormData();
-                mediaFormData.append('news_id', newsId);
-                mediaFormData.append('media', file);
-
-                return axios.post(`${apiserver}/news/media/`, mediaFormData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
+    
+            // Update media files if they were changed
+            if (mediaFiles.length > 0) {
+                const uploadPromises = mediaFiles.map(file => {
+                    const mediaFormData = new FormData();
+                    mediaFormData.append('news_id', newsId);
+                    mediaFormData.append('media', file);
+    
+                    return axios.post(`${apiserver}/news/media/`, mediaFormData, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
                 });
-            });
-
-            await Promise.all(uploadPromises);
-            console.log('Новость добавлена:', response.data);
-
+    
+                await Promise.all(uploadPromises);
+            }
+    
+            console.log('Новость обновлена:', response.data);
             setShowSuccessMessage(true);
             setTimeout(() => setShowSuccessMessage(false), 3000);
-
-            // Очистка полей формы
-            setTitle('');
-            setText('');
-            setPublicatedAt('');
-            setMediaFiles([]);
-            setFilePreviews([]);
-            setCoverFile(null);
-            setCoverPreview(null);
+    
+            onNewsUpdated();
         } catch (error) {
-            console.error('Error adding news:', error);
+            console.error('Error editing news:', error);
         }
     };
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        setMediaFiles(prevFiles => [...prevFiles, ...files]);
+        setMediaFiles(prevMediaFiles => [...prevMediaFiles, ...files]); // добавляем новые файлы к существующим
         const previews = files.map(file => URL.createObjectURL(file));
-        setFilePreviews(prevPreviews => [...prevPreviews, ...previews]);
+        setFilePreviews(prevPreviews => [...prevPreviews, ...previews]); // добавляем новые превью к существующим
     };
+    
 
     const handleCoverChange = (e) => {
         const file = e.target.files[0];
@@ -78,21 +97,19 @@ const AddNews = () => {
         setCoverPreview(URL.createObjectURL(file));
     };
 
-    const handleRemoveFile = (index) => {
-        setMediaFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
-        setFilePreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
-    };
-
     return (
         <div className="add-news">
-            <div className='add-news_title'>Добавить новость</div>
+            <div className='add-news_title'>Редактировать новость</div>
+            <div type="button" className="close-btn" onClick={onClose}>
+               <img src='./close-circle.svg' alt="Закрыть"/>
+            </div>
             <div className="form-group">
                 <label className='label_add_news'>Заголовок</label>
-                <input className='add_news_textarea' type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <input className='edit_news_textarea' type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <div className="form-group">
                 <label className='label_add_news'>Дата и время</label>
-                <input className='add_news_textarea' type="datetime-local" value={publicatedAt} onChange={(e) => setPublicatedAt(e.target.value)} />
+                <input className='edit_news_textarea' type="datetime-local" value={publicatedAt} onChange={(e) => setPublicatedAt(e.target.value)} />
             </div>
             <div className="form-group">
                 <label className='label_add_news'>Текст</label>
@@ -113,12 +130,6 @@ const AddNews = () => {
                     {filePreviews.map((preview, index) => (
                         <div key={index} className="file-preview">
                             <img src={preview} alt={`preview-${index}`} width="100" />
-                            <div 
-                                className="remove-file-button"
-                                onClick={() => handleRemoveFile(index)}
-                            >
-                                <img className='close-btn_img' src="./close-circle1.svg" alt="Remove" />
-                            </div>
                         </div>
                     ))}
                 </div>
@@ -139,18 +150,16 @@ const AddNews = () => {
                 )}
             </div>
 
-          
             <div className="form-group">
-                <input className='add_news_checkbox' type="checkbox" id="add_news_checkbox-id" />
-                <label className='label_add_news' htmlFor="add_news_checkbox-id">Добавить новость в мини ленту</label>
+                <input className='edit_news_checkbox' type="checkbox" id="edit_news_checkbox-id" />
+                <label className='label_edit_news' htmlFor="edit_news_checkbox-id">Добавить новость в мини ленту</label>
             </div>
             <button
-                className={`save-button ${isFormComplete ? '' : 'save-button-disabled'}`}
-                onClick={handleAddNews}
-                disabled={!isFormComplete}
+                className="save-button"
+                onClick={handleEditNews}
             >Сохранить</button>
 
-            {/* Сообщение об успешном сохранении */}
+            {/* Сообщение об успешном обновлении */}
             {showSuccessMessage && (
                 <div className="success-message">
                     <div className='success-icon'>
@@ -163,4 +172,4 @@ const AddNews = () => {
     );
 };
 
-export default AddNews;
+export default NewsEdit;

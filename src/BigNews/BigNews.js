@@ -18,11 +18,15 @@ const BigNews = () => {
                 setNews(newsResponse.data);
             } catch (error) {
                 if (error.response && error.response.status === 401) {
+                    // Попытка обновить токен
                     const refreshTokenSuccess = await refreshAuthToken(navigate);
                     if (refreshTokenSuccess) {
+                        // Если токен обновлен, повторно выполняем запрос
                         fetchNews();
                     } else {
-                        console.error("Не удалось обновить токен.");
+                        console.error("Не удалось обновить токен. Перенаправление на страницу логина.");
+                        // Перенаправление на страницу логина
+                        navigate("/");
                     }
                 } else {
                     console.error("Ошибка при получении данных: ", error);
@@ -34,7 +38,7 @@ const BigNews = () => {
     }, [navigate]);
 
     return (
-        <div>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
             <div className='news_title'>Новости</div>
 
             <div className="big_news_container">
@@ -42,10 +46,12 @@ const BigNews = () => {
                     <div key={item.id} className="news_item" onClick={() => navigate(`/news/${item.id}`)}>
                         <div className='news_item_row'>
                             <div className='news_title_content'>{item.title}</div>
-                            {/* Используем поле cover для отображения обложки новости */}
-                            {item.cover && <img className='news_img' src={item.cover} alt="News Cover" />}
+                            
+                            <div className='news_date'>{item.created_at.split(' ')[0]}</div>
                         </div>
-                        <div className='news_date'>{item.created_at.split(' ')[0]}</div>
+                        {/* Используем поле cover для отображения обложки новости */}
+                        {item.cover && <img className='news_img' src={item.cover} alt="News Cover" />}
+                        
                     </div>
                 ))}
             </div>

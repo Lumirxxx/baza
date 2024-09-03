@@ -2,6 +2,7 @@
   "name": "baza",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://5.182.4.206:8000",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@ckeditor/ckeditor5-react": "^6.1.0",
