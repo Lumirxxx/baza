@@ -176,7 +176,7 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing,onClose }) => {
             <label>
                 Пароль
                 <div className="password-container">
-                    <input className='add-contract-input' type="text" value={password} readOnly />
+                    <input className='add-contract-input' type="text" value={password}  />
                     <div className='pass-gen' type="button" onClick={   generatePassword}>
                         <div className='pass-gen_txt'>
                             

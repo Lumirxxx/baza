@@ -5,13 +5,43 @@ import { useNavigate } from 'react-router-dom';
 import AddUserForm from '../AddUserForm/AddUserForm';
 import EditUserForm from '../EditUserForm/EditUserForm';
 import UserSearch from '../UserSearch/UserSearch';
+import DeleteConfirmationModal from '../DeleteConfirmationModal/DeleteConfirmationModal';
+import SnackBar from '../SnackBar/SnackBar'; // Импортируем новый компонент
 
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [isAddingUser, setIsAddingUser] = useState(false);
-    const [isEditingUser, setIsEditingUser] = useState(null); // ID пользователя, которого редактируем
-    const [searchQuery, setSearchQuery] = useState(''); // Строка поиска
+    const [isEditingUser, setIsEditingUser] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
+    const [snackBarMessage, setSnackBarMessage] = useState(''); // Сообщение для Snack Bar
+    const [isSnackBarOpen, setIsSnackBarOpen] = useState(false); // Состояние для отображения Snack Bar
+    const [snackBarType, setSnackBarType] = useState('success'); // Новое состояние для типа SnackBar
+
+
+    const confirmDelete = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`${apiserver}/auth/users/${userToDelete.id}/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            fetchUsers();
+            setShowDeleteModal(false);
+            showSnackBar("Данные успешно удалены", 'delete'); // Показать Snack Bar с типом 'delete'
+        } catch (error) {
+            console.error("Ошибка при удалении пользователя:", error.message);
+        }
+    };
+
+    const cancelDelete = () => {
+        setShowDeleteModal(false);
+        setUserToDelete(null);
+    };
+
 
     const fetchUsers = async () => {
         try {
@@ -96,7 +126,9 @@ const Users = () => {
     const handleUserAddedOrEdited = () => {
         setIsAddingUser(false);
         setIsEditingUser(null);
-        fetchUsers(); // Обновляем список пользователей после добавления/редактирования
+        fetchUsers();
+        const message = isEditingUser ? "Данные успешно сохранены" : "Данные успешно сохранены";
+        showSnackBar(message); // Показать Snack Bar после добавления или редактирования
     };
 
     const handleEditUser = (userId) => {
@@ -104,24 +136,24 @@ const Users = () => {
         setIsAddingUser(true);
     };
 
-    const handleDeleteUser = async (userId) => {
-        try {
-            const token = localStorage.getItem('token');
-
-            // Удаляем пользователя
-            await axios.delete(`${apiserver}/auth/users/${userId}/`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            fetchUsers(); // Обновляем список пользователей после удаления
-        } catch (error) {
-            console.error("Ошибка при удалении пользователя:", error.message);
-        }
+    const handleDeleteUser = (userId) => {
+        const user = users.find((u) => u.id === userId);
+        setUserToDelete(user);
+        setShowDeleteModal(true);
     };
 
-    // Фильтрация пользователей на основе строки поиска
+    // Показ Snack Bar
+    const showSnackBar = (message, type = 'success') => {
+        setSnackBarMessage(message);
+        setSnackBarType(type); // Устанавливаем тип для SnackBar
+        setIsSnackBarOpen(true);
+    };
+
+    // Закрытие Snack Bar
+    const closeSnackBar = () => {
+        setIsSnackBarOpen(false);
+    };
+
     const filteredUsers = users.filter(user =>
         user.username.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -164,8 +196,8 @@ const Users = () => {
                                     <div className='table-body_item'>{user.inn}</div>
                                     <div className='table-body_item'>{user.organization}</div>
                                     <div className='table-body_item'>{user.industry}</div>
-                                    <div className='table-body_item'>{user.region}</div>
-                                    <div className='table-body_item'>{user.email}office@promreshenie.ru</div>
+                                    <div className='table-body_item region_margin'>{user.region}</div>
+                                    <div className='table-body_item user_email'>{user.email}</div>
                                     <div className='table-body_item actions'>
                                         <img src='./edit-icon.svg' className='edit-icon' onClick={() => handleEditUser(user.id)} />
                                         <img src='./delete-icon.svg' onClick={() => handleDeleteUser(user.id)} />
@@ -194,15 +226,31 @@ const Users = () => {
                         )
                     )}
                 </div>
+ 
+            {/* SnackBar */}
+            <SnackBar
+    message={snackBarMessage}
+    isOpen={isSnackBarOpen}
+    onClose={closeSnackBar}
+    type={snackBarType} // Добавляем передачу типа
+/>
             </div>
     
             {/* Кнопка добавления пользователя */}
             <button className="add-user-button" onClick={() => { setIsAddingUser(true); setIsEditingUser(null); }}>
                 Добавить пользователя
             </button>
+           
+            
+            {showDeleteModal && (
+                <DeleteConfirmationModal
+                    username={userToDelete?.username}
+                    onDelete={confirmDelete}
+                    onCancel={cancelDelete}
+                />
+            )}
         </div>
     );
-    
 };
 
 export default Users;

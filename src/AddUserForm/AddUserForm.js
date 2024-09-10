@@ -154,7 +154,7 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
             <label>
                 Отрасль
                 <select value={branchId} onChange={(e) => setBranchId(e.target.value)}>
-                    <option value="">Выберите отрасль</option>
+                    <option value=""></option>
                     {branches.map(branch => (
                         <option key={branch.id} value={branch.id}>{branch.name}</option>
                     ))}
@@ -163,7 +163,7 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
             <label>
                 Регион
                 <select value={districtId} onChange={(e) => setDistrictId(e.target.value)}>
-                    <option value="">Выберите регион</option>
+                    <option value=""></option>
                     {districts.map(district => (
                         <option key={district.id} value={district.id}>{district.name}</option>
                     ))}
