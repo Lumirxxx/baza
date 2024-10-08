@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { apiserver } from "../config";
-import { apiserverwiki } from "../config";
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -12,7 +11,6 @@ import { ReactComponent as PrevArrow } from '../icons/prevArrow.svg';  // Пут
 
 const NewsSlider = () => {
     const [news, setNews] = useState([]);
-    const [media, setMedia] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,12 +21,6 @@ const NewsSlider = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setNews(newsResponse.data);
-
-                const mediaResponse = await axios.get(`${apiserver}/news/media/`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-
-                setMedia(mediaResponse.data);
             } catch (error) {
                 if (error.response && error.response.status === 401) {
                     const refreshTokenSuccess = await refreshAuthToken(navigate);
@@ -45,26 +37,6 @@ const NewsSlider = () => {
         fetchNews();
     }, [navigate]);
 
-    const getFirstMediaForNews = (newsId) => {
-        const newsMedia = media.filter(m => m.news_id === newsId);
-        return newsMedia.length > 0 ? newsMedia[0].media : null;
-    };
-    function hideInactiveSlides() {
-        // Получаем все элементы с классом slick-slide
-        const slides = document.querySelectorAll('.slick-slide');
-
-        slides.forEach(slide => {
-            // Проверяем, имеет ли слайд классы slick-active или slick-current
-            if (!slide.classList.contains('slick-active') && !slide.classList.contains('slick-current')) {
-                // Присваиваем свойство display: none, если не содержит эти классы
-                slide.style.display = 'none';
-            } else {
-                // Убираем свойство display, если оно было установлено ранее
-                slide.style.display = '';
-            }
-        });
-    }
-
     const settings = {
         dots: false,
         infinite: false,
@@ -75,20 +47,15 @@ const NewsSlider = () => {
         prevArrow: <PrevArrow />   // Использование кастомной стрелки назад
     };
 
-
-
     return (
         <div className='slider_container_background'>
             <Slider  {...settings}>
                 {news.map((item, index) => (
-                    <div >
-                        <div onClick={() => navigate(`/news/${item.id}`)} className='slider_container' key={index}>
-
-                            <div style={{ backgroundImage: `url(${getFirstMediaForNews(item.id)})` }} className='slider_img_container'>
-                                {/* <img className='slider_img' src={getFirstMediaForNews(item.id)} alt="News" /> */}
+                    <div key={index}>
+                        <div onClick={() => navigate(`/news/${item.id}`)} className='slider_container'>
+                            <div style={{ backgroundImage: `url(${item.cover})` }} className='slider_img_container'>
                             </div>
                             <div className='slider_title'>{item.title}</div>
-
                         </div>
                     </div>
                 ))}

@@ -6,11 +6,13 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [publicatedAt, setPublicatedAt] = useState('');
-    const [mediaFiles, setMediaFiles] = useState([]);
-    const [filePreviews, setFilePreviews] = useState([]);
-    const [coverFile, setCoverFile] = useState(null);
-    const [coverPreview, setCoverPreview] = useState(null);
+    const [mediaFiles, setMediaFiles] = useState([]); // Новые медиафайлы для загрузки
+    const [filePreviews, setFilePreviews] = useState([]); // Превью для новых файлов
+    const [existingMedia, setExistingMedia] = useState([]); // Существующие медиафайлы
+    const [coverFile, setCoverFile] = useState(null); // Новый файл обложки
+    const [coverPreview, setCoverPreview] = useState(null); // Превью для новой обложки
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0); // Прогресс загрузки
 
     useEffect(() => {
         const fetchNewsData = async () => {
@@ -21,22 +23,30 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-    
+
                 const newsData = response.data;
                 setTitle(newsData.title);
                 setText(newsData.text);
                 setPublicatedAt(newsData.publicated_at);
-                setCoverPreview(newsData.cover); // Assuming the cover URL is returned
-                setFilePreviews(newsData.media.map(file => file.url)); // Assuming media URLs are returned
+                setCoverPreview(newsData.cover);
+
+                const mediaResponse = await axios.get(`${apiserver}/news/media/`, {
+                    params: { news_id: newsId },
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                setExistingMedia(mediaResponse.data);
             } catch (error) {
                 console.error('Error fetching news data:', error);
             }
         };
-    
+
         fetchNewsData();
     }, [newsId]);
-    
 
+    // Обновление новости
     const handleEditNews = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -48,6 +58,7 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                 formData.append('cover', coverFile);
             }
     
+            // Обновление данных новости
             const response = await axios.patch(`${apiserver}/news/list-admin/${newsId}/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -55,7 +66,7 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                 },
             });
     
-            // Update media files if they were changed
+            // Загружаем новые медиафайлы
             if (mediaFiles.length > 0) {
                 const uploadPromises = mediaFiles.map(file => {
                     const mediaFormData = new FormData();
@@ -67,6 +78,10 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'multipart/form-data',
                         },
+                        onUploadProgress: (progressEvent) => {
+                            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                            setUploadProgress(percentCompleted); // Устанавливаем прогресс загрузки
+                        },
                     });
                 });
     
@@ -75,9 +90,12 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
     
             console.log('Новость обновлена:', response.data);
             setShowSuccessMessage(true);
-            setTimeout(() => setShowSuccessMessage(false), 3000);
     
-            onNewsUpdated();
+            // Ожидание 3 секунд перед закрытием формы и обновлением
+            setTimeout(() => {
+                setShowSuccessMessage(false);
+                onNewsUpdated();  // Обновляем список новостей
+            }, 3000); // Задержка в 3 секунды для отображения сообщения
         } catch (error) {
             console.error('Error editing news:', error);
         }
@@ -85,11 +103,19 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        setMediaFiles(prevMediaFiles => [...prevMediaFiles, ...files]); // добавляем новые файлы к существующим
-        const previews = files.map(file => URL.createObjectURL(file));
-        setFilePreviews(prevPreviews => [...prevPreviews, ...previews]); // добавляем новые превью к существующим
-    };
+        
+        const newPreviews = files.map(file => {
+            const fileType = file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : null;
+            return {
+                type: fileType,
+                url: URL.createObjectURL(file),
+                file: file 
+            };
+        });
     
+        setFilePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
+        setMediaFiles(prevMediaFiles => [...prevMediaFiles, ...files]);
+    };
 
     const handleCoverChange = (e) => {
         const file = e.target.files[0];
@@ -97,11 +123,26 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
         setCoverPreview(URL.createObjectURL(file));
     };
 
+    const handleRemoveExistingFile = async (mediaId) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`${apiserver}/news/media/${mediaId}/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            setExistingMedia(existingMedia.filter(media => media.id !== mediaId));
+        } catch (error) {
+            console.error('Error deleting media file:', error);
+        }
+    };
+
     return (
         <div className="add-news">
             <div className='add-news_title'>Редактировать новость</div>
             <div type="button" className="close-btn" onClick={onClose}>
-               <img src='./close-circle.svg' alt="Закрыть"/>
+                <img src='./close-circle.svg' alt="Закрыть" />
             </div>
             <div className="form-group">
                 <label className='label_add_news'>Заголовок</label>
@@ -125,13 +166,59 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                     </button>
                 </div>
             </div>
+
+            {/* Превью существующих медиафайлов */}
+            {existingMedia && existingMedia.length > 0 && (
+                <div className="file-preview-container">
+                    {existingMedia.map((file, index) => {
+                        const isImage = file.media.match(/\.(jpeg|jpg|gif|png)$/);
+                        const isVideo = file.media.match(/\.(mp4|webm)$/);
+
+                        return (
+                            <div key={index} className="file-preview">
+                                {isImage ? (
+                                    <img src={file.media} alt={`preview-${index}`} width="100" />
+                                ) : isVideo ? (
+                                    <video width="100" controls>
+                                        <source src={file.media} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                ) : null}
+                                
+                                <div 
+                                    className="remove-file-button"
+                                    onClick={() => handleRemoveExistingFile(file.id)}
+                                >
+                                    <img className='close-btn_img' src="./close-circle1.svg" alt="Remove" />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+
+            {/* Превью новых медиафайлов */}
             {filePreviews.length > 0 && (
                 <div className="file-preview-container">
                     {filePreviews.map((preview, index) => (
                         <div key={index} className="file-preview">
-                            <img src={preview} alt={`preview-${index}`} width="100" />
+                            {preview.type === 'image' ? (
+                                <img src={preview.url} alt={`preview-${index}`} width="100" />
+                            ) : preview.type === 'video' ? (
+                                <video width="100" controls>
+                                    <source src={preview.url} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            ) : null}
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Прогресс загрузки */}
+            {uploadProgress > 0 && uploadProgress < 100 && (
+                <div className="upload-progress">
+                    Загрузка: {uploadProgress}%
                 </div>
             )}
 

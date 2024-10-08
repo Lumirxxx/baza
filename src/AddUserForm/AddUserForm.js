@@ -14,12 +14,13 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
 
     const [branches, setBranches] = useState([]);
     const [districts, setDistricts] = useState([]);
+    const [isBranchOpen, setIsBranchOpen] = useState(false);
+    const [isDistrictOpen, setIsDistrictOpen] = useState(false);
 
     useEffect(() => {
         const fetchBranchesAndDistricts = async () => {
             try {
                 const token = localStorage.getItem('token');
-
                 const branchesResponse = await axios.get(`${apiserver}/auth/branches/`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -33,7 +34,6 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
                     }
                 });
                 setDistricts(districtsResponse.data);
-
             } catch (error) {
                 console.error('Ошибка при загрузке данных отраслей и регионов:', error);
             }
@@ -41,6 +41,11 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
 
         fetchBranchesAndDistricts();
     }, []);
+
+    const handleOptionClick = (id, setter, toggle) => {
+        setter(id); // Устанавливаем выбранное значение
+        toggle(false); // Закрываем выпадающий список
+    };
 
     const handleAddContract = () => {
         setContracts([...contracts, '']);
@@ -52,25 +57,35 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
         setContracts(updatedContracts);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const token = localStorage.getItem('token');
-            
-            const userResponse = await axios.post(`${apiserver}/auth/users/`, {
-                username,
-                password,
-                email,
-                is_client: true
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+        
+        const token = localStorage.getItem('token');
+    
+        // Логируем данные перед отправкой
+        console.log('User data:', {
+            username, password, email, inn, organization, branchId, districtId, contracts
+        });
 
+        // 1. Создаем пользователя
+        axios.post(`${apiserver}/auth/users/`, {
+            username,
+            password,
+            email,
+            is_client: true
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(userResponse => {
             const userId = userResponse.data.id;
 
-            const clientResponse = await axios.post(`${apiserver}/auth/clients/`, {
+            // Логируем успешное создание пользователя
+            console.log('User created:', userResponse.data);
+    
+            // 2. Создаем клиента
+            return axios.post(`${apiserver}/auth/clients/`, {
                 user_id: userId,
                 inn,
                 organization,
@@ -81,27 +96,50 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
+        })
+        .then(clientResponse => {
             const clientId = clientResponse.data.id;
 
-            for (const contractNumber of contracts) {
-                await axios.post(`${apiserver}/projects/contracts/`, {
-                    client_id: clientId,
-                    contract_number: contractNumber
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+            // Логируем успешное создание клиента
+            console.log('Client created:', clientResponse.data);
+    
+            // 3. Добавляем контракты
+            const contractPromises = contracts
+                .filter(contractNumber => contractNumber) // Проверка, что контракт не пустой
+                .map(contractNumber => {
+                    return axios.post(`${apiserver}/projects/contracts/`, {
+                        client_id: clientId,
+                        contract_number: contractNumber
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }).then(contractResponse => {
+                        console.log('Contract added:', contractResponse.data); // Логируем добавленный контракт
+                    });
                 });
-            }
 
+            return Promise.all(contractPromises);
+        })
+        .then(() => {
+            // Логируем успешное завершение процесса
+            console.log('Все контракты добавлены. Процесс завершен.');
+
+            // 4. Закрываем форму и оповещаем о завершении
             onUserAdded();
-
-        } catch (error) {
-            console.error('Ошибка при добавлении пользователя:', error);
-        }
+        })
+        .catch(error => {
+            // Детальная обработка ошибок с логированием
+            if (error.response) {
+                console.error('Ошибка с ответом от сервера:', error.response.data);
+            } else if (error.request) {
+                console.error('Ошибка с запросом:', error.request);
+            } else {
+                console.error('Другая ошибка:', error.message);
+            }
+        });
     };
-
+    
     return (
         <form onSubmit={handleSubmit} className="add-user-form">
             <div className='form-title'>
@@ -153,33 +191,53 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
             </label>
             <label>
                 Отрасль
-                <select value={branchId} onChange={(e) => setBranchId(e.target.value)}>
-                    <option value=""></option>
-                    {branches.map(branch => (
-                        <option key={branch.id} value={branch.id}>{branch.name}</option>
-                    ))}
-                </select>
+                <div 
+                    className={`custom-select ${isBranchOpen ? 'open' : ''}`} 
+                    onClick={() => setIsBranchOpen(!isBranchOpen)}
+                >
+                    <div className="selected-value">
+                        {branchId ? branches.find(b => b.id === branchId)?.name : ''}
+                    </div>
+                    <div className="custom-select-options">
+                        {branches.map(branch => (
+                            <div
+                                key={branch.id}
+                                className="custom-option"
+                                onClick={() => handleOptionClick(branch.id, setBranchId, setIsBranchOpen)}
+                            >
+                                {branch.name}
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </label>
             <label>
                 Регион
-                <select value={districtId} onChange={(e) => setDistrictId(e.target.value)}>
-                    <option value=""></option>
-                    {districts.map(district => (
-                        <option key={district.id} value={district.id}>{district.name}</option>
-                    ))}
-                </select>
+                <div 
+                    className={`custom-select ${isDistrictOpen ? 'open' : ''}`} 
+                    onClick={() => setIsDistrictOpen(!isDistrictOpen)}
+                >
+                    <div className="selected-value">
+                        {districtId ? districts.find(d => d.id === districtId)?.name : 'Выберите регион'}
+                    </div>
+                    <div className="custom-select-options">
+                        {districts.map(district => (
+                            <div
+                                key={district.id}
+                                className="custom-option"
+                                onClick={() => handleOptionClick(district.id, setDistrictId, setIsDistrictOpen)}
+                            >
+                                {district.name}
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </label>
             <label>
                 Email
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </label>
-            <button 
-    type="submit" 
-    className="save-btn"
-    disabled={!username || !password || !inn || !organization || !branchId || !districtId || !email}
->
-    Сохранить
-</button>
+            <button type="submit" className="save-btn">Сохранить</button>
         </form>
     );
 };

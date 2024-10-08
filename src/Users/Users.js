@@ -200,7 +200,7 @@ const Users = () => {
                                     <div className='table-body_item user_email'>{user.email}</div>
                                     <div className='table-body_item actions'>
                                         <img src='./edit-icon.svg' className='edit-icon' onClick={() => handleEditUser(user.id)} />
-                                        <img src='./delete-icon.svg' onClick={() => handleDeleteUser(user.id)} />
+                                        <img src='./delete-icon.svg' className='delete-icon_users' onClick={() => handleDeleteUser(user.id)} />
                                     </div>
                                 </div>
                             ))}

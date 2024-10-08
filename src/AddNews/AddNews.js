@@ -68,7 +68,18 @@ const AddNews = () => {
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
         setMediaFiles(prevFiles => [...prevFiles, ...files]);
-        const previews = files.map(file => URL.createObjectURL(file));
+    
+        const previews = files.map(file => {
+            const fileType = file.type.split('/')[0]; // image или video
+            if (fileType === 'image') {
+                return { url: URL.createObjectURL(file), type: 'image' };
+            } else if (fileType === 'video') {
+                return { url: URL.createObjectURL(file), type: 'video' };
+            } else {
+                return { url: URL.createObjectURL(file), type: 'other' };
+            }
+        });
+    
         setFilePreviews(prevPreviews => [...prevPreviews, ...previews]);
     };
 
@@ -109,20 +120,27 @@ const AddNews = () => {
                 </div>
             </div>
             {filePreviews.length > 0 && (
-                <div className="file-preview-container">
-                    {filePreviews.map((preview, index) => (
-                        <div key={index} className="file-preview">
-                            <img src={preview} alt={`preview-${index}`} width="100" />
-                            <div 
-                                className="remove-file-button"
-                                onClick={() => handleRemoveFile(index)}
-                            >
-                                <img className='close-btn_img' src="./close-circle1.svg" alt="Remove" />
-                            </div>
-                        </div>
-                    ))}
+    <div className="file-preview-container">
+        {filePreviews.map((preview, index) => (
+            <div key={index} className="file-preview">
+                {preview.type === 'image' ? (
+                    <img src={preview.url} alt={`preview-${index}`} width="100" />
+                ) : preview.type === 'video' ? (
+                    <video width="100" controls>
+                        <source src={preview.url} type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                ) : null}
+                <div 
+                    className="remove-file-button"
+                    onClick={() => handleRemoveFile(index)}
+                >
+                    <img className='close-btn_img' src="./close-circle1.svg" alt="Remove" />
                 </div>
-            )}
+            </div>
+        ))}
+    </div>
+)}
 
             <div className="form-group">
                 <div className="file-input-wrapper form-group">
