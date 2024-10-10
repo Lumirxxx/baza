@@ -2819,6 +2819,63 @@ margin-top: 37px;
 }
 
 
+/*Project Page Styles*/
+.main_project_container{
+  max-width: 1236px;
+  width: 100%;
+  margin: auto;
+}
+.main_project_col{
+  display: flex;
+  flex-direction: column;
+}
+.custom-select-value{
+  width: 257px;
+  outline: none;
+  border: 1px solid #022B94;
+  border-radius: 5px;
+  background-color: #FAFAFA;
+  margin-left: auto;
+  background-image: url("/public/element-equal.svg");
+  background-repeat: no-repeat;
+  background-position: 10px;
+  padding-left: 56px;
+
+color: #022B94;
+font-size: 16px;
+font-family: nunito_semibold;
+ 
+
+}
+.custom-select-project::after{
+  top: 14px!important;
+}
+.custom-select-value.open-radius {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.custom-select-options-project{
+  width: 261px;
+  margin-left: auto;
+  margin-right: -4px;
+  border: 0.5px solid #022B94;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.custom-select-options-project .custom-option{
+  border-bottom: 0.5px solid #022B94;
+  background-image: url("/public/tick-square.svg");
+  background-repeat: no-repeat;
+  background-position: 19px;
+  padding-left: 56px;
+line-height: 1;
+color: #022B94;
+font-size: 16px;
+font-family: nunito_semibold;
+}
+
 
 @media (max-width:1098px) {
   .form_modal {

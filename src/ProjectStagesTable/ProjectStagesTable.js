@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { apiserver } from "../config"; // apiserver предполагает URL вашего API
+import { apiserver } from "../config";
 
-const ProjectStagesTable = ({ contractNumber }) => { // Используем contractNumber вместо contractId
+const ProjectStagesTable = ({ contractNumber }) => {
     const [stages, setStages] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Функция для получения данных по этапам проектов для конкретного контракта
         const fetchProjectStages = async () => {
             try {
-                const token = localStorage.getItem('token'); // Получаем токен из localStorage
+                const token = localStorage.getItem("token");
                 if (!token) {
                     console.error("Токен не найден в localStorage");
                     return;
                 }
 
-                // Запрашиваем список этапов для всех контрактов
+                // Запрашиваем список этапов для выбранного контракта
                 const response = await axios.get(`${apiserver}/projects/list/`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` },
                 });
 
                 // Фильтруем этапы по contract_number
-                const projectStages = response.data.filter(stage => stage.contract_number === contractNumber);
-                console.log("Этапы проекта:", projectStages);
-
-                // Сохраняем полученные этапы в состояние
+                const projectStages = response.data.filter(
+                    stage => stage.contract_number === contractNumber
+                );
                 setStages(projectStages);
             } catch (error) {
                 console.error("Ошибка при получении этапов проектов:", error);
@@ -36,11 +32,10 @@ const ProjectStagesTable = ({ contractNumber }) => { // Используем con
             }
         };
 
-        // Вызываем функцию получения данных
         if (contractNumber) {
             fetchProjectStages();
         }
-    }, [contractNumber]); // Вызываем функцию при изменении contractNumber
+    }, [contractNumber]);
 
     return (
         <div>
@@ -59,23 +54,23 @@ const ProjectStagesTable = ({ contractNumber }) => { // Используем con
                         </tr>
                     </thead>
                     <tbody>
-    {stages.length > 0 ? (
-        stages.map((stage, index) => (
-            <tr key={stage.id}>
-                <td>{index + 1}</td>
-                <td>{stage.name}</td>
-                <td>{stage.start_date.split(' ')[0]}</td> {/* Корректируем отображение даты */}
-                <td>{stage.deadline.split(' ')[0]}</td> {/* Корректируем отображение даты */}
-                <td></td> {/* Статус оставляем пустым */}
-                <td>{stage.actual_date ? stage.actual_date.split(' ')[0] : ''}</td> {/* Корректируем отображение даты */}
-            </tr>
-        ))
-    ) : (
-        <tr>
-            <td colSpan="6">Этапы проекта не найдены</td>
-        </tr>
-    )}
-</tbody>
+                        {stages.length > 0 ? (
+                            stages.map((stage, index) => (
+                                <tr key={stage.id}>
+                                    <td>{index + 1}</td>
+                                    <td>{stage.name}</td>
+                                    <td>{stage.start_date.split(' ')[0]}</td>
+                                    <td>{stage.deadline.split(' ')[0]}</td>
+                                    <td></td>
+                                    <td>{stage.actual_date ? stage.actual_date.split(' ')[0] : ''}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6">Этапы проекта не найдены</td>
+                            </tr>
+                        )}
+                    </tbody>
                 </table>
             )}
         </div>

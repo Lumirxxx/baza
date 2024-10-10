@@ -1,102 +1,117 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MainHeader from "../MainHeader/MainHeader";
-import ProjectStagesTable from "../ProjectStagesTable/ProjectStagesTable"; // Импортируем компонент таблицы
-import { apiserver } from "../config"; // apiserver предполагает URL вашего API
+import { apiserver } from "../config";
+import ProjectStagesTable from "../ProjectStagesTable/ProjectStagesTable"; // Подключаем таблицу
+import { setupAxiosInterceptors } from "../authService"; // Импортируем функцию перехватчиков
 
 const MainProjects = () => {
-    const [contracts, setContracts] = useState([]); // Состояние для хранения договоров
-    const [selectedContractNumber, setSelectedContractNumber] = useState(null); // Состояние для выбранного contract_number
-    const [loading, setLoading] = useState(true); // Состояние для отображения загрузки
+    const [contracts, setContracts] = useState([]);
+    const [selectedContractNumber, setSelectedContractNumber] = useState(null); // Для хранения выбранного контракта
+    const [isContractOpen, setIsContractOpen] = useState(false); // Состояние открытия выпадающего списка
+    const [loading, setLoading] = useState(true);
+
+    const fetchUserData = async () => {
+        try {
+            let token = localStorage.getItem("token");
+            if (!token) {
+                console.error("Токен не найден в localStorage");
+                return;
+            }
+
+            // Запрашиваем данные о пользователе
+            const userResponse = await axios.get(`${apiserver}/auth/users/`);
+
+            const currentUser = userResponse.data[0];
+
+            if (currentUser.is_client) {
+                // Запрашиваем список клиентов
+                const clientsResponse = await axios.get(`${apiserver}/auth/clients/`);
+
+                const client = clientsResponse.data.find(c => c.user_id === currentUser.id);
+                if (client) {
+                    // Запрашиваем список контрактов
+                    const contractsResponse = await axios.get(`${apiserver}/projects/contracts/`);
+
+                    const clientContracts = contractsResponse.data.filter(
+                        contract => contract.client_id === client.id
+                    );
+
+                    // Сохраняем контракты и устанавливаем первый контракт по умолчанию
+                    setContracts(clientContracts);
+                    if (clientContracts.length > 0) {
+                        setSelectedContractNumber(clientContracts[0].contract_number); // Устанавливаем первый контракт
+                    }
+                } else {
+                    console.error("Клиент не найден для текущего пользователя.");
+                }
+            }
+        } catch (error) {
+            console.error("Ошибка при получении данных о пользователе:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        // Функция для получения данных о пользователе
-        const fetchUserData = async () => {
-            try {
-                const token = localStorage.getItem('token'); // Предположим, что токен хранится в localStorage
-                if (!token) {
-                    console.error("Токен не найден в localStorage");
-                    return;
-                }
+        // Настраиваем перехватчики axios для автоматического обновления токена
+        setupAxiosInterceptors();
 
-                // Отправляем запрос к API для получения данных о пользователе
-                const response = await axios.get(`${apiserver}/auth/users/`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                // Проверяем, что поле data существует и содержит объект пользователя
-                if (response && response.data) {
-                    const currentUser = response.data;
-
-                    // Проверяем и выводим значение is_client
-                    if (currentUser[0].is_client) {
-                        // Если пользователь является клиентом, запрашиваем данные клиента
-                        const clientsResponse = await axios.get(`${apiserver}/auth/clients/`, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        });
-
-                        // Находим клиента, соответствующего текущему пользователю
-                        const client = clientsResponse.data.find(client => client.user_id === currentUser[0].id);
-                        if (client) {
-                            // Теперь запрашиваем список договоров для текущего клиента
-                            const contractsResponse = await axios.get(`${apiserver}/projects/contracts/`, {
-                                headers: {
-                                    'Authorization': `Bearer ${token}`
-                                }
-                            });
-
-                            // Фильтруем договоры по client_id
-                            const clientContracts = contractsResponse.data.filter(contract => contract.client_id === client.id);
-                            console.log("Договоры клиента:", clientContracts); // Выводим договоры клиента
-
-                            // Сохраняем договоры в состояние
-                            setContracts(clientContracts);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("Ошибка при получении данных о пользователе:", error);
-            } finally {
-                setLoading(false); // Завершаем загрузку
-            }
-        };
-
-        fetchUserData(); // Вызываем функцию для получения данных при загрузке компонента
+        fetchUserData();
     }, []);
+
+    // Обработчик для выбора контракта
+    const handleOptionClick = (contractNumber) => {
+        setSelectedContractNumber(contractNumber);
+        setIsContractOpen(false); // Закрываем выпадающий список после выбора
+    };
 
     return (
         <div className="main_news_container">
             <MainHeader />
-            <div className="main_news-row">
-                <h1>Страница с проектами</h1>
-                {loading ? (
-                    <p>Загрузка...</p>
-                ) : (
-                    <>
-                        <select
-                            onChange={e => setSelectedContractNumber(e.target.value)} // Передаем contract_number
-                            defaultValue=""
-                        >
-                            <option value="" disabled>Выберите договор</option>
-                            {contracts.length > 0 ? (
-                                contracts.map(contract => (
-                                    <option key={contract.contract_number} value={contract.contract_number}>
-                                        Договор ID: {contract.contract_number}
-                                    </option>
-                                ))
-                            ) : (
-                                <option disabled>Нет доступных договоров</option>
-                            )}
-                        </select>
+            <div className="main_project_container">
+                <div className="main_project_col">
+                    <h1>Страница с проектами</h1>
+                    {loading ? (
+                        <p>Загрузка...</p>
+                    ) : (
+                        <>
+                            {/* Кастомный выпадающий список для выбора контракта */}
+                            <label>
+                                Контракты
+                                <div
+                                    className={`custom-select custom-select-project ${isContractOpen ? "open" : ""}`}
+                                    onClick={() => setIsContractOpen(!isContractOpen)}
+                                >
+                                    {/* Добавляем класс с условием для изменения радиусов при открытии списка */}
+                                    <div className={`selected-value custom-select-value ${isContractOpen ? "open-radius" : ""}`}>
+                                        {selectedContractNumber
+                                            ? contracts.find(c => c.contract_number === selectedContractNumber)?.contract_number
+                                            : "Выберите контракт"}
+                                    </div>
+                                    {isContractOpen && (
+                                        <div className="custom-select-options custom-select-options-project">
+                                            {contracts.map(contract => (
+                                                <div
+                                                    key={contract.contract_number}
+                                                    className="custom-option"
+                                                    onClick={() => handleOptionClick(contract.contract_number)}
+                                                >
+                                                    {contract.contract_number}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </label>
 
-                        {/* Отображаем таблицу с этапами для выбранного контракта */}
-                        {selectedContractNumber && <ProjectStagesTable contractNumber={selectedContractNumber} />}
-                    </>
-                )}
+                            {/* Отображаем таблицу этапов проектов для выбранного контракта */}
+                            {selectedContractNumber && (
+                                <ProjectStagesTable contractNumber={selectedContractNumber} />
+                            )}
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
