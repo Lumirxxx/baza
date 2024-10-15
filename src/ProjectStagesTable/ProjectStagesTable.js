@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { apiserver } from "../config";
+import AdjustmentsList from "../AdjustmentsList/AdjustmentsList"; // Импортируем компонент согласований
 
 const ProjectStagesTable = ({ contractNumber }) => {
     const [stages, setStages] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showAdjustments, setShowAdjustments] = useState(false); // Управление состоянием выпадающего списка
 
     useEffect(() => {
         const fetchProjectStages = async () => {
@@ -37,14 +39,25 @@ const ProjectStagesTable = ({ contractNumber }) => {
         }
     }, [contractNumber]);
 
+    const getStatus = (isCompleted) => {
+        return isCompleted
+            ? { text: "Выполнен", color: "#0A9B19" }
+            : { text: "Ожидает выполнения", color: "#959595" };
+    };
+
+    const toggleAdjustments = () => {
+        setShowAdjustments(!showAdjustments); // Переключаем состояние выпадающего списка
+    };
+
     return (
         <div>
             {loading ? (
                 <p>Загрузка этапов...</p>
             ) : (
-                <table>
-                    <thead>
+                <table className="table-project">
+                    <thead className="table-header_project">
                         <tr>
+                            <th style={{ width: "50px" }}></th>
                             <th>Номер</th>
                             <th>Наименование</th>
                             <th>Дата начала</th>
@@ -55,19 +68,43 @@ const ProjectStagesTable = ({ contractNumber }) => {
                     </thead>
                     <tbody>
                         {stages.length > 0 ? (
-                            stages.map((stage, index) => (
-                                <tr key={stage.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{stage.name}</td>
-                                    <td>{stage.start_date.split(' ')[0]}</td>
-                                    <td>{stage.deadline.split(' ')[0]}</td>
-                                    <td></td>
-                                    <td>{stage.actual_date ? stage.actual_date.split(' ')[0] : ''}</td>
-                                </tr>
-                            ))
+                            stages.map((stage, index) => {
+                                const { text, color } = getStatus(stage.is_completed);
+                                return (
+                                    <React.Fragment key={stage.id}>
+                                        <tr className="table-header_item-tr">
+                                            <td></td>
+                                            <td className="table-header_item-index">{index + 1}</td>
+                                            <td
+                                                className="table-header_item-name"
+                                                onClick={stage.name === "Согласование чертежей с заказчиком" ? toggleAdjustments : null}
+                                                style={{ cursor: stage.name === "Согласование чертежей с заказчиком" ? "pointer" : "default" }}
+                                            >
+                                                {stage.name}
+                                            </td>
+                                            <td className="table-header_item-date">{stage.start_date.split(" ")[0]}</td>
+                                            <td className="table-header_item-date">{stage.deadline.split(" ")[0]}</td>
+                                            <td className="table-header_item-status" style={{ color }}>
+                                                {text}
+                                            </td>
+                                            <td className="table-header_item-date">
+                                                {stage.actual_date ? stage.actual_date.split(" ")[0] : ""}
+                                            </td>
+                                        </tr>
+                                        {/* Если этап - "Согласование чертежей с заказчиком", отображаем список согласований */}
+                                        {stage.name === "Согласование чертежей с заказчиком" && showAdjustments && (
+                                            <tr>
+                                                <td colSpan="7">
+                                                    <AdjustmentsList contractNumber={contractNumber} />
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </React.Fragment>
+                                );
+                            })
                         ) : (
                             <tr>
-                                <td colSpan="6">Этапы проекта не найдены</td>
+                                <td colSpan="7">Этапы проекта не найдены</td>
                             </tr>
                         )}
                     </tbody>

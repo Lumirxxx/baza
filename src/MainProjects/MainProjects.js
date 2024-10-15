@@ -3,6 +3,7 @@ import axios from "axios";
 import MainHeader from "../MainHeader/MainHeader";
 import { apiserver } from "../config";
 import ProjectStagesTable from "../ProjectStagesTable/ProjectStagesTable"; // Подключаем таблицу
+import GanttChart from "../GanttComponent/Gantt";
 import { setupAxiosInterceptors } from "../authService"; // Импортируем функцию перехватчиков
 
 const MainProjects = () => {
@@ -107,7 +108,10 @@ const MainProjects = () => {
 
                             {/* Отображаем таблицу этапов проектов для выбранного контракта */}
                             {selectedContractNumber && (
+                                <div>
+                                     <GanttChart contractNumber={selectedContractNumber} />
                                 <ProjectStagesTable contractNumber={selectedContractNumber} />
+                                </div>
                             )}
                         </>
                     )}
