@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { apiserver } from "../config";
 
@@ -7,43 +7,47 @@ const RegistrationForm = ({ onCancel }) => {
         organizationName: "",
         organizationINN: "",
         industry: "",
+        industryId: null,  // Сохраняем id выбранной отрасли
         region: "",
+        regionId: null,  // Сохраняем id выбранного региона
         email: "",
     });
+
+    const [branches, setBranches] = useState([]);
+    const [districts, setDistricts] = useState([]);
     const [isBranchOpen, setIsBranchOpen] = useState(false);
     const [isDistrictOpen, setIsDistrictOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    const branches = [
-        "Алкогольные и безалкогольные напитки",
-        "Джемы",
-        "Молоко",
-        "Мясо",
-        "Не сладкие соусы к мясу, птице, рыбе",
-        "Пищевое (сыпучее)",
-        "Плодоовощные консервы",
-        "Птица",
-        "Рыба",
-        "Сиропы (топинги для кофе, выпечки)",
-        "Сладкие соусы",
-        "Табак",
-        "Химическая промышленность",
-    ];
+    // Функция для загрузки отраслей
+    const fetchBranches = async () => {
+        try {
+            const response = await axios.get(`${apiserver}/auth/branches/`);
+            setBranches(response.data);  // Данные будут содержать name и id
+        } catch (error) {
+            console.error("Error fetching branches:", error);
+        }
+    };
 
-    const districts = [
-        "Дальневосточный федеральный округ (ДФО)",
-        "Приволжский федеральный округ (ПФО)",
-        "Северо-Западный федеральный округ (СЗФО)",
-        "Северо-кавказский федеральный округ (СКФО)",
-        "Сибирский федеральный округ (СФО)",
-        "Уральский федеральный округ (УрФО)",
-        "Центральный федеральный округ (ЦФО)",
-        "Южный федеральный округ (ЮФО)",
-    ];
+    // Функция для загрузки регионов
+    const fetchDistricts = async () => {
+        try {
+            const response = await axios.get(`${apiserver}/auth/districts/`);
+            setDistricts(response.data);  // Данные будут содержать name и id
+        } catch (error) {
+            console.error("Error fetching districts:", error);
+        }
+    };
 
-    const handleOptionClick = (value, setValue, setOpen) => {
-        setValue(value);
+    useEffect(() => {
+        fetchBranches();
+        fetchDistricts();
+    }, []);
+
+    const handleOptionClick = (value, id, setFieldValue, setFieldId, setOpen) => {
+        setFieldValue(value);
+        setFieldId(id);
         setOpen(false);
     };
 
@@ -57,8 +61,18 @@ const RegistrationForm = ({ onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Подготовка данных для отправки
+        const registrationData = {
+            organization: formData.organizationName,
+            inn: formData.organizationINN,
+            branch: formData.industryId,  // Отправляем id отрасли
+            district: formData.regionId,  // Отправляем id региона
+            email: formData.email,
+        };
+
         axios
-            .post(`${apiserver}/register/`, formData)
+            .post(`${apiserver}/auth/reg_request/`, registrationData)
             .then((response) => {
                 setSuccessMessage("Регистрация прошла успешно. Проверьте вашу почту.");
             })
@@ -102,49 +116,67 @@ const RegistrationForm = ({ onCancel }) => {
                         />
                     </div>
                     <div className="registration_form_group">
-                      <div className="registration_form_group-title">Отрасль</div> 
-                        <div 
-                            className={`custom-select ${isBranchOpen ? 'open' : ''}`} 
-                            onClick={() => setIsBranchOpen(!isBranchOpen)}
-                        >
-                            <div className="selected-value registration_form_group-input">
-                                {formData.industry || "Оытрасль"}
-                            </div>
-                            <div className="custom-select-options">
-                                {branches.map((branch, index) => (
-                                    <div
-                                        key={index}
-                                        className="custom-option"
-                                        onClick={() => handleOptionClick(branch, (value) => setFormData({ ...formData, industry: value }), setIsBranchOpen)}
-                                    >
-                                        {branch}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="registration_form_group">
-                        <div className="registration_form_group-title">Регион</div> 
-                        <div 
-                            className={`custom-select ${isDistrictOpen ? 'open' : ''}`} 
-                            onClick={() => setIsDistrictOpen(!isDistrictOpen)}
-                        >
-                            <div className="selected-value registration_form_group-input">
-                                {formData.region || "Регион"}
-                            </div>
-                            <div className="custom-select-options">
-                                {districts.map((district, index) => (
-                                    <div
-                                        key={index}
-                                        className="custom-option"
-                                        onClick={() => handleOptionClick(district, (value) => setFormData({ ...formData, region: value }), setIsDistrictOpen)}
-                                    >
-                                        {district}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+    <div className="registration_form_group-title">Отрасль</div> 
+    <div 
+        className={`custom-select ${isBranchOpen ? 'open' : ''}`} 
+        onClick={() => setIsBranchOpen(!isBranchOpen)}
+    >
+        <div className="selected-value registration_form_group-input">
+            {formData.industry || "Отрасль"}
+        </div>
+        <div className="custom-select-options">
+            {branches.map((branch) => (
+                <div
+                    key={branch.id}
+                    className="custom-option"
+                    onClick={() => {
+                        // Объединяем обновления в одном вызове setFormData
+                        setFormData((prevData) => ({
+                            ...prevData,
+                            industry: branch.name,
+                            industryId: branch.id
+                        }));
+                        setIsBranchOpen(false);
+                    }}
+                >
+                    {branch.name}
+                </div>
+            ))}
+        </div>
+    </div>
+</div>
+
+<div className="registration_form_group">
+    <div className="registration_form_group-title">Регион</div> 
+    <div 
+        className={`custom-select ${isDistrictOpen ? 'open' : ''}`} 
+        onClick={() => setIsDistrictOpen(!isDistrictOpen)}
+    >
+        <div className="selected-value registration_form_group-input">
+            {formData.region || "Регион"}
+        </div>
+        <div className="custom-select-options">
+            {districts.map((district) => (
+                <div
+                    key={district.id}
+                    className="custom-option"
+                    onClick={() => {
+                        // Объединяем обновления в одном вызове setFormData
+                        setFormData((prevData) => ({
+                            ...prevData,
+                            region: district.name,
+                            regionId: district.id
+                        }));
+                        setIsDistrictOpen(false);
+                    }}
+                >
+                    {district.name}
+                </div>
+            ))}
+        </div>
+    </div>
+</div>
+
                     <div className="registration_form_group">
                         <div className="registration_form_group-title">Email</div>
                         <input
