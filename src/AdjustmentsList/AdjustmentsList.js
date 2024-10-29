@@ -51,13 +51,13 @@ const AdjustmentsList = ({ contractNumber }) => {
                 <table className="table-adjustments">
                     <thead className="table-header_adjustments">
                         <tr>
-                            <th>Наименование</th>
-                            <th>Дата</th>
-                            {/* <th></th> */}
-                            <th>Статус</th>
+                            <th className="table-header_adjustments-name">Наименование</th>
+                            <th style={{ width: "25%" }}>Дата</th>
+                            <th style={{ width: "4%" }}></th> 
+                            <th style={{ width: "24.5%" }}>Статус</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="table-body_adjustments">
                         {adjustments.map(adjust => {
                             const { text, color } = getStatus(adjust.is_agreed);
                             return (
@@ -66,7 +66,7 @@ const AdjustmentsList = ({ contractNumber }) => {
                                     <td className="table-header_adjustments-date">
                                         {adjust.sent_date ? adjust.sent_date.split(' ')[0] : ''} {/* Проверка на null */}
                                     </td>
-                                    {/* <td></td> */}
+                                   <td></td>
                                     <td className="table-header_adjustments-status" style={{ color }}>{text}</td>
                                 </tr>
                             );

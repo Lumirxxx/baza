@@ -17,20 +17,9 @@ const GanttChart = ({ contractNumber }) => {
         }
 
         const [datePart] = dateString.split(' ');
-
-        if (!/^\d{2}\.\d{2}\.\d{4}$/.test(datePart)) {
-            console.error('Invalid date format:', dateString);
-            return null;
-        }
-
         const [day, month, year] = datePart.split('.');
         const parsedDate = new Date(year, month - 1, day); 
-        if (isNaN(parsedDate)) {
-            console.error('Invalid date value after parsing:', dateString);
-            return null;
-        }
-
-        return parsedDate;
+        return isNaN(parsedDate) ? null : parsedDate;
     };
 
     useEffect(() => {
@@ -42,86 +31,108 @@ const GanttChart = ({ contractNumber }) => {
                 if (projects && Array.isArray(projects)) {
                     const filteredProjects = projects.filter(
                         (project) => project.contract_number === contractNumber
-                    ); // Фильтруем проекты по номеру контракта
+                    );
 
                     const convertedTasks = filteredProjects.map((project) => {
                         const startDate = parseDate(project.start_date);
-                        const deadline = parseDate(project.deadline);
+                        const endDate = project.is_completed ? parseDate(project.actual_date) : parseDate(project.deadline);
 
-                        if (startDate && deadline && !isNaN(startDate) && !isNaN(deadline)) {
-                            return {
+                        const isOverdue = project.is_completed && parseDate(project.actual_date) > parseDate(project.deadline);
+
+                        return startDate && endDate
+                            ? {
                                 start: startDate,
-                                end: deadline,
+                                end: endDate,
                                 name: project.name,
-                                id: project.id || project.name, 
+                                id: project.id || project.name,
                                 project: project.name,
                                 type: 'task',
                                 isDisabled: true,
                                 todayMarker: true,
-                                styles: { backgroundColor: '#002072', progressSelectedColor: '#ffff' },
-                            };
-                        } else {
-                            console.warn("Project data is missing some fields or has invalid date:", project);
-                            return null;
-                        }
+                                isOverdue,
+                                styles: { 
+                                    backgroundColor: '#002072', 
+                                    progressSelectedColor: '#ffff',
+                                },
+                            }
+                            : null;
                     }).filter(task => task !== null);
 
                     setTasks(convertedTasks);
-                } else {
-                    console.error("Unexpected projects data:", projects);
                 }
             } catch (error) {
                 console.error("Error fetching project data:", error);
             }
         };
-
+        
         fetchData();
-
-        const observer = new MutationObserver(() => {});
-
-        if (ganttLocaleRef.current) {
-            observer.observe(ganttLocaleRef.current, { childList: true, subtree: true });
-        }
-
-        return () => observer.disconnect();
     }, [contractNumber]);
 
-    // Проверка на наличие задач перед рендером
-    if (tasks.length === 0) {
-        console.error("No tasks to display or tasks contain invalid data.");
-    }
+    useEffect(() => {
+        const headerObserver = new MutationObserver((mutations) => { 
+            mutations.forEach(() => {
+                const headers = ganttLocaleRef.current.querySelectorAll('._WuQ0f');
+                if (headers.length >= 3) {
+                    headers[0].textContent = 'Название';
+                    headers[1].textContent = 'Начало';
+                    headers[2].textContent = 'Окончание';
+                }
+            });
+        });
 
-    // Обработка смены режима отображения
+        if (ganttLocaleRef.current) {
+            headerObserver.observe(ganttLocaleRef.current, { childList: true, subtree: true });
+        }
+
+        return () => headerObserver.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const overdueObserver = new MutationObserver(() => {
+            const overdueTasks = tasks.filter(task => task.isOverdue);
+            overdueTasks.forEach((overdueTask) => {
+                const taskElements = Array.from(ganttLocaleRef.current.querySelectorAll('g'));
+                taskElements.forEach((gElement) => {
+                    const textElement = gElement.querySelector('text');
+                    if (textElement && textElement.textContent === overdueTask.name) {
+                        const rectElement = gElement.querySelector('rect._31ERP');
+                        if (rectElement) {
+                            rectElement.style.fill = '#FF0000';
+                        }
+                    }
+                });
+            });
+        });
+
+        if (ganttLocaleRef.current) {
+            overdueObserver.observe(ganttLocaleRef.current, { childList: true, subtree: true });
+        }
+
+        return () => overdueObserver.disconnect();
+    }, [tasks]);
+
     const handleViewModeChange = (mode) => {
         setViewMode(mode);
     };
 
     return (
         <div ref={ganttLocaleRef} className='ganttlocale'>
-            {/* Добавляем кнопки переключения режимов */}
-            <div>
-                <button onClick={() => handleViewModeChange('Day')} className={viewMode === 'Day' ? 'active' : ''}>
-                    День
-                </button>
-                <button onClick={() => handleViewModeChange('Week')} className={viewMode === 'Week' ? 'active' : ''}>
-                    Неделя
-                </button>
-                <button onClick={() => handleViewModeChange('Month')} className={viewMode === 'Month' ? 'active' : ''}>
-                    Месяц
-                </button>
+            <div className='button-style-container'>
+                <button onClick={() => handleViewModeChange('Day')} className={`button-style button-style-day ${viewMode === 'Day' ? 'active' : ''}`}>День</button>
+                <button onClick={() => handleViewModeChange('Week')} className={`button-style ${viewMode === 'Week' ? 'active' : ''}`}>Неделя</button>
+                <button onClick={() => handleViewModeChange('Month')} className={`button-style button-style-month ${viewMode === 'Month' ? 'active' : ''}`}>Месяц</button>
             </div>
 
-            {/* Отображаем диаграмму Ганта */}
             {tasks.length > 0 ? (
                 <Gantt
                     fontSize='12px'
                     fontFamily='Nunito'
                     tasks={tasks}
                     locale={ru}
-                    viewMode={viewMode} // Передаем выбранный режим отображения
+                    viewMode={viewMode}
                 />
             ) : (
-                <p>Loading tasks...</p>
+                <p></p>
             )}
         </div>
     );

@@ -1,19 +1,40 @@
 import React, { useState } from "react";
+import axios from "axios"; // Импортируем axios для отправки запросов
 
 const FeedBack = ({ toggleFeedback, feedbackVisible }) => {
     const [feedbackText, setFeedbackText] = useState("");
     const [isMessageSent, setIsMessageSent] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(""); // Для отображения ошибок при отправке
 
     const handleInputChange = (e) => {
         setFeedbackText(e.target.value);
     };
 
-    const handleSubmit = () => {
-        console.log("Отправлено:", feedbackText);
-        // Логика для отправки сообщения здесь
+    const handleSubmit = async () => {
+        try {
+            const token = localStorage.getItem('token'); // Предположим, что токен находится в localStorage
 
-        setIsMessageSent(true); // Предположим, что сообщение успешно отправлено
-        setFeedbackText("");
+            const response = await axios.post(
+                '/api/v1/auth/report/', // Указываем URL API
+                { text: feedbackText }, // Отправляем объект с текстом сообщения
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Добавляем токен авторизации, если он нужен
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            console.log('Отправлено:', response.data);
+
+            // Если сообщение успешно отправлено:
+            setIsMessageSent(true);
+            setFeedbackText("");
+            setErrorMessage(""); // Сброс ошибки, если она была
+        } catch (error) {
+            console.error('Ошибка при отправке сообщения:', error);
+            setErrorMessage("Не удалось отправить сообщение. Попробуйте снова.");
+        }
     };
 
     const handleToggleFeedback = () => {
@@ -21,6 +42,7 @@ const FeedBack = ({ toggleFeedback, feedbackVisible }) => {
             // Если форма была видимой, и мы ее закрываем, сбросим состояние
             setIsMessageSent(false);
             setFeedbackText("");
+            setErrorMessage(""); // Сброс ошибок при закрытии формы
         }
         toggleFeedback();
     };
@@ -44,6 +66,11 @@ const FeedBack = ({ toggleFeedback, feedbackVisible }) => {
                             <button className="feedback_form-btn" onClick={handleSubmit}>
                                 Отправить
                             </button>
+                            {errorMessage && (
+                                <div className="feedback_form-error">
+                                    {errorMessage}
+                                </div>
+                            )}
                         </>
                     ) : (
                         <div className="feedback_success-message">

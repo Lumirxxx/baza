@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar/Sidebar';
 import AddNews from '../AddNews/AddNews';
 import NewsSearch from '../NewsSearch/NewsSearch';
-import Users from '../Users/Users';
-import NewsList from '../NewsList/NewsList'; // Импортируем новый компонент
+import NewsList from '../NewsList/NewsList';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { apiserver } from "../config";
@@ -11,10 +10,11 @@ import { setupAxiosInterceptors } from "../authService";
 
 const AdminPage = () => {
     const [selectedSection, setSelectedSection] = useState('news');
-    const navigate = useNavigate();
     const [news, setNews] = useState([]);
     const [searchParams, setSearchParams] = useState({ date: '', title: '' });
     const [showAddNewsForm, setShowAddNewsForm] = useState(false);
+    const [isEditing, setIsEditing] = useState(false); // Состояние для отслеживания открытия формы редактирования
+    const navigate = useNavigate();
 
     useEffect(() => {
         setupAxiosInterceptors(navigate);
@@ -39,26 +39,51 @@ const AdminPage = () => {
         setSearchParams(params); // Устанавливаем параметры поиска
     };
 
+    const handleToggleAddNewsForm = () => setShowAddNewsForm(!showAddNewsForm);
+
+    const handleEditToggle = (isEditMode) => {
+        setIsEditing(isEditMode); // Обновляем состояние при открытии и закрытии формы редактирования
+    };
+
     const renderSection = () => {
         switch (selectedSection) {
-            case 'users':
-                return <Users />;
             case 'news':
                 return (
                     <div>
-                        <div className='add_news_title'>Список новостей</div>
-                        <NewsSearch onSearch={handleSearch} />
+                        {!showAddNewsForm && !isEditing && (
+                            <>
+                                <div className='add_news_title'>Список новостей</div>
+                                <NewsSearch onSearch={handleSearch} />
+                            </>
+                        )}
                         <button
                             className="add-news-toggle-button"
-                            onClick={() => setShowAddNewsForm(!showAddNewsForm)}
+                            onClick={handleToggleAddNewsForm}
                         >
-                            {showAddNewsForm ? 'Добавить новость' : 'Добавить новость'}
-                            <img className='add_news-icon' src="/add-icon.svg" alt="Add Icon" />
+                            {showAddNewsForm ? (
+                                <>
+                                    <span style={{ color: '#022B94' }}>Вернуться к списку новостей</span>
+                                    <img
+                                        className="return-news-icon"
+                                        src="/arrow-left.svg"
+                                        alt="Return Icon"
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    Добавить новость
+                                    <img className='add_news-icon' src="/add-icon.svg" alt="Add Icon" />
+                                </>
+                            )}
                         </button>
                         {showAddNewsForm ? (
-                            <AddNews />
+                            <AddNews onSuccess={handleToggleAddNewsForm} />
                         ) : (
-                            <NewsList news={news} searchParams={searchParams} />
+                            <NewsList
+                                news={news}
+                                searchParams={searchParams}
+                                onEditToggle={handleEditToggle} // Передаём функцию для управления режимом редактирования
+                            />
                         )}
                     </div>
                 );

@@ -46,8 +46,23 @@ const LoginPage = () => {
 
     const isFormValid = username && password;
 
+    // Условно задаем фон в зависимости от isRegistrationVisible
+    const backgroundImage = isRegistrationVisible
+        ? "/bgreg.svg"
+        : "/bgLoginPage3.svg";
+
     return (
-        <div className="login_page">
+        <div
+            className="login_page"
+            style={{
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundColor: "#002456",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed",
+            }}
+        >
             {isRegistrationVisible ? (
                 <RegistrationForm onCancel={() => setIsRegistrationVisible(false)} />
             ) : (
@@ -63,7 +78,7 @@ const LoginPage = () => {
                             <div className="login_form_button-container">
                                 <input
                                     className="select_button"
-                                    placeholder="Номер проекта"
+                                    placeholder="Логин"
                                     type="text"
                                     id="username"
                                     value={username}
@@ -83,7 +98,7 @@ const LoginPage = () => {
                                     {password.length > 0 && (
                                         <div className="icon-container" onClick={togglePasswordVisibility}>
                                             {showPassword ? (
-                                                <img className="show-password" src="/eye-icon.svg" alt="Скрыть пароль" />
+                                                <img className="show-password" src="/eye-on-icon.svg" alt="Скрыть пароль" />
                                             ) : (
                                                 <img className="show-password" src="/eye-off-icon.svg" alt="Показать пароль" />
                                             )}

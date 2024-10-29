@@ -1175,9 +1175,13 @@ color: #022B94;
 .main_news-row {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   /* margin-top: 30px; */
   height: 100vh;
+  max-width: 1236px;
+  width: 100%;
+  margin: auto;
+
 
 }
 
@@ -1544,7 +1548,7 @@ body.modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(79, 79, 79, 0.9);
   /* Полупрозрачный черный фон */
   z-index: 1000;
   /* Убедитесь, что модальное окно поверх всех других элементов */
@@ -1598,10 +1602,11 @@ body.modal-open {
   padding-right: 16px;
   font-family: nunito_extrabold;
   font-size: 16px;
+  background-color: #fff;
 }
 
 ._9w8d5 {
-  font-size: 16px;
+  font-size: 13px;
   font-family: nunito_extrabold;
 }
 
@@ -1623,7 +1628,11 @@ body.modal-open {
   white-space: wrap !important;
   padding-left: 16px;
   font-size: 16px;
+  
 
+}
+._34SS0 {
+  background-color: #fff;
 }
 
 ._1nBOt {
@@ -1821,7 +1830,7 @@ body.modal-open {
 }
 .add-news-toggle-button{
   background: none;
-  width: 253px;
+  /* width: 253px; */
   border: none;
   display: flex;
   flex-direction: row-reverse;
@@ -1832,6 +1841,9 @@ body.modal-open {
   font-family:nunito_semibold ;
   margin-top: 30px;
   margin-bottom: 20px;
+}
+.return-news-icon{
+  margin-right: 16px;
 }
 .add_news-icon{
   margin-right: 16px;
@@ -2717,6 +2729,14 @@ margin-top: 37px;
   height: 42px;
 }
 
+.custom-select .selected-value {
+  /* color: #959595; Цвет для placeholder */
+}
+
+.custom-select .selected-value.filled {
+  color: #000000; /* Черный цвет для выбранного значения */
+}
+
 .custom-select select {
   display: none; /* Прячем стандартный select */
 }
@@ -2767,17 +2787,59 @@ margin-top: 37px;
 
 /*Registration form style*/
 .registration_form{
-  max-width: 1236px;
+  width: 1236px;
   margin: auto;
+  margin-top: 70px;
+}
+
+.registration_page{
+  min-height: 100vh;
+  height: 100%;
 }
 .registration_form-header{
   background-color: #FAFAFA;
   border-radius: 15px;
   padding-left: 37px;
   padding-right: 37px;
-  padding-top: 20px;
+  padding-top: 10px;
   padding-bottom: 20px;
   margin-bottom: 25px;
+}
+
+.form_button_submit_reg-toback{
+  background: none;
+  outline: none;
+  color:#022B94;
+  font-size: 18px;
+  font-family: nunito;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1.5px solid #022B94;
+  padding: 0;
+}
+
+.selected-value-regform{
+  color: #959595;
+}
+
+.custom-option_reg{
+  font-size: 26px;
+  font-family: nunito_medium;
+  padding-left: 35px!important;
+  padding-top: 7.5px!important;
+  padding-bottom: 7.5px!important;
+}
+
+.form_button_submit_reg{
+  background-color: #022B94;
+  color: #F3F3F3;
+  font-size: 26px;
+  font-family: nunito_semibold;
+  padding-left: 57.5px;
+  padding-right: 57.5px;
+  padding-top: 14.5px;
+  padding-bottom: 14.5px;
 }
 .registration_form_title{
   font-size: 45px;
@@ -2789,6 +2851,7 @@ margin-top: 37px;
 .registration_form_info{
   font-size: 26px;
   font-family: nunito;
+  margin-top: 20px;
 }
 .registration_form_group{
   background-color: #FAFAFA;
@@ -2804,6 +2867,7 @@ margin-top: 37px;
   font-size:26px;
   font-family: nunito_medium;
   margin-bottom: 30px;
+  line-height: 1;
 }
 
 .registration_form_group-input{
@@ -2815,7 +2879,17 @@ margin-top: 37px;
   width: 100%;
   background-color:#FAFAFA;
   outline: none;
+  font-family: nunito;
+  font-size: 26px;
 
+}
+
+.registration_form_group-input:focus{
+  border-bottom: 2px solid #022B94;
+}
+
+.registration_form_group-input::placeholder{
+  color: #959595;
 }
 
 
@@ -2840,6 +2914,7 @@ margin-top: 37px;
   background-repeat: no-repeat;
   background-position: 10px;
   padding-left: 56px;
+  height: 44px;
 
 color: #022B94;
 font-size: 16px;
@@ -2847,28 +2922,39 @@ font-family: nunito_semibold;
  
 
 }
+.custom-select-project{
+  top: 44px;
+}
 .custom-select-project::after{
   top: 14px!important;
 }
 .custom-select-value.open-radius {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
+  /* border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px; */
+}
+
+.table-header_item-none-project{
+  border-top-left-radius: 5px;
+ 
 }
 
 .custom-select-options-project{
-  width: 261px;
+  width: 257px;
   margin-left: auto;
-  margin-right: -4px;
+  /* margin-right: -4px; */
   border: 0.5px solid #022B94;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
+  /* border-top-left-radius: 0px;
+  border-top-right-radius: 0px; */
+  position: absolute;
+  top: 42px;
+  right: 0;
 }
 
 .custom-select-options-project .custom-option{
   border-bottom: 0.5px solid #022B94;
-  background-image: url("/public/tick-square.svg");
+  background-image: url("/public/document-text.svg");
   background-repeat: no-repeat;
-  background-position: 19px;
+  background-position: 16px;
   padding-left: 56px;
 line-height: 1;
 color: #022B94;
@@ -2910,20 +2996,87 @@ font-family: nunito_semibold;
 }
 .table-header_item-index{
   font-family: nunito;
+  width: 0px;
 }
 .table-header_item-name{
   font-family: nunito_extrabold;
+  padding-left: 39px;
+  width: 314px;
+}
+.table-header_item-date-start{
+  width:13%;
+  padding-right: 60px;
+}
+.table-body_adjustments tr{
+  font-size: 15px;
+  border-bottom: 1px solid #6E97FF;
+}
+.toggle-icon {
+  margin-left: 6px;
+  transition: transform 0.3s ease; /* Плавная анимация */
+}
+/* Статичный стиль для кнопок */
+.button-style {
+  color: #959595; /* Цвет текста, если нет класса active */
+  padding: 10px;
+  border: 0.5px solid #022B94;
+  background-color: #FAFAFA;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: nunito_semibold;
+
+}
+.button-style-container{
+  margin-bottom: 24px;
+  height: 44px;
+}
+.button-style-day{
+  border-right: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.button-style-month{
+  border-left: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+/* Стиль для активной кнопки */
+.button-style.active {
+  color: #022B94; /* Цвет текста, если есть класс active */
+  font-family: nunito_bold;
+}
+
+
+.rotate-180 {
+  transform: rotate(180deg); /* Поворот на 180 градусов */
+}
+.table-body_adjustments td{
+  
+ /* border-bottom: 1px solid #959595; */
+}
+.table-header_item-date-end{
+  width: 137px;
 }
 .table-header_item-date{
   font-family: nunito;
 }
+.table-header_item-date-fact{
+  width: 14%;
+  padding-right: 20px;
+  border-top-right-radius: 5px;
+}
 .table-header_item-status{
   font-family: nunito_semibold;
+  width: 94px;
 }
 .table-header_item-tr td{
-  padding-top: 19px;
-  padding-bottom: 19px;
+  /* padding-top: 19px;
+  padding-bottom: 19px; */
 
+}
+.soglas-active{
+  background-color: #D1DEFF;
 }
 .table-header_item-date-th{
   width: 169px;
@@ -2933,6 +3086,18 @@ font-family: nunito_semibold;
 .table-header_item-status-th{
   width: 133px;
 }
+.project-stages-table_title{
+  margin-top: 30px;
+  margin-bottom: 30px;
+
+  font-size: 26px;
+  font-family: nunito_semibold;
+  line-height: 1;
+}
+.registration_form_group-input_hiegth{
+  height: 49px;
+  padding-left: 0px;
+}
 .table-adjustments{
   width: 100%;
   background-color: #F4F7FF;
@@ -2940,16 +3105,65 @@ font-family: nunito_semibold;
   padding-top: 16px;
 }
 .table-header_adjustments-name{
-  width: 39%;
+  font-family: nunito;
+  font-size: 15;
+  /* width: 39%; */
+  padding-left: 10px;
+  padding-top: 12.5px;
+  padding-bottom: 12.5px;
+}
+.overdue-task ._31ERP {
+  fill: #FF0000 !important;
 }
 .table-header_adjustments-date{
   width: 22%;
 }
 .table-header_adjustments-status{
   width: 93px;
+  word-spacing: 3000px;
+  font-family: nunito_semibold;
+  font-size: 15px;
 }
 .table-header_adjustments th{
   padding-top: 16px;
+  font-size: 16px;
+  color: #022B94;
+}
+.download-button{
+  background: none;
+  border-right: none;
+  border-left: none;
+  border-top: none;
+  border-bottom: 0.5px solid #022B94;
+  border-radius: 0;
+  padding: 0;
+  line-height: 1;
+  color: #022B94;
+  font-size: 15px;
+  font-family: nunito_semibold;
+  margin-left: 20px;
+}
+   .documents-title{
+    font-size: 26px;
+    font-family: nunito_semibold;
+    color: #181818;
+    margin-bottom: 14px;
+    margin-top: 30px;
+   }
+.document-name{
+  font-size: 15px;
+  font-family: nunito_semibold;
+  color: #181818;
+
+}
+.document-list{
+  width: max-content;
+}
+.document-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 @media (max-width:1098px) {
   .form_modal {

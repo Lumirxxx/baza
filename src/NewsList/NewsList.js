@@ -3,19 +3,17 @@ import axios from 'axios';
 import NewsEdit from '../NewsEdit/NewsEdit';
 import NewsDeleteConfirmationModal from '../NewsDeleteConfirmationModal/NewsDeleteConfirmationModal';
 import SnackBar from '../SnackBar/SnackBar'; // Импорт готового SnackBar
-import { apiserver } from '../config'; // убедитесь, что путь к конфигу правильный
+import { apiserver } from '../config';
 
-const NewsList = ({ news, searchParams }) => {
+const NewsList = ({ news, searchParams, onEditToggle }) => {
     const [filteredNews, setFilteredNews] = useState(news);
     const [editingNewsId, setEditingNewsId] = useState(null);
-    const [deletingNewsId, setDeletingNewsId] = useState(null); // Состояние для ID новости на удаление
-    const [deletingNewsTitle, setDeletingNewsTitle] = useState(''); // Состояние для названия новости
+    const [deletingNewsId, setDeletingNewsId] = useState(null);
+    const [deletingNewsTitle, setDeletingNewsTitle] = useState('');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+    const [snackbarType, setSnackbarType] = useState('');
 
-    const [snackbarMessage, setSnackbarMessage] = useState(''); // Состояние для сообщения snackbar
-    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // Состояние для управления видимостью snackbar
-    const [snackbarType, setSnackbarType] = useState(''); // Тип snackbar ('delete', 'success' и т.д.)
-
-    // Метод для перезапроса списка новостей
     const fetchNews = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -33,40 +31,45 @@ const NewsList = ({ news, searchParams }) => {
     useEffect(() => {
         const filterNews = () => {
             let filtered = news;
-
+    
             if (searchParams.title) {
                 filtered = filtered.filter(item =>
                     item.title.toLowerCase().includes(searchParams.title.toLowerCase())
                 );
             }
-
+    
             if (searchParams.date) {
-                const searchDate = searchParams.date.split('.').reverse().join('-');
-                filtered = filtered.filter(item =>
-                    item.publicated_at.startsWith(searchDate)
-                );
+                filtered = filtered.filter(item => {
+                    const itemDate = item.publicated_at.split(' ')[0];
+                    return itemDate.includes(searchParams.date);
+                });
             }
-
+    
             setFilteredNews(filtered);
         };
-
+    
         filterNews();
     }, [news, searchParams]);
-
+    
     const handleEditClick = (newsId) => {
         setEditingNewsId(newsId);
+        onEditToggle(true); // Переход в режим редактирования
     };
 
     const handleCloseEditForm = () => {
         setEditingNewsId(null);
+        onEditToggle(false); // Возврат к списку
     };
 
     const handleNewsUpdated = () => {
         setEditingNewsId(null);
-        fetchNews();  // Перезапрос списка новостей после редактирования
+        fetchNews();
+        setSnackbarMessage("Новость успешно обновлена.");
+        setSnackbarType('success');
+        setIsSnackbarOpen(true);
+        onEditToggle(false);
     };
 
-    // Функция для удаления новости с подтверждением
     const handleDeleteClick = (newsId, newsTitle) => {
         setDeletingNewsId(newsId);
         setDeletingNewsTitle(newsTitle);
@@ -80,12 +83,10 @@ const NewsList = ({ news, searchParams }) => {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            setDeletingNewsId(null); // Закрыть модальное окно после удаления
-            fetchNews(); // Перезапрос списка новостей после удаления
-
-            // Установить сообщение и показать snackbar
+            setDeletingNewsId(null);
+            fetchNews();
             setSnackbarMessage(`Новость "${deletingNewsTitle}" успешно удалена.`);
-            setSnackbarType('delete'); // Указываем, что это тип удаления
+            setSnackbarType('delete');
             setIsSnackbarOpen(true);
         } catch (error) {
             console.error('Error deleting news:', error);
@@ -93,16 +94,15 @@ const NewsList = ({ news, searchParams }) => {
     };
 
     const handleCancelDelete = () => {
-        setDeletingNewsId(null); // Закрыть модальное окно без удаления
+        setDeletingNewsId(null);
     };
 
     const closeSnackbar = () => {
-        setIsSnackbarOpen(false); // Закрыть snackbar
+        setIsSnackbarOpen(false);
     };
 
     return (
         <div className="news-list">
-            {/* Если редактирование новости открыто, список не отображается */}
             {editingNewsId ? null : (
                 <>
                     {filteredNews.length === 0 ? (
@@ -120,9 +120,8 @@ const NewsList = ({ news, searchParams }) => {
                                         className="edit-button_news-list"
                                         onClick={() => handleEditClick(item.id)}
                                     >
-                                        <img src='./edit-icon.svg' className='edit-icon'></img>
+                                        <img src='./edit-icon.svg' className='edit-icon' alt="Edit"/>
                                     </button>
-                                    {/* Добавление кнопки для удаления с иконкой */}
                                     <button
                                         className="delete-button_news-list edit-button_news-list"
                                         onClick={() => handleDeleteClick(item.id, item.title)}
@@ -136,7 +135,6 @@ const NewsList = ({ news, searchParams }) => {
                 </>
             )}
 
-            {/* Форма редактирования новости */}
             {editingNewsId && (
                 <NewsEdit
                     newsId={editingNewsId}
@@ -145,7 +143,6 @@ const NewsList = ({ news, searchParams }) => {
                 />
             )}
 
-            {/* Модальное окно для подтверждения удаления */}
             {deletingNewsId && (
                 <NewsDeleteConfirmationModal
                     newsTitle={deletingNewsTitle}
@@ -154,12 +151,11 @@ const NewsList = ({ news, searchParams }) => {
                 />
             )}
 
-            {/* Добавляем компонент Snackbar */}
             <SnackBar
-                message="Данные успешно удалены."
+                message={snackbarMessage}
                 isOpen={isSnackbarOpen}
                 onClose={closeSnackbar}
-                type={snackbarType} // Тип snackbar ('delete', 'success' и т.д.)
+                type={snackbarType}
             />
         </div>
     );

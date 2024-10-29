@@ -13,7 +13,7 @@ const SnackBar = ({ message, isOpen, onClose, type }) => {
     if (!isOpen) return null;
 
     // Условное определение цвета
-    const backgroundColor = type === 'delete' ? '#954343' : '#38B15A'; // Красный для удаления, зеленый для добавления/редактирования
+    const backgroundColor = type === 'delete' ? '#FF5A5A' : '#38B15A'; // Красный для удаления, зеленый для добавления/редактирования
 
     return (
         <div className="snackbar" style={{ backgroundColor }}>

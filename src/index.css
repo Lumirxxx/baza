@@ -38,6 +38,12 @@ body {
   font-weight: bold;
 
 }
+@font-face {
+  font-family: nunito_bold;
+  src: local(nunito), url(./fonts/Nunito-Bold.ttf) format('truetype');
+  font-weight: bold;
+
+}
 
 @font-face {
   font-family: nunito_extrabold;

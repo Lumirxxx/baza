@@ -7,9 +7,9 @@ const RegistrationForm = ({ onCancel }) => {
         organizationName: "",
         organizationINN: "",
         industry: "",
-        industryId: null,  // Сохраняем id выбранной отрасли
+        industryId: null,
         region: "",
-        regionId: null,  // Сохраняем id выбранного региона
+        regionId: null,
         email: "",
     });
 
@@ -19,12 +19,14 @@ const RegistrationForm = ({ onCancel }) => {
     const [isDistrictOpen, setIsDistrictOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(false); // Состояние для проверки валидности формы
 
     // Функция для загрузки отраслей
     const fetchBranches = async () => {
         try {
             const response = await axios.get(`${apiserver}/auth/branches/`);
-            setBranches(response.data);  // Данные будут содержать name и id
+            setBranches(response.data);
         } catch (error) {
             console.error("Error fetching branches:", error);
         }
@@ -34,7 +36,7 @@ const RegistrationForm = ({ onCancel }) => {
     const fetchDistricts = async () => {
         try {
             const response = await axios.get(`${apiserver}/auth/districts/`);
-            setDistricts(response.data);  // Данные будут содержать name и id
+            setDistricts(response.data);
         } catch (error) {
             console.error("Error fetching districts:", error);
         }
@@ -44,6 +46,17 @@ const RegistrationForm = ({ onCancel }) => {
         fetchBranches();
         fetchDistricts();
     }, []);
+
+    useEffect(() => {
+        // Проверка, заполнены ли все поля формы
+        const isValid =
+            formData.organizationName &&
+            formData.organizationINN &&
+            formData.industry &&
+            formData.region &&
+            formData.email;
+        setIsFormValid(isValid);
+    }, [formData]);
 
     const handleOptionClick = (value, id, setFieldValue, setFieldId, setOpen) => {
         setFieldValue(value);
@@ -62,19 +75,19 @@ const RegistrationForm = ({ onCancel }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Подготовка данных для отправки
         const registrationData = {
             organization: formData.organizationName,
             inn: formData.organizationINN,
-            branch: formData.industryId,  // Отправляем id отрасли
-            district: formData.regionId,  // Отправляем id региона
+            branch: formData.industryId,
+            district: formData.regionId,
             email: formData.email,
         };
 
         axios
             .post(`${apiserver}/auth/reg_request/`, registrationData)
             .then((response) => {
-                setSuccessMessage("Регистрация прошла успешно. Проверьте вашу почту.");
+                setSuccessMessage("Анкета отправлена. Ожидайте письмо на указанную Вами почту.");
+                setIsSubmitted(true);
             })
             .catch((error) => {
                 setErrorMessage("Ошибка при регистрации. Пожалуйста, попробуйте снова.");
@@ -87,119 +100,134 @@ const RegistrationForm = ({ onCancel }) => {
                 <div className="registration_form-header">
                     <div className="registration_form_title">Регистрационная анкета</div>
                     <div className="registration_form_info">
-                        Для регистрации необходимо заполнить анкету. После отправки анкеты, на указанный Email будет напрвлено письмо с логином и паролем для входа.
+                        {isSubmitted
+                            ? successMessage
+                            : "Для регистрации необходимо заполнить анкету. После отправки анкеты, на указанный Email будет направлено письмо с логином и паролем для входа."}
                     </div>
                 </div>
-                <form className="registration_form-body" onSubmit={handleSubmit}>
-                    <div className="registration_form_group">
-                        <div className="registration_form_group-title">Наименование организации</div>
-                        <input
-                            className="registration_form_group-input"
-                            type="text"
-                            name="organizationName"
-                            placeholder="Ответ"
-                            value={formData.organizationName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="registration_form_group">
-                        <div className="registration_form_group-title">ИНН организации</div>
-                        <input
-                            type="text"
-                            className="registration_form_group-input"
-                            name="organizationINN"
-                            placeholder="Ответ"
-                            value={formData.organizationINN}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="registration_form_group">
-    <div className="registration_form_group-title">Отрасль</div> 
-    <div 
-        className={`custom-select ${isBranchOpen ? 'open' : ''}`} 
-        onClick={() => setIsBranchOpen(!isBranchOpen)}
-    >
-        <div className="selected-value registration_form_group-input">
-            {formData.industry || "Отрасль"}
-        </div>
-        <div className="custom-select-options">
-            {branches.map((branch) => (
-                <div
-                    key={branch.id}
-                    className="custom-option"
-                    onClick={() => {
-                        // Объединяем обновления в одном вызове setFormData
-                        setFormData((prevData) => ({
-                            ...prevData,
-                            industry: branch.name,
-                            industryId: branch.id
-                        }));
-                        setIsBranchOpen(false);
-                    }}
-                >
-                    {branch.name}
-                </div>
-            ))}
-        </div>
-    </div>
-</div>
+                
+                {!isSubmitted ? (
+                    <form className="registration_form-body" onSubmit={handleSubmit}>
+                        <div className="registration_form_group">
+                            <div className="registration_form_group-title">Наименование организации</div>
+                            <input
+                                className="registration_form_group-input"
+                                type="text"
+                                name="organizationName"
+                                placeholder="Ответ"
+                                value={formData.organizationName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="registration_form_group">
+                            <div className="registration_form_group-title">ИНН организации</div>
+                            <input
+                                type="text"
+                                className="registration_form_group-input"
+                                name="organizationINN"
+                                placeholder="Ответ"
+                                value={formData.organizationINN}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="registration_form_group">
+                            <div className="registration_form_group-title">Отрасль</div>
+                            <div 
+                                className={`custom-select ${isBranchOpen ? 'open' : ''}`} 
+                                onClick={() => setIsBranchOpen(!isBranchOpen)}
+                            >
+                                <div 
+                                    className={`selected-value selected-value-regform registration_form_group-input registration_form_group-input_hiegth  ${formData.industry ? 'filled' : ''}`}
+                                >
+                                    {formData.industry || "Отрасль"}
+                                </div>
+                                <div className="custom-select-options">
+                                    {branches.map((branch) => (
+                                        <div
+                                            key={branch.id}
+                                            className="custom-option custom-option_reg"
+                                            onClick={() => {
+                                                setFormData((prevData) => ({
+                                                    ...prevData,
+                                                    industry: branch.name,
+                                                    industryId: branch.id
+                                                }));
+                                                setIsBranchOpen(false);
+                                            }}
+                                        >
+                                            {branch.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="registration_form_group">
+                            <div className="registration_form_group-title">Регион</div>
+                            <div 
+                                className={`custom-select ${isDistrictOpen ? 'open' : ''}`} 
+                                onClick={() => setIsDistrictOpen(!isDistrictOpen)}
+                            >
+                                <div 
+                                    className={`selected-value selected-value-regform registration_form_group-input registration_form_group-input_hiegth  ${formData.region ? 'filled' : ''}`}
+                                >
+                                    {formData.region || "Регион"}
+                                </div>
+                                <div className="custom-select-options">
+                                    {districts.map((district) => (
+                                        <div
+                                            key={district.id}
+                                            className="custom-option custom-option_reg"
+                                            onClick={() => {
+                                                setFormData((prevData) => ({
+                                                    ...prevData,
+                                                    region: district.name,
+                                                    regionId: district.id
+                                                }));
+                                                setIsDistrictOpen(false);
+                                            }}
+                                        >
+                                            {district.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
 
-<div className="registration_form_group">
-    <div className="registration_form_group-title">Регион</div> 
-    <div 
-        className={`custom-select ${isDistrictOpen ? 'open' : ''}`} 
-        onClick={() => setIsDistrictOpen(!isDistrictOpen)}
-    >
-        <div className="selected-value registration_form_group-input">
-            {formData.region || "Регион"}
-        </div>
-        <div className="custom-select-options">
-            {districts.map((district) => (
-                <div
-                    key={district.id}
-                    className="custom-option"
-                    onClick={() => {
-                        // Объединяем обновления в одном вызове setFormData
-                        setFormData((prevData) => ({
-                            ...prevData,
-                            region: district.name,
-                            regionId: district.id
-                        }));
-                        setIsDistrictOpen(false);
-                    }}
-                >
-                    {district.name}
-                </div>
-            ))}
-        </div>
-    </div>
-</div>
-
-                    <div className="registration_form_group">
-                        <div className="registration_form_group-title">Email</div>
-                        <input
-                            className="registration_form_group-input"
-                            type="email"
-                            name="email"
-                            placeholder="Ответ"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="registration_form_buttons">
-                        <button className="form_button_submit" type="submit">
-                            Отправить
-                        </button>
-                        <button className="form_button_cancel" onClick={onCancel}>
-                            Отмена
+                        <div className="registration_form_group">
+                            <div className="registration_form_group-title">Email</div>
+                            <input
+                                className="registration_form_group-input"
+                                type="email"
+                                name="email"
+                                placeholder="Ответ"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="registration_form_buttons">
+                            <button
+                                className="form_button_submit form_button_submit_reg"
+                                type="submit"
+                                disabled={!isFormValid}
+                                style={{
+                                    backgroundColor: isFormValid ? "#002072" : "#5F6982",
+                                }}
+                            >
+                                Отправить
+                            </button>
+                        </div>
+                        {errorMessage && <div className="error-message">{errorMessage}</div>}
+                    </form>
+                ) : (
+                    <div className="registration_form_info">
+                        <button onClick={onCancel} className="form_button_submit_reg-toback ">
+                            Вернуться к авторизации
                         </button>
                     </div>
-                    {successMessage && <div className="success-message">{successMessage}</div>}
-                    {errorMessage && <div className="error-message">{errorMessage}</div>}
-                </form>
+                )}
             </div>
         </div>
     );

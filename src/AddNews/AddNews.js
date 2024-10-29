@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { apiserver } from "../config";
 
-const AddNews = () => {
+const AddNews = ({ onSuccess }) => {
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [publicatedAt, setPublicatedAt] = useState('');
@@ -60,6 +60,8 @@ const AddNews = () => {
             setFilePreviews([]);
             setCoverFile(null);
             setCoverPreview(null);
+
+            onSuccess();
         } catch (error) {
             console.error('Error adding news:', error);
         }
