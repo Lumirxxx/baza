@@ -67,18 +67,21 @@ const KnowledgeBase = () => {
     // };
 
     return (
-        <div>
+        <div className="KnowledgeBase_page" style={{backgroundImage: "url(/bgknow.svg)"}}>
             <MainHeader />
             <div className="KnowledgeBase">
 
-                <h1>Тут отображается список доступны БЗ</h1>
-                {/* Отображаем полученные объекты */}
                 <div>
+                    <div className="KnowledgeBase_title">Функционал находится в разработке</div>
+                    <div className="KnowledgeBase_line">База знаний ПО IPM_System. Полезные статьи для работы с ПО.</div>
+                </div>
+                {/* Отображаем полученные объекты */}
+                {/* <div>
                     {items.map((item, index) => (
                         <div onClick={() => handleButtonWikiClick(item.id)} key={index}>{item.name}</div>
 
                     ))}
-                </div>
+                </div> */}
             </div>
         </div>
     );

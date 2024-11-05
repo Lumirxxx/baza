@@ -7,7 +7,6 @@ import MainHeader from "../MainHeader/MainHeader";
 import NewsSlider from "../NewsSlider/NewsSlider";
 import SliderComponent from "../SliderComponent/SliderComponent";
 
-
 const FullNews = () => {
     const { id } = useParams();
     const [news, setNews] = useState(null);
@@ -53,6 +52,35 @@ const FullNews = () => {
         setShowAllMedia(true);
     };
 
+    const renderMedia = (mediaItem, index, isLarge = false) => {
+        const isImage = mediaItem.media.endsWith(".jpg") || mediaItem.media.endsWith(".jpeg") || mediaItem.media.endsWith(".png");
+        const isVideo = mediaItem.media.endsWith(".mp4") || mediaItem.media.endsWith(".webm") || mediaItem.media.endsWith(".ogg");
+    
+        if (isImage) {
+            return (
+                <div className={isLarge ? 'full_news_img large_media' : 'full_news_img small_media'} key={index} onClick={() => openSliderAtIndex(index)}>
+                    <div className={isLarge ? 'full_news_img-bg' : 'full_news_img-bg_small'} style={{ backgroundImage: `url(${mediaItem.media})` }} alt={`Media ${index + 1}`}></div>
+                </div>
+            );
+        }
+    
+        if (isVideo) {
+            return (
+                <div className={isLarge ? 'full_news_video large_media' : 'full_news_video small_media'} key={index} onClick={() => openSliderAtIndex(index)}>
+                    <video className="background-video" controls>
+                        <source src={mediaItem.media} type="video/mp4" />
+                        Ваш браузер не поддерживает видео-теги.
+                    </video>
+                    <div className='video-play-trangle'>
+                        <img src="/trianglevideo.svg" alt="Play Video"></img>
+                    </div>
+                </div>
+            );
+        }
+    
+        return null;
+    };
+
     return (
         <div>
             <div className="full_news_container main_news_container">
@@ -71,15 +99,9 @@ const FullNews = () => {
                             }) : 'Loading...'}
                         </div>
                         <div className="media_container">
-                            <div className='full_news_img' style={{ width: '694px', height: '394px' }} onClick={() => openSliderAtIndex(0)}>
-                                <div className='full_news_img-bg' style={{ backgroundImage: `url(${media.length > 0 ? media[0].media : ''})` }} alt={`Media 1`}></div>
-                            </div>
+                            {media.length > 0 && renderMedia(media[0], 0, true)}
                             <div className="small_media_container">
-                                {media.slice(1, 4).map((m, index) => (
-                                    <div className='full_news_img small_media' key={index} onClick={() => openSliderAtIndex(index + 1)}>
-                                        <div className='full_news_img-bg_small' style={{ backgroundImage: `url(${m.media})` }} alt={`Media ${index + 2}`}></div>
-                                    </div>
-                                ))}
+                                {media.slice(1, 4).map((m, index) => renderMedia(m, index + 1))}
                             </div>
                         </div>
                     </div>
@@ -100,4 +122,3 @@ const FullNews = () => {
 };
 
 export default FullNews;
-

@@ -5,13 +5,16 @@ import { apiserver } from "../config";
 import ProjectStagesTable from "../ProjectStagesTable/ProjectStagesTable";
 import GanttChart from "../GanttComponent/Gantt";
 import { setupAxiosInterceptors } from "../authService";
-import Documents from "../Documents/Documents"; // Импортируем новый компонент
+import Documents from "../Documents/Documents"; // Import the new component
 
 const MainProjects = () => {
     const [contracts, setContracts] = useState([]);
     const [selectedContractNumber, setSelectedContractNumber] = useState(null);
     const [isContractOpen, setIsContractOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [stages, setStages] = useState([]);
+    const [stagesLoading, setStagesLoading] = useState(false);
+    const [hasDocuments, setHasDocuments] = useState(false);
 
     const fetchUserData = async () => {
         try {
@@ -48,10 +51,64 @@ const MainProjects = () => {
         }
     };
 
+    const fetchProjectStages = async (contractNumber) => {
+        setStagesLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("Токен не найден в localStorage");
+                return;
+            }
+
+            const response = await axios.get(`${apiserver}/projects/list/`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const projectStages = response.data.filter(
+                stage => stage.contract_number === contractNumber
+            );
+
+            setStages(projectStages);
+        } catch (error) {
+            console.error("Ошибка при получении этапов проекта:", error);
+        } finally {
+            setStagesLoading(false);
+        }
+    };
+
+    const fetchDocuments = async (contractNumber) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("Токен не найден в localStorage");
+                return;
+            }
+
+            const response = await axios.get(`${apiserver}/projects/documents/`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const documents = response.data.filter(
+                doc => doc.contract_number === contractNumber
+            );
+
+            setHasDocuments(documents.length > 0);
+        } catch (error) {
+            console.error("Ошибка при получении документов:", error);
+        }
+    };
+
     useEffect(() => {
         setupAxiosInterceptors();
         fetchUserData();
     }, []);
+
+    useEffect(() => {
+        if (selectedContractNumber) {
+            fetchProjectStages(selectedContractNumber);
+            fetchDocuments(selectedContractNumber);
+        }
+    }, [selectedContractNumber]);
 
     const handleOptionClick = (contractNumber) => {
         setSelectedContractNumber(contractNumber);
@@ -63,17 +120,15 @@ const MainProjects = () => {
             <MainHeader />
             <div className="main_project_container">
                 <div className="main_project_col">
-           
                     {loading ? (
                         <p>Загрузка...</p>
                     ) : (
                         <>
                             <label>
-                              
                                 <div
                                     className={`custom-select custom-select-project ${isContractOpen ? "open" : ""}`}
                                     onClick={() => setIsContractOpen(!isContractOpen)}
-                                >
+                                >   
                                     <div className={`selected-value custom-select-value ${isContractOpen ? "open-radius" : ""}`}>
                                         {selectedContractNumber
                                             ? contracts.find(c => c.contract_number === selectedContractNumber)?.contract_number
@@ -97,9 +152,20 @@ const MainProjects = () => {
 
                             {selectedContractNumber && (
                                 <div>
-                                    <GanttChart contractNumber={selectedContractNumber} />
-                                    <ProjectStagesTable contractNumber={selectedContractNumber} />
-                                    <Documents contractNumber={selectedContractNumber} /> {/* Подключаем компонент "Документы" */}
+                                    {stagesLoading ? (
+                                        <p>Загрузка этапов...</p>
+                                    ) : stages.length > 0 ? (
+                                        <>
+                                            <GanttChart contractNumber={selectedContractNumber} />
+                                            <ProjectStagesTable contractNumber={selectedContractNumber} />
+                                        </>
+                                    ) : hasDocuments ? (
+                                        <div className="no-stages-found">В данном проекте нет этапов выполнения</div>
+                                    ) : (
+                                        <div className="no-stages-found">Ничего не найдено в Договоре №{selectedContractNumber}</div>
+                                    )}
+
+                                    <Documents contractNumber={selectedContractNumber} />
                                 </div>
                             )}
                         </>

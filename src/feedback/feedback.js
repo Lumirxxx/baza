@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios"; // Импортируем axios для отправки запросов
+import axios from "axios";
+import { apiserver } from "../config";
+import { refreshAuthToken } from "../authService"; // Импортируем функцию обновления токена
 
 const FeedBack = ({ toggleFeedback, feedbackVisible }) => {
     const [feedbackText, setFeedbackText] = useState("");
     const [isMessageSent, setIsMessageSent] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(""); // Для отображения ошибок при отправке
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleInputChange = (e) => {
         setFeedbackText(e.target.value);
@@ -12,37 +14,51 @@ const FeedBack = ({ toggleFeedback, feedbackVisible }) => {
 
     const handleSubmit = async () => {
         try {
-            const token = localStorage.getItem('token'); // Предположим, что токен находится в localStorage
+            await sendFeedback(); 
+            setIsMessageSent(true);
+            setFeedbackText("");
+            setErrorMessage("");
+        } catch (error) {
+            console.error("Ошибка при отправке сообщения:", error);
+            setErrorMessage("Не удалось отправить сообщение. Попробуйте снова.");
+        }
+    };
 
+    const sendFeedback = async () => {
+        const token = localStorage.getItem("token");
+
+        try {
             const response = await axios.post(
-                '/api/v1/auth/report/', // Указываем URL API
-                { text: feedbackText }, // Отправляем объект с текстом сообщения
+                `${apiserver}/auth/report/`,
+                { text: feedbackText },
                 {
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Добавляем токен авторизации, если он нужен
-                        'Content-Type': 'application/json'
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
                     }
                 }
             );
-
-            console.log('Отправлено:', response.data);
-
-            // Если сообщение успешно отправлено:
-            setIsMessageSent(true);
-            setFeedbackText("");
-            setErrorMessage(""); // Сброс ошибки, если она была
+            console.log("Отправлено:", response.data);
         } catch (error) {
-            console.error('Ошибка при отправке сообщения:', error);
-            setErrorMessage("Не удалось отправить сообщение. Попробуйте снова.");
+            if (error.response && error.response.status === 401) {
+                // Если ошибка 401 (Unauthorized), пробуем обновить токен
+                const refreshTokenSuccess = await refreshAuthToken();
+                if (refreshTokenSuccess) {
+                    return await sendFeedback(); // Повторный запрос после успешного обновления токена
+                } else {
+                    throw new Error("Не удалось обновить токен.");
+                }
+            } else {
+                throw error;
+            }
         }
     };
 
     const handleToggleFeedback = () => {
         if (feedbackVisible) {
-            // Если форма была видимой, и мы ее закрываем, сбросим состояние
             setIsMessageSent(false);
             setFeedbackText("");
-            setErrorMessage(""); // Сброс ошибок при закрытии формы
+            setErrorMessage("");
         }
         toggleFeedback();
     };

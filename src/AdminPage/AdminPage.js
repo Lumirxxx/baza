@@ -3,6 +3,8 @@ import Sidebar from '../Sidebar/Sidebar';
 import AddNews from '../AddNews/AddNews';
 import NewsSearch from '../NewsSearch/NewsSearch';
 import NewsList from '../NewsList/NewsList';
+import Users from '../Users/Users';
+import AdminDocuments from '../AdminDocuments/AdminDocuments';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { apiserver } from "../config";
@@ -47,6 +49,8 @@ const AdminPage = () => {
 
     const renderSection = () => {
         switch (selectedSection) {
+            case 'users':
+                return <Users />;
             case 'news':
                 return (
                     <div>
@@ -76,19 +80,21 @@ const AdminPage = () => {
                                 </>
                             )}
                         </button>
-                        {showAddNewsForm ? (
-                            <AddNews onSuccess={handleToggleAddNewsForm} />
-                        ) : (
-                            <NewsList
-                                news={news}
-                                searchParams={searchParams}
-                                onEditToggle={handleEditToggle} // Передаём функцию для управления режимом редактирования
-                            />
-                        )}
+                   {showAddNewsForm ? (
+    <AddNews onSuccess={handleToggleAddNewsForm} />
+) : (
+    <NewsList
+        news={news}
+        searchParams={searchParams}
+        onEditToggle={handleEditToggle}
+    />
+)}
                     </div>
                 );
             case 'ipmwiki':
                 return <div>IPM Wiki</div>;
+                case 'contracts':
+                    return <AdminDocuments />;
             default:
                 return <div>Новости</div>;
         }

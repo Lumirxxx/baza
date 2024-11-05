@@ -141,8 +141,12 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
     return (
         <div className="add-news">
             <div className='add-news_title'>Редактировать новость</div>
-            <div type="button" className="close-btn" onClick={onClose}>
-                <img src='./close-circle.svg' alt="Закрыть" />
+            <div type="button" className="close-btn-edit" onClick={onClose}>
+                <div className='back_to_news_list'>
+                    <img src='./arrow-left.svg' alt="Закрыть" />
+                    </div>
+                                
+                                <div className='back_to_news_list-text'>Вернуться к списку новостей</div>
             </div>
             <div className="form-group">
                 <label className='label_add_news'>Заголовок</label>
@@ -237,7 +241,7 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                 )}
             </div>
 
-            <div className="form-group">
+            <div className="form-group  form-group_flex">
                 <input className='edit_news_checkbox' type="checkbox" id="edit_news_checkbox-id" />
                 <label className='label_edit_news' htmlFor="edit_news_checkbox-id">Добавить новость в мини ленту</label>
             </div>

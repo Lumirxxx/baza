@@ -77,7 +77,7 @@ const SliderComponent = ({ media, initialSlide, onClose }) => {
             </div>
 
             <div className="close-btn-container" onClick={onClose}>
-                <img className="close-btn" src="/closeblack.svg" alt="Close" />
+                <img className="close-btn" src="/newclsbtn.svg" alt="Close" />
             </div>
         </div>
     );

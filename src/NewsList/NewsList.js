@@ -110,7 +110,7 @@ const NewsList = ({ news, searchParams, onEditToggle }) => {
                     ) : (
                         filteredNews.map((item) => (
                             <div key={item.id} className="news-item">
-                                <img src={item.cover} alt={item.title} className="news-cover" />
+                                <img src={item.cover}  className="news-cover" />
                                 <div className="news-details">
                                     <div className="news-title">{item.title}</div>
                                     <div className="news-date">

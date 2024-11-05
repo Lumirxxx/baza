@@ -50,9 +50,12 @@ const AddNews = ({ onSuccess }) => {
             console.log('Новость добавлена:', response.data);
 
             setShowSuccessMessage(true);
-            setTimeout(() => setShowSuccessMessage(false), 3000);
+            setTimeout(() => {
+                setShowSuccessMessage(false);
+                onSuccess(); // Invoke the prop to return to the news list
+            }, 3000);
 
-            // Очистка полей формы
+            // Clear form fields
             setTitle('');
             setText('');
             setPublicatedAt('');
@@ -60,8 +63,6 @@ const AddNews = ({ onSuccess }) => {
             setFilePreviews([]);
             setCoverFile(null);
             setCoverPreview(null);
-
-            onSuccess();
         } catch (error) {
             console.error('Error adding news:', error);
         }

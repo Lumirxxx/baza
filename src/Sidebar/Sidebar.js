@@ -31,6 +31,17 @@ const Sidebar = ({ selectedSection, onSelectSection }) => {
 
                 </li>
                 <li
+    className={selectedSection === 'contracts' ? 'active' : ''}
+    onClick={() => onSelectSection('contracts')}
+>
+    <div className='sidebar-menu-content'>
+        <div className='sidebar-menu-icon'>
+            <img src='/document-download.svg' alt="Contracts Icon" />
+        </div>
+        <div>Документы</div>
+    </div>
+</li>
+                <li
                     className={selectedSection === 'news' ? 'active' : ''}
                     onClick={() => onSelectSection('news')}
                 >

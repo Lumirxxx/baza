@@ -50,7 +50,7 @@ const BigNews = () => {
                             <div className='news_date'>{item.created_at.split(' ')[0]}</div>
                         </div>
                         {/* Используем поле cover для отображения обложки новости */}
-                        {item.cover && <img className='news_img' src={item.cover} alt="News Cover" />}
+                        <div style={{ backgroundImage: `url(${item.cover})` }} className='slider_img_container'></div>
                         
                     </div>
                 ))}
