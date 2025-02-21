@@ -16,6 +16,9 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
     const [password, setPassword] = useState('');
     const [isBranchOpen, setIsBranchOpen] = useState(false);
     const [isDistrictOpen, setIsDistrictOpen] = useState(false);
+    const [initialData, setInitialData] = useState({});
+    const [isSaveEnabled, setIsSaveEnabled] = useState(false); // Состояние для активности кнопки
+
 
     useEffect(() => {
         if (isEditing && editingUserId) {
@@ -23,7 +26,6 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
         }
         fetchBranchesAndDistricts();
     }, [isEditing, editingUserId]);
-
     const fetchUserData = async (userId) => {
         try {
             const token = localStorage.getItem('token');
@@ -42,9 +44,10 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
             const userData = userResponse.data;
             const client = clientsResponse.data.find(client => client.user_id === userData.id);
 
+            let clientContracts = []; 
             if (client) {
                 setClientId(client.id);
-                const clientContracts = contractsResponse.data.filter(contract => contract.client_id === client.id);
+                clientContracts = contractsResponse.data.filter(contract => contract.client_id === client.id); // Assign correctly
                 setContracts(clientContracts);
             }
 
@@ -54,9 +57,30 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
             setOrganization(client ? client.organization : '');
             setBranchId(client ? client.branch_id : '');
             setDistrictId(client ? client.district_id : '');
+
+            // Устанавливаем начальные данные пользователя для отслеживания изменений
+            setInitialData({
+                username: userData.username,
+                email: userData.email,
+                inn: client ? client.inn : '',
+                organization: client ? client.organization : '',
+                branchId: client ? client.branch_id : '',
+                districtId: client ? client.district_id : '',
+                contracts: clientContracts,
+                password: ''
+            });
         } catch (error) {
             console.error("Ошибка при получении данных пользователя:", error.message);
         }
+    };
+    const areContractsChanged = () => {
+        if (initialData.contracts.length !== contracts.length) return true;
+    
+        // Проверяем, изменился ли какой-либо договор
+        return contracts.some((contract, index) => {
+            const initialContract = initialData.contracts[index];
+            return !initialContract || initialContract.contract_number !== contract.contract_number;
+        });
     };
 
     const fetchBranchesAndDistricts = async () => {
@@ -76,6 +100,21 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
             console.error('Ошибка при загрузке данных отраслей и регионов:', error);
         }
     };
+    const checkIfChanged = () => {
+        // Проверяем, отличаются ли текущие данные от initialData
+        const hasChanges = (
+            username !== initialData.username ||
+            email !== initialData.email ||
+            inn !== initialData.inn ||
+            organization !== initialData.organization ||
+            branchId !== initialData.branchId ||
+            districtId !== initialData.districtId ||
+            (password && password !== initialData.password) ||
+            areContractsChanged()
+        );
+        setIsSaveEnabled(hasChanges);
+    };
+    useEffect(checkIfChanged, [username, email, inn, organization, branchId, districtId, password, contracts]);
 
     const handleOptionClick = (id, setFunction, setOpen) => {
         setFunction(id);
@@ -187,11 +226,30 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
         }
         setPassword(newPassword);
     };
+    const handleDeleteContract = async (index) => {
+        const contractToDelete = contracts[index];
+    
+        // Если договор уже существует в базе (имеет `id`), отправляем запрос на его удаление
+        if (contractToDelete.id) {
+            try {
+                const token = localStorage.getItem('token');
+                await axios.delete(`${apiserver}/projects/contracts/${contractToDelete.id}/`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+            } catch (error) {
+                console.error("Ошибка при удалении договора:", error.message);
+                return;
+            }
+        }
+    
+        // Удаляем договор из локального состояния
+        setContracts(contracts.filter((_, i) => i !== index));
+    };
 
     return (
         <form onSubmit={handleSubmit} className="add-user-form">
             <div className='form-title'>Редактирование пользователя</div>
-            <div type="button" className="close-btn" onClick={onClose}>
+            <div type="button" className="close-btn close-btn_user-form" onClick={onClose}>
                 <img src='./close-circle.svg' alt="close"></img>
             </div>
             <label>
@@ -216,8 +274,9 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
                 <div className='add_contracts_label-col'>
                     № Договора
                     {contracts.map((contract, index) => (
-                        <label key={index}>
+                        <label key={index} className='add-contract-label-position-button'>
                             <input className='add-contract-input' type="text" value={contract.contract_number} onChange={(e) => handleContractChange(index, e.target.value)} />
+                            <button type="button" className="delete-contract-btn" onClick={() => handleDeleteContract(index)}></button>
                         </label>
                     ))}
                 </div>
@@ -238,7 +297,7 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
                     onClick={() => setIsBranchOpen(!isBranchOpen)}
                 >
                     <div className="selected-value">
-                        {branchId ? branches.find(b => b.id === branchId)?.name : 'Выберите отрасль'}
+                        {branchId ? branches.find(b => b.id === branchId)?.name : ''}
                     </div>
                     {isBranchOpen && (
                         <div className="custom-select-options">
@@ -262,7 +321,7 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
                     onClick={() => setIsDistrictOpen(!isDistrictOpen)}
                 >
                     <div className="selected-value">
-                        {districtId ? districts.find(d => d.id === districtId)?.name : 'Выберите регион'}
+                        {districtId ? districts.find(d => d.id === districtId)?.name : ''}
                     </div>
                     {isDistrictOpen && (
                         <div className="custom-select-options">
@@ -283,7 +342,7 @@ const EditUserForm = ({ onUserEdited, editingUserId, isEditing, onClose }) => {
                 Email
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </label>
-            <button type="submit" className="save-btn">Сохранить</button>
+            <button type="submit" className="save-btn" disabled={!isSaveEnabled}>Сохранить</button>
         </form>
     );
 };

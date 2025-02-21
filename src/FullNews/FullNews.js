@@ -105,9 +105,25 @@ const FullNews = () => {
                             </div>
                         </div>
                     </div>
+                    <div className='full_news_btns'>
+                    <button
+                        className="add-news-toggle-button return-login-button full_news_btns_return "
+                        onClick={() => navigate('/MainNews')}
+                    >
+                        <>
+                            <span>Вернуться к списку новостей</span>
+                            <img
+                                className="return-news-icon return-icon-login-page"
+                                src="/arrow-left-black.svg"
+                                alt="Return Icon"
+                            />
+                        </>
+                    </button>
                     {!showAllMedia && (
                         <div className="show_all-news_btn" onClick={() => openSliderAtIndex(0)}>Смотреть все</div>
                     )}
+                   
+                    </div>
                 </div>
                 {showAllMedia && (
                     <div className="modal-slider_full-news">
@@ -116,6 +132,7 @@ const FullNews = () => {
                         </div>
                     </div>
                 )}
+               
             </div>
         </div>
     );

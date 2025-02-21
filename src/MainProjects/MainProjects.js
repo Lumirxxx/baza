@@ -15,6 +15,7 @@ const MainProjects = () => {
     const [stages, setStages] = useState([]);
     const [stagesLoading, setStagesLoading] = useState(false);
     const [hasDocuments, setHasDocuments] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false); // Новое состояние для проверки администратора
 
     const fetchUserData = async () => {
         try {
@@ -24,12 +25,26 @@ const MainProjects = () => {
                 return;
             }
 
+            // Получаем информацию о текущем пользователе
             const userResponse = await axios.get(`${apiserver}/auth/users/`);
             const currentUser = userResponse.data[0];
 
-            if (currentUser.is_client) {
+            setIsAdmin(currentUser.is_staff); // Проверяем, является ли пользователь админом
+
+            if (currentUser.is_staff) {
+                //  Если админ, получаем все контракты
+                const contractsResponse = await axios.get(`${apiserver}/projects/contracts/`);
+                setContracts(contractsResponse.data);
+                
+                // Выбираем первый контракт по умолчанию (если есть)
+                if (contractsResponse.data.length > 0) {
+                    setSelectedContractNumber(contractsResponse.data[0].contract_number);
+                }
+            } else if (currentUser.is_client) {
+                //  Если обычный клиент, получаем только его контракты
                 const clientsResponse = await axios.get(`${apiserver}/auth/clients/`);
                 const client = clientsResponse.data.find(c => c.user_id === currentUser.id);
+
                 if (client) {
                     const contractsResponse = await axios.get(`${apiserver}/projects/contracts/`);
                     const clientContracts = contractsResponse.data.filter(
@@ -37,6 +52,7 @@ const MainProjects = () => {
                     );
 
                     setContracts(clientContracts);
+
                     if (clientContracts.length > 0) {
                         setSelectedContractNumber(clientContracts[0].contract_number);
                     }
@@ -165,7 +181,9 @@ const MainProjects = () => {
                                         <div className="no-stages-found">Ничего не найдено в Договоре №{selectedContractNumber}</div>
                                     )}
 
-                                    <Documents contractNumber={selectedContractNumber} />
+                                    {(stages.length > 0 || hasDocuments) && (
+                                        <Documents contractNumber={selectedContractNumber} />
+                                    )}
                                 </div>
                             )}
                         </>

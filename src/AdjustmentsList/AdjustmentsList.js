@@ -74,7 +74,7 @@ const AdjustmentsList = ({ contractNumber }) => {
                     </tbody>
                 </table>
             ) : (
-                <p>Согласования не найдены</p>
+                <div className="no-adjustments">Ничего не найдено</div>
             )}
         </div>
     );

@@ -6,13 +6,18 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [publicatedAt, setPublicatedAt] = useState('');
-    const [mediaFiles, setMediaFiles] = useState([]); // Новые медиафайлы для загрузки
-    const [filePreviews, setFilePreviews] = useState([]); // Превью для новых файлов
-    const [existingMedia, setExistingMedia] = useState([]); // Существующие медиафайлы
-    const [coverFile, setCoverFile] = useState(null); // Новый файл обложки
-    const [coverPreview, setCoverPreview] = useState(null); // Превью для новой обложки
+    const [mediaFiles, setMediaFiles] = useState([]);
+    const [filePreviews, setFilePreviews] = useState([]);
+    const [existingMedia, setExistingMedia] = useState([]);
+    const [coverFile, setCoverFile] = useState(null);
+    const [coverPreview, setCoverPreview] = useState(null);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0); // Прогресс загрузки
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [toSlider, setToSlider] = useState(true);  // состояние для to_slider
+
+    // состояние для отслеживания начальных данных и изменений формы
+    const [initialData, setInitialData] = useState({});
+    const [isChanged, setIsChanged] = useState(false);
 
     useEffect(() => {
         const fetchNewsData = async () => {
@@ -23,56 +28,85 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-
+    
                 const newsData = response.data;
+    
+                // Преобразование даты в формат datetime-local
+                const formatToDatetimeLocal = (dateString) => {
+                    const [date, time] = dateString.split(' ');
+                    const [day, month, year] = date.split('.');
+                    return `${year}-${month}-${day}T${time.substring(0, 5)}`;
+                };
+    
                 setTitle(newsData.title);
                 setText(newsData.text);
-                setPublicatedAt(newsData.publicated_at);
+                setPublicatedAt(formatToDatetimeLocal(newsData.publicated_at)); // Установка преобразованной даты
                 setCoverPreview(newsData.cover);
-
+                setToSlider(newsData.to_slider);
+    
+                setInitialData({
+                    title: newsData.title,
+                    text: newsData.text,
+                    publicatedAt: formatToDatetimeLocal(newsData.publicated_at),
+                    to_slider: newsData.to_slider
+                });
+    
                 const mediaResponse = await axios.get(`${apiserver}/news/media/`, {
                     params: { news_id: newsId },
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-
+    
                 setExistingMedia(mediaResponse.data);
             } catch (error) {
-                console.error('Error fetching news data:', error);
+                console.error('Ошибка при получении данных новости:', error);
             }
         };
-
+    
         fetchNewsData();
     }, [newsId]);
+    
 
-    // Обновление новости
+    // отслеживание изменений формы
+    useEffect(() => {
+        setIsChanged(
+            title !== initialData.title ||
+            text !== initialData.text ||
+            publicatedAt !== initialData.publicatedAt ||
+            coverFile !== null ||
+            mediaFiles.length > 0 ||
+            toSlider !== initialData.to_slider  // отслеживание изменения to_slider
+        );
+    }, [title, text, publicatedAt, coverFile, mediaFiles, initialData, toSlider]);
+
     const handleEditNews = async () => {
+        if (!isChanged) return; // предотвращение сохранения, если изменений нет
+
         try {
             const token = localStorage.getItem('token');
             const formData = new FormData();
             formData.append('title', title);
             formData.append('text', text);
             formData.append('publicated_at', publicatedAt);
+            formData.append('to_slider', toSlider);  // добавление to_slider в данные формы
             if (coverFile) {
                 formData.append('cover', coverFile);
             }
-    
-            // Обновление данных новости
+
             const response = await axios.patch(`${apiserver}/news/list-admin/${newsId}/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
-            // Загружаем новые медиафайлы
+
             if (mediaFiles.length > 0) {
                 const uploadPromises = mediaFiles.map(file => {
                     const mediaFormData = new FormData();
                     mediaFormData.append('news_id', newsId);
                     mediaFormData.append('media', file);
-    
+
                     return axios.post(`${apiserver}/news/media/`, mediaFormData, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -80,30 +114,28 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                         },
                         onUploadProgress: (progressEvent) => {
                             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                            setUploadProgress(percentCompleted); // Устанавливаем прогресс загрузки
+                            setUploadProgress(percentCompleted);
                         },
                     });
                 });
-    
+
                 await Promise.all(uploadPromises);
             }
-    
-            console.log('Новость обновлена:', response.data);
+
             setShowSuccessMessage(true);
-    
-            // Ожидание 3 секунд перед закрытием формы и обновлением
+
             setTimeout(() => {
                 setShowSuccessMessage(false);
-                onNewsUpdated();  // Обновляем список новостей
-            }, 3000); // Задержка в 3 секунды для отображения сообщения
+                onNewsUpdated();
+            }, 3000);
         } catch (error) {
-            console.error('Error editing news:', error);
+            console.error('Ошибка при редактировании новости:', error);
         }
     };
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        
+
         const newPreviews = files.map(file => {
             const fileType = file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : null;
             return {
@@ -112,7 +144,7 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                 file: file 
             };
         });
-    
+
         setFilePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
         setMediaFiles(prevMediaFiles => [...prevMediaFiles, ...files]);
     };
@@ -134,9 +166,14 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
 
             setExistingMedia(existingMedia.filter(media => media.id !== mediaId));
         } catch (error) {
-            console.error('Error deleting media file:', error);
+            console.error('Ошибка при удалении файла:', error);
         }
     };
+    const handleRemoveNewFile = (index) => {
+        setFilePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+        setMediaFiles((prevMediaFiles) => prevMediaFiles.filter((_, i) => i !== index));
+    };
+    
 
     return (
         <div className="add-news">
@@ -154,7 +191,7 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
             </div>
             <div className="form-group">
                 <label className='label_add_news'>Дата и время</label>
-                <input className='edit_news_textarea' type="datetime-local" value={publicatedAt} onChange={(e) => setPublicatedAt(e.target.value)} />
+                <input className='edit_news_textarea'  type="datetime-local" value={publicatedAt} onChange={(e) => setPublicatedAt(e.target.value)} />
             </div>
             <div className="form-group">
                 <label className='label_add_news'>Текст</label>
@@ -203,21 +240,30 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
 
             {/* Превью новых медиафайлов */}
             {filePreviews.length > 0 && (
-                <div className="file-preview-container">
-                    {filePreviews.map((preview, index) => (
-                        <div key={index} className="file-preview">
-                            {preview.type === 'image' ? (
-                                <img src={preview.url} alt={`preview-${index}`} width="100" />
-                            ) : preview.type === 'video' ? (
-                                <video width="100" controls>
-                                    <source src={preview.url} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
-                            ) : null}
-                        </div>
-                    ))}
+    <div className="file-preview-container">
+        {filePreviews.map((preview, index) => (
+            <div key={index} className="file-preview">
+                {preview.type === 'image' ? (
+                    <img src={preview.url} alt={`preview-${index}`} width="100" />
+                ) : preview.type === 'video' ? (
+                    <video width="100" controls>
+                        <source src={preview.url} type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                ) : null}
+
+                {/* Кнопка удаления */}
+                <div 
+                    className="remove-file-button"
+                    onClick={() => handleRemoveNewFile(index)}
+                >
+                    <img className='close-btn_img' src="./close-circle1.svg" alt="Remove" />
                 </div>
-            )}
+            </div>
+        ))}
+    </div>
+)}
+
 
             {/* Прогресс загрузки */}
             {uploadProgress > 0 && uploadProgress < 100 && (
@@ -241,24 +287,33 @@ const NewsEdit = ({ newsId, onClose, onNewsUpdated }) => {
                 )}
             </div>
 
-            <div className="form-group  form-group_flex">
-                <input className='edit_news_checkbox' type="checkbox" id="edit_news_checkbox-id" />
-                <label className='label_edit_news' htmlFor="edit_news_checkbox-id">Добавить новость в мини ленту</label>
+            <div className="form-group">
+            <input
+                    className='add_news_checkbox'
+                    type="checkbox"
+                    id="add_news_checkbox-id"
+                    checked={toSlider}
+                    onChange={() => setToSlider(!toSlider)}
+                />
+                <label className='label_add_news' htmlFor="add_news_checkbox-id">Добавить новость в мини ленту</label>
             </div>
             <button
-                className="save-button"
+                className={`save-button ${isChanged ? '' : 'save-button-disabled'}`}
                 onClick={handleEditNews}
-            >Сохранить</button>
+                disabled={!isChanged} // Disable save button if no changes
+            >
+                Сохранить
+            </button>
 
             {/* Сообщение об успешном обновлении */}
-            {showSuccessMessage && (
+            {/* {showSuccessMessage && (
                 <div className="success-message">
                     <div className='success-icon'>
                         <img src="/tick-square.svg" alt="Success" />
                     </div>
                     <div className='success-text'>Данные успешно сохранены.</div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

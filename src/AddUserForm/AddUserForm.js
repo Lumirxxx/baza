@@ -17,6 +17,9 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
     const [isBranchOpen, setIsBranchOpen] = useState(false);
     const [isDistrictOpen, setIsDistrictOpen] = useState(false);
 
+    // Проверка на заполненность полей формы
+    const isFormValid = username && password && inn && organization && branchId && districtId && email && contracts.every(contract => contract);
+
     useEffect(() => {
         const fetchBranchesAndDistricts = async () => {
             try {
@@ -43,8 +46,8 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
     }, []);
 
     const handleOptionClick = (id, setter, toggle) => {
-        setter(id); // Устанавливаем выбранное значение
-        toggle(false); // Закрываем выпадающий список
+        setter(id);
+        toggle(false);
     };
 
     const handleAddContract = () => {
@@ -56,18 +59,15 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
         updatedContracts[index] = value;
         setContracts(updatedContracts);
     };
+    const handleDeleteContract = (index) => {
+        setContracts(contracts.filter((_, i) => i !== index));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         
         const token = localStorage.getItem('token');
     
-        // Логируем данные перед отправкой
-        console.log('User data:', {
-            username, password, email, inn, organization, branchId, districtId, contracts
-        });
-
-        // 1. Создаем пользователя
         axios.post(`${apiserver}/auth/users/`, {
             username,
             password,
@@ -80,11 +80,7 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
         })
         .then(userResponse => {
             const userId = userResponse.data.id;
-
-            // Логируем успешное создание пользователя
-            console.log('User created:', userResponse.data);
     
-            // 2. Создаем клиента
             return axios.post(`${apiserver}/auth/clients/`, {
                 user_id: userId,
                 inn,
@@ -99,13 +95,9 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
         })
         .then(clientResponse => {
             const clientId = clientResponse.data.id;
-
-            // Логируем успешное создание клиента
-            console.log('Client created:', clientResponse.data);
     
-            // 3. Добавляем контракты
             const contractPromises = contracts
-                .filter(contractNumber => contractNumber) // Проверка, что контракт не пустой
+                .filter(contractNumber => contractNumber)
                 .map(contractNumber => {
                     return axios.post(`${apiserver}/projects/contracts/`, {
                         client_id: clientId,
@@ -115,21 +107,16 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
                             'Authorization': `Bearer ${token}`
                         }
                     }).then(contractResponse => {
-                        console.log('Contract added:', contractResponse.data); // Логируем добавленный контракт
+                        console.log('Contract added:', contractResponse.data);
                     });
                 });
 
             return Promise.all(contractPromises);
         })
         .then(() => {
-            // Логируем успешное завершение процесса
-            console.log('Все контракты добавлены. Процесс завершен.');
-
-            // 4. Закрываем форму и оповещаем о завершении
             onUserAdded();
         })
         .catch(error => {
-            // Детальная обработка ошибок с логированием
             if (error.response) {
                 console.error('Ошибка с ответом от сервера:', error.response.data);
             } else if (error.request) {
@@ -143,9 +130,9 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
     return (
         <form onSubmit={handleSubmit} className="add-user-form">
             <div className='form-title'>
-            Добавление пользователя   
+                Добавление пользователя   
             </div>
-            <div type="button" className="close-btn" onClick={onClose}>
+            <div type="button" className="close-btn close-btn_user-form" onClick={onClose}>
                <img src='./close-circle.svg'></img>
             </div>
             <label>
@@ -157,29 +144,27 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
                 <div className="password-container">
                     <input className='add-contract-input' type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
                     <div className='pass-gen' type="button" onClick={() => setPassword(generatePassword())}>
-                        <div className='pass-gen_txt'>
-                            
-                        Сгенерировать пароль
-                        </div>
-                        </div>
+                        <div className='pass-gen_txt'>Сгенерировать пароль</div>
+                    </div>
                 </div>
             </label>
             <div className='add_contracts'>
                 <div className='add_contracts_label-col'>
-                № Договора
-            {contracts.map((contract, index) => (
-                
-                <label key={index}>
-                   
-                    <input className='add-contract-input'
-                        type="text"
-                        value={contract}
-                        onChange={(e) => handleContractChange(index, e.target.value)}
-                    />
-                </label>
-            ))}
-            </div>
-            <button type="button" className="add-contract-btn" onClick={handleAddContract}>Добавить договор</button>
+                    № Договора
+                    {contracts.map((contract, index) => (
+                        <label key={index} className='add-contract-label-position-button'>
+                            <input className='add-contract-input'
+                                type="text"
+                                value={contract}
+                                onChange={(e) => handleContractChange(index, e.target.value)}
+                            />
+                               <button type="button" className="delete-contract-btn" onClick={() => handleDeleteContract(index)}>
+                                
+                            </button>
+                        </label>
+                    ))}
+                </div>
+                <button type="button" className="add-contract-btn" onClick={handleAddContract}>Добавить договор</button>
             </div>
             <label>
                 ИНН
@@ -218,7 +203,7 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
                     onClick={() => setIsDistrictOpen(!isDistrictOpen)}
                 >
                     <div className="selected-value">
-                        {districtId ? districts.find(d => d.id === districtId)?.name : 'Выберите регион'}
+                        {districtId ? districts.find(d => d.id === districtId)?.name : ''}
                     </div>
                     <div className="custom-select-options">
                         {districts.map(district => (
@@ -237,7 +222,7 @@ const AddUserForm = ({ onUserAdded, onClose }) => {
                 Email
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </label>
-            <button type="submit" className="save-btn">Сохранить</button>
+            <button type="submit" className="save-btn" disabled={!isFormValid}>Сохранить</button>
         </form>
     );
 };

@@ -2,19 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { apiserver } from "../config";
 import DocumentDeleteConfirmationModal from '../DocumentDeleteConfirmationModal/DocumentDeleteConfirmationModal';
-import SnackBar from '../SnackBar/SnackBar';
+import SnackBarDocuments from '../SnackBar/SnackBarDocuments';
 
 const AdminDocuments = () => {
     const [contracts, setContracts] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedFiles, setSelectedFiles] = useState(null);
-    const [uploadContractId, setUploadContractId] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
     const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState('');
-    const [snackBarType, setSnackBarType] = useState(''); // Добавляем переменную для типа сообщения
+    const [snackBarType, setSnackBarType] = useState('');
 
     useEffect(() => {
         const fetchContractsAndDocuments = async () => {
@@ -55,7 +53,6 @@ const AdminDocuments = () => {
             setShowDeleteModal(false);
             setSelectedDocument(null);
             
-            // Уведомление об успешном удалении
             setSnackBarMessage('Данные успешно удалены');
             setSnackBarType('delete');
             setIsSnackBarOpen(true);
@@ -73,51 +70,44 @@ const AdminDocuments = () => {
         setSearchTerm(event.target.value);
     };
 
-    const handleFileSelect = (event) => {
-        setSelectedFiles(event.target.files);
+    const handleFileSelect = async (event, contractId) => {
+        const files = event.target.files;
+
+        if (files.length) {
+            try {
+                const token = localStorage.getItem('token');
+                const formData = new FormData();
+
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('file', files[i]);
+                    formData.append('name', files[i].name);
+                }
+
+                formData.append('contract_id', contractId);
+
+                await axios.post(`${apiserver}/projects/documents/`, formData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                const updatedDocumentsResponse = await axios.get(`${apiserver}/projects/documents/`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+                setDocuments(updatedDocumentsResponse.data);
+
+                setSnackBarMessage('Данные успешно сохранены');
+                setSnackBarType('upload');
+                setIsSnackBarOpen(true);
+            } catch (error) {
+                console.error('Error uploading documents:', error);
+            }
+        }
     };
 
     const handleUploadClick = (contractId) => {
-        setUploadContractId(contractId);
-        setSelectedFiles(null);
-    };
-
-    const handleUpload = async () => {
-        if (!selectedFiles || !uploadContractId) return;
-    
-        try {
-            const token = localStorage.getItem('token');
-            const formData = new FormData();
-    
-            for (let i = 0; i < selectedFiles.length; i++) {
-                formData.append('file', selectedFiles[i]);
-                formData.append('name', selectedFiles[i].name);
-            }
-    
-            formData.append('contract_id', uploadContractId);
-    
-            await axios.post(`${apiserver}/projects/documents/`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-    
-            const updatedDocumentsResponse = await axios.get(`${apiserver}/projects/documents/`, {
-                headers: { 'Authorization': `Bearer ${token}` },
-            });
-            setDocuments(updatedDocumentsResponse.data);
-            setSelectedFiles(null);
-            setUploadContractId(null);
-            
-            // Уведомление об успешной загрузке
-            setSnackBarMessage('Данные успешно сохранены');
-            setSnackBarType('upload'); // Устанавливаем тип как "upload" для зелёного SnackBar
-            setIsSnackBarOpen(true);
-    
-        } catch (error) {
-            console.error('Error uploading documents:', error);
-        }
+        document.getElementById(`file-input-${contractId}`).click();
     };
 
     const filteredContracts = contracts.filter(contract =>
@@ -132,6 +122,7 @@ const AdminDocuments = () => {
 
     return (
         <div className="documents">
+            <div className='documents_container'>
             <div className='documents_table-title'>Список договоров</div>
             <div className='search-container'>
                 <input
@@ -180,25 +171,21 @@ const AdminDocuments = () => {
                                             >
                                                 Загрузить документ
                                             </button>
+                                            <input
+                                                type="file"
+                                                id={`file-input-${group.contract_id}`}
+                                                style={{ display: 'none' }}
+                                                onChange={(e) => handleFileSelect(e, group.contract_id)}
+                                                multiple
+                                            />
                                         </div>
                                     </td>
                                 </tr>
-                                {uploadContractId === group.contract_id && (
-                                    <tr>
-                                        <td colSpan="3">
-                                            <div className="upload-modal">
-                                                <div className='contract-number'>Загрузка документов для договора {group.contract_number}</div>
-                                                <input className='upload-button' type="file" onChange={handleFileSelect} />
-                                                <button className='upload-button' onClick={handleUpload}>Загрузить</button>
-                                                <button className='delete-button_documents cancel-button_document' onClick={() => setUploadContractId(null)}>Отмена</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
                             </React.Fragment>
                         ))}
                     </tbody>
                 </table>
+             
             </div>
             {showDeleteModal && (
                 <DocumentDeleteConfirmationModal
@@ -208,12 +195,13 @@ const AdminDocuments = () => {
                     onCancel={handleCancelDelete}
                 />
             )}
-            <SnackBar
-                message={snackBarMessage}
-                isOpen={isSnackBarOpen}
-                onClose={() => setIsSnackBarOpen(false)}
-                type={snackBarType} // Передаём тип (upload или delete)
-            />
+               <SnackBarDocuments
+                    message={snackBarMessage}
+                    isOpen={isSnackBarOpen}
+                    onClose={() => setIsSnackBarOpen(false)}
+                    type={snackBarType}
+                />
+                </div>
         </div>
     );
 };

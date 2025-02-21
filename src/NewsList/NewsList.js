@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NewsEdit from '../NewsEdit/NewsEdit';
 import NewsDeleteConfirmationModal from '../NewsDeleteConfirmationModal/NewsDeleteConfirmationModal';
-import SnackBar from '../SnackBar/SnackBar'; // Импорт готового SnackBar
+import SnackBarEditNews from '../SnackBar/SnackBarEditNews'; // Импорт готового SnackBar
 import { apiserver } from '../config';
 
 const NewsList = ({ news, searchParams, onEditToggle }) => {
@@ -64,7 +64,7 @@ const NewsList = ({ news, searchParams, onEditToggle }) => {
     const handleNewsUpdated = () => {
         setEditingNewsId(null);
         fetchNews();
-        setSnackbarMessage("Новость успешно обновлена.");
+        setSnackbarMessage("Данные успешно сохранены.");
         setSnackbarType('success');
         setIsSnackbarOpen(true);
         onEditToggle(false);
@@ -102,7 +102,9 @@ const NewsList = ({ news, searchParams, onEditToggle }) => {
     };
 
     return (
+        <div className='snackbar-container_width'>
         <div className="news-list">
+            
             {editingNewsId ? null : (
                 <>
                     {filteredNews.length === 0 ? (
@@ -151,12 +153,13 @@ const NewsList = ({ news, searchParams, onEditToggle }) => {
                 />
             )}
 
-            <SnackBar
+            <SnackBarEditNews
                 message={snackbarMessage}
                 isOpen={isSnackbarOpen}
                 onClose={closeSnackbar}
                 type={snackbarType}
             />
+            </div>
         </div>
     );
 };

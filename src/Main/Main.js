@@ -89,24 +89,6 @@ const Main = () => {
         fetchData();
     }, [navigate]);
 
-    // Функция для обновления токена
-    // const refreshAuthToken = async () => {
-    //     const refreshToken = localStorage.getItem("refreshToken");
-    //     try {
-    //         const response = await axios.post(`${apiserver}/token/refresh/`, {
-    //             refreshToken: refreshToken
-    //         });
-    //         // Сохраняем новый токен в localStorage
-    //         localStorage.setItem("token", response.data.token);
-    //         // Возвращаем true, указывая на успешное обновление токена
-    //         return true;
-    //     } catch (error) {
-    //         console.error("Ошибка при обновлении токена:", error);
-    //         // В случае ошибки при обновлении токена возвращаем false
-    //         return false;
-    //     }
-    // };
-
     useEffect(() => {
         const fetchData = async () => {
             try {

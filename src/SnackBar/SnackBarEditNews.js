@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const SnackBar = ({ message, isOpen, onClose, type }) => {
+const SnackBarEditNews = ({ message, isOpen, onClose, type }) => {
     useEffect(() => {
         if (isOpen) {
             const timer = setTimeout(() => {
@@ -16,7 +16,7 @@ const SnackBar = ({ message, isOpen, onClose, type }) => {
     const backgroundColor = type === 'delete' ? '#FF5A5A' : '#38B15A'; // Красный для удаления, зеленый для добавления/редактирования
 
     return (
-        <div className="snackbar" style={{ backgroundColor }}>
+        <div className="snackbar_edit_news" style={{ backgroundColor }}>
             <div className="snackbar-content">
                 <img src='./tick-square.svg'></img>
                 <span className="snackbar-message">{message}</span>
@@ -25,4 +25,4 @@ const SnackBar = ({ message, isOpen, onClose, type }) => {
     );
 };
 
-export default SnackBar;
+export default SnackBarEditNews;

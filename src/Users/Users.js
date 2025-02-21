@@ -6,7 +6,7 @@ import AddUserForm from '../AddUserForm/AddUserForm';
 import EditUserForm from '../EditUserForm/EditUserForm';
 import UserSearch from '../UserSearch/UserSearch';
 import DeleteConfirmationModal from '../DeleteConfirmationModal/DeleteConfirmationModal';
-import SnackBar from '../SnackBar/SnackBar'; // Импортируем новый компонент
+import SnackBarUsers from '../SnackBar/SnackBarUsers'; // Импортируем новый компонент
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -164,8 +164,12 @@ const Users = () => {
             
             {/* Добавляем компонент поиска */}
             <UserSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            
+            <button className="add-user-button" onClick={() => { setIsAddingUser(true); setIsEditingUser(null); }}>
+                Добавить пользователя
+       
+            </button>
             <div className="users-container">
+           
                 <div className={`users-table_container ${isAddingUser ? 'compressed' : ''}`}>
                     <div className="users-table">
                         
@@ -228,18 +232,18 @@ const Users = () => {
                 </div>
  
             {/* SnackBar */}
-            <SnackBar
+          
+            <SnackBarUsers
     message={snackBarMessage}
     isOpen={isSnackBarOpen}
     onClose={closeSnackBar}
     type={snackBarType} // Добавляем передачу типа
 />
+
             </div>
     
             {/* Кнопка добавления пользователя */}
-            <button className="add-user-button" onClick={() => { setIsAddingUser(true); setIsEditingUser(null); }}>
-                Добавить пользователя
-            </button>
+       
            
             
             {showDeleteModal && (

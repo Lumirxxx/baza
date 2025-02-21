@@ -96,7 +96,21 @@ const RegistrationForm = ({ onCancel }) => {
 
     return (
         <div className="registration_page">
+             
             <div className="registration_form">
+            <button
+            className="add-news-toggle-button return-login-button"
+            onClick={onCancel}
+        >
+            <>
+                <span >Вернуться на страницу входа</span>
+                <img
+                    className="return-news-icon return-icon-login-page"
+                    src="/arrow-left-black.svg"
+                    alt="Return Icon"
+                />
+            </>
+        </button>
                 <div className="registration_form-header">
                     <div className="registration_form_title">Регистрационная анкета</div>
                     <div className="registration_form_info">
@@ -228,6 +242,7 @@ const RegistrationForm = ({ onCancel }) => {
                         </button>
                     </div>
                 )}
+               
             </div>
         </div>
     );

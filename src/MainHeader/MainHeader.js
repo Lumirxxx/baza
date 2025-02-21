@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import FeedBack from "../feedback/feedback";
+import ProfileMenu from "../ProfileMenu/ProfileMenu";
 
 const MainHeader = () => {
     const navigate = useNavigate();
@@ -49,6 +50,7 @@ const MainHeader = () => {
                         <div className="heder_menu-object_form-feedback" onClick={toggleFeedback}>
                             {/* <img src="/feedback.svg" alt="Feedback" /> */}
                         </div>
+                        <ProfileMenu />
                     </div>
                 </div>
             </div>

@@ -11,6 +11,14 @@ const BigNews = () => {
     useEffect(() => {
         const fetchNews = async () => {
             const token = localStorage.getItem("token");
+
+            // Если токена нет — сразу перенаправляем на страницу логина
+            if (!token) {
+                console.error("Отсутствует токен авторизации. Перенаправление на страницу логина.");
+                navigate("/");
+                return;
+            }
+
             try {
                 const newsResponse = await axios.get(`${apiserver}/news/list/`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -18,25 +26,28 @@ const BigNews = () => {
                 setNews(newsResponse.data);
             } catch (error) {
                 if (error.response && error.response.status === 401) {
-                    // Попытка обновить токен
+                    console.warn("Токен устарел. Попытка обновления...");
+                    
+                    // Попытка обновления токена
                     const refreshTokenSuccess = await refreshAuthToken(navigate);
+                    
                     if (refreshTokenSuccess) {
-                        // Если токен обновлен, повторно выполняем запрос
-                        fetchNews();
+                        console.log("Токен успешно обновлен. Повторяем запрос...");
+                        fetchNews(); // Повторный запрос
                     } else {
                         console.error("Не удалось обновить токен. Перенаправление на страницу логина.");
-                        // Перенаправление на страницу логина
-                        navigate("/");
+                        navigate("/"); // Если не удалось обновить — редирект на логин
                     }
                 } else {
                     console.error("Ошибка при получении данных: ", error);
                 }
             }
         };
+        
 
         fetchNews();
     }, [navigate]);
-
+    
     return (
         <div style={{display: 'flex', flexDirection: 'column'}}>
             <div className='news_title'>Новости</div>
@@ -60,3 +71,6 @@ const BigNews = () => {
 };
 
 export default BigNews;
+
+
+   

@@ -121,8 +121,12 @@ const ProjectStagesTable = ({ contractNumber }) => {
                                             <td className="table-header_item-name">
                                                 {stage.name}
                                             </td>
-                                            <td className="table-header_item-date">{stage.start_date.split(" ")[0]}</td>
-                                            <td className="table-header_item-date">{stage.deadline.split(" ")[0]}</td>
+                                            <td className="table-header_item-date">
+  {stage.start_date ? stage.start_date.split(" ")[0] : ""}
+</td>
+<td className="table-header_item-date">
+  {stage.deadline ? stage.deadline.split(" ")[0] : ""}
+</td>
                                             <td
                                                 className="table-header_item-status"
                                                 style={{
@@ -134,8 +138,8 @@ const ProjectStagesTable = ({ contractNumber }) => {
                                                 {text}
                                             </td>
                                             <td className="table-header_item-date">
-                                                {stage.actual_date ? stage.actual_date.split(" ")[0] : ""}
-                                            </td>
+  {stage.actual_date ? stage.actual_date.split(" ")[0] : ""}
+</td>
                                         </tr>
                                         {/* Если этап - "Согласование чертежей с заказчиком", отображаем список согласований */}
                                         {isDesignApproval && isActive && (

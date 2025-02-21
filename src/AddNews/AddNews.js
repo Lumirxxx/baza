@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { apiserver } from "../config";
+import SnackBar from '../SnackBar/SnackBar';
 
 const AddNews = ({ onSuccess }) => {
     const [title, setTitle] = useState('');
@@ -11,6 +12,7 @@ const AddNews = ({ onSuccess }) => {
     const [coverFile, setCoverFile] = useState(null);
     const [coverPreview, setCoverPreview] = useState(null);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [toSlider, setToSlider] = useState(false); // Чекбокс выключен по умолчанию
 
     const isFormComplete = title && publicatedAt && text;
 
@@ -21,6 +23,7 @@ const AddNews = ({ onSuccess }) => {
             formData.append('title', title);
             formData.append('text', text);
             formData.append('publicated_at', publicatedAt);
+            formData.append('to_slider', toSlider); // Передаем значение чекбокса
             if (coverFile) {
                 formData.append('cover', coverFile);
             }
@@ -52,10 +55,10 @@ const AddNews = ({ onSuccess }) => {
             setShowSuccessMessage(true);
             setTimeout(() => {
                 setShowSuccessMessage(false);
-                onSuccess(); // Invoke the prop to return to the news list
+                onSuccess();
             }, 3000);
 
-            // Clear form fields
+            // Очистка полей формы
             setTitle('');
             setText('');
             setPublicatedAt('');
@@ -63,6 +66,7 @@ const AddNews = ({ onSuccess }) => {
             setFilePreviews([]);
             setCoverFile(null);
             setCoverPreview(null);
+            setToSlider(false); // Сброс чекбокса
         } catch (error) {
             console.error('Error adding news:', error);
         }
@@ -73,14 +77,8 @@ const AddNews = ({ onSuccess }) => {
         setMediaFiles(prevFiles => [...prevFiles, ...files]);
     
         const previews = files.map(file => {
-            const fileType = file.type.split('/')[0]; // image или video
-            if (fileType === 'image') {
-                return { url: URL.createObjectURL(file), type: 'image' };
-            } else if (fileType === 'video') {
-                return { url: URL.createObjectURL(file), type: 'video' };
-            } else {
-                return { url: URL.createObjectURL(file), type: 'other' };
-            }
+            const fileType = file.type.split('/')[0];
+            return { url: URL.createObjectURL(file), type: fileType };
         });
     
         setFilePreviews(prevPreviews => [...prevPreviews, ...previews]);
@@ -123,27 +121,27 @@ const AddNews = ({ onSuccess }) => {
                 </div>
             </div>
             {filePreviews.length > 0 && (
-    <div className="file-preview-container">
-        {filePreviews.map((preview, index) => (
-            <div key={index} className="file-preview">
-                {preview.type === 'image' ? (
-                    <img src={preview.url} alt={`preview-${index}`} width="100" />
-                ) : preview.type === 'video' ? (
-                    <video width="100" controls>
-                        <source src={preview.url} type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
-                ) : null}
-                <div 
-                    className="remove-file-button"
-                    onClick={() => handleRemoveFile(index)}
-                >
-                    <img className='close-btn_img' src="./close-circle1.svg" alt="Remove" />
+                <div className="file-preview-container">
+                    {filePreviews.map((preview, index) => (
+                        <div key={index} className="file-preview">
+                            {preview.type === 'image' ? (
+                                <img src={preview.url} alt={`preview-${index}`} width="100" />
+                            ) : preview.type === 'video' ? (
+                                <video width="100" controls>
+                                    <source src={preview.url} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            ) : null}
+                            <div 
+                                className="remove-file-button"
+                                onClick={() => handleRemoveFile(index)}
+                            >
+                                <img className='close-btn_img' src="./close-circle1.svg" alt="Remove" />
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            </div>
-        ))}
-    </div>
-)}
+            )}
 
             <div className="form-group">
                 <div className="file-input-wrapper form-group">
@@ -160,24 +158,32 @@ const AddNews = ({ onSuccess }) => {
                 )}
             </div>
 
-          
             <div className="form-group">
-                <input className='add_news_checkbox' type="checkbox" id="add_news_checkbox-id" />
-                <label className='label_add_news' htmlFor="add_news_checkbox-id">Добавить новость в мини ленту</label>
+                <input
+                    className='add_news_checkbox'
+                    type="checkbox"
+                    id="add_news_checkbox-id"
+                    checked={toSlider} // Установленное состояние чекбокса
+                    onChange={(e) => setToSlider(e.target.checked)}
+                />
+                <label className='label_add_news' htmlFor="add_news_checkbox-id">
+                    Добавить новость в мини ленту
+                </label>
             </div>
             <button
                 className={`save-button ${isFormComplete ? '' : 'save-button-disabled'}`}
                 onClick={handleAddNews}
                 disabled={!isFormComplete}
-            >Сохранить</button>
+            >
+                Сохранить
+            </button>
 
-            {/* Сообщение об успешном сохранении */}
             {showSuccessMessage && (
                 <div className="success-message">
                     <div className='success-icon'>
                         <img src="/tick-square.svg" alt="Success" />
                     </div>
-                    <div className='success-text'>Данные успешно сохранены.</div>
+                    <div className='success-text'>Новость успешно добавлена.</div>
                 </div>
             )}
         </div>

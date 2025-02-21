@@ -71,7 +71,16 @@ const Documents = ({ contractNumber }) => {
                     ))}
                 </div>
             ) : (
-                <p></p>
+                <div className="document-list">
+                <div className="documents-title">Документы</div>
+              
+                 
+                     <div className="document-not-found">
+                     В данном проекте нет добавленных документов
+                     </div>
+                   </div>
+            
+   
             )}
         </div>
     );

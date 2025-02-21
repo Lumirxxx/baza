@@ -8,6 +8,7 @@ import KnowledgeBase from './KnowledgeBase/KnowledgeBase';
 import MainProjects from './MainProjects/MainProjects';
 import FullNews from './FullNews/FullNews';
 import AdminPage from './AdminPage/AdminPage';
+import NotFound from './NotFound/NotFound'; 
 function App() {
 
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='/MainProjects' element={<MainProjects></MainProjects>} />
           <Route path="/news/:id" element={<FullNews />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
 
