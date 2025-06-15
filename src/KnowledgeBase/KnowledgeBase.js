@@ -7,7 +7,7 @@ import { refreshAuthToken } from "../authService";
 const KnowledgeBase = () => {
   const navigate = useNavigate();
   const handleButtonWikiClick = (itemId) => {
-    navigate("/main", { state: { wikiId: itemId } });
+    navigate("/Maino", { state: { wikiId: itemId } });
     console.log(itemId);
   };
   // Создаем состояние для хранения объектов

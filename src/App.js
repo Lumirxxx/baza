@@ -9,6 +9,7 @@ import MainProjects from './MainProjects/MainProjects';
 import FullNews from './FullNews/FullNews';
 import AdminPage from './AdminPage/AdminPage';
 import NotFound from './NotFound/NotFound'; 
+import OptimizedMain from './OptimizedMain/OptimizedMain';
 function App() {
 
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/news/:id" element={<FullNews />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/Maino" element={<OptimizedMain />} />
         </Routes>
       </BrowserRouter>
 

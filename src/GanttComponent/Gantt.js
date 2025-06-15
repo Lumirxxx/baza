@@ -99,31 +99,36 @@ const GanttChart = ({ contractNumber }) => {
     // Автоматическая локализация заголовков и замена "W" -> "Н"
     useEffect(() => {
         const headerObserver = new MutationObserver((mutations) => {
-            mutations.forEach(() => {
-                // Заголовки
-                const headers = ganttLocaleRef.current?.querySelectorAll('._WuQ0f');
-                if (headers?.length >= 3) {
-                    headers[0].textContent = 'Название';
-                    headers[1].textContent = 'Начало';
-                    headers[2].textContent = 'Окончание';
+       
+            headerObserver.disconnect();
+    
+            // Выполняем разовые правки
+            const headers = ganttLocaleRef.current?.querySelectorAll('._WuQ0f');
+            if (headers?.length >= 3) {
+                headers[0].textContent = 'Название';
+                headers[1].textContent = 'Начало';
+                headers[2].textContent = 'Окончание';
+            }
+    
+            const targetBlocks = ganttLocaleRef.current?.querySelectorAll('._9w8d5');
+            targetBlocks?.forEach((block) => {
+                if (block.textContent.includes('W')) {
+                    block.textContent = block.textContent.replace(/W/g, 'Н');
                 }
-
-                // Замена W -> Н
-                const targetBlocks = ganttLocaleRef.current?.querySelectorAll('._9w8d5');
-                targetBlocks?.forEach((block) => {
-                    if (block.textContent.includes('W')) {
-                        block.textContent = block.textContent.replace(/W/g, 'Н');
-                    }
-                });
             });
+    
+      
+            headerObserver.observe(ganttLocaleRef.current, { childList: true, subtree: true });
         });
-
+    
         if (ganttLocaleRef.current) {
+          
             headerObserver.observe(ganttLocaleRef.current, { childList: true, subtree: true });
         }
-
+    
         return () => headerObserver.disconnect();
     }, []);
+    
 
     // Подсвечивание просроченных задач
     useEffect(() => {

@@ -1657,6 +1657,16 @@ body.modal-open {
   cursor: pointer;
 }
 
+.optimized-main-container{
+  background-image: url("../public/Mainb.svg");
+  background-attachment: fixed;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  min-height: 100vh;
+}
+
 
 
 
@@ -3716,8 +3726,353 @@ border-radius: 10px;
   padding-top: 11px;
 }
 
-.logout-button:hover {
+.base_content_container{
+  max-width: 1236px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+}
+.menu_title{
+  font-family: nunito_semibold;
+  font-size: 18px;
+  color: #F3F3F3;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  padding-left: 17px;
+  background-color: #022B94;
+  border-radius: 5px;
+}
+.base_menu_item{
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
+  align-items: center;
+  gap: 16px;
+  background-color: #F3F3F3;
+  border-radius: 5px;
+  margin-top: 8px;
+}
+.base_menu_item.active{
+  background-color: #BACDFF;
+  color: #F3F3F3;
+}
+.base_menu_name{
+  font-size: 18px;
+  font-family: nunito_bold;
+  color: #022B94;
+  width: 159px;
+}
+.menu_img_container{
+  width: 42px;
+  height: 42px;
+}
+.sections_panel{
+  margin-top: 56px;
+  margin-left: 20px;
+}
+.base_section_item{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  gap: 12px;
+  background-color: #F3F3F3;
+  border-radius: 5px;
   
+}
+.base_section_item.active{
+  background-color: #BACDFF;
+  color: #F3F3F3;
+}
+.sections_panel-container{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 295px;
+}
+.base_section_name{
+  font-size: 18px;
+  font-family: nunito_semibold;
+  color: #022B94;
+}
+.base_section_img{
+  width: 22px;
+  height: 22px;
+}
+.sections_articles_panel{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+
+}
+.articles_panel{
+  margin-top: 56px;
+
+}
+.articles_panel-container{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.article_item {
+  font-size: 18px;
+  font-family: nunito_semibold;
+  color: #022B94;
+  background-color: #F3F3F3;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  width: 261px;
+
+}
+.article_item.active{
+  background-color: #BACDFF;
+
+}
+.article_detail{
+  position: relative;
+  margin-top: 76px;
+  width: 1236px;
+    left: -592px;
+    background-color: #E3EBFF;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+.breadcrumbs{
+  font-size: 13px;
+  font-family: nunito_medium;
+  color: #959595;
+}
+.breadcrumbs_container{
+  max-width: 1236px;
+  width: 100%;
+  margin: auto;
+padding-top: 30px;
+padding-bottom: 30px;
+
+}
+.wiki-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.wiki-list {
+  flex: 1;
+}
+
+.edit-sidebar {
+  width: 636px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  position: absolute;
+  left: 417px;
+  top: 0;
+
+}
+.wiki_cancel-button{
+  border: none;
+  background: none;
+}
+.edit-title{
+  font-size: 18px;
+  font-family: nunito_semibold;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.edit-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.edit-form input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.save-btn {
+  background: #4CAF50;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+}
+
+.cancel-btn {
+  background: #f44336;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+}
+.wiki-name{
+  font-size: 20px;
+  font-family: nunito_bold;
+  color: #022B94;
+}
+.wiki-details{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #FAFAFA;
+  border-radius: 5px;
+  max-width: 247px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.wiki_details_img{
+  width: 42px;
+  height: 42px;
+}
+.wiki-item{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
+  gap: 12px;
+}
+.wiki-actions button{
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0px;
+
+}
+.wiki_add-btn{
+  display: flex;
+  background-color: none;
+}
+.knowledge-base-page{
+  margin-top: 70px;
+}
+.wiki-actions{
+  display: flex;
+  flex-direction: row;
+ gap: 13px;
+  background-color: #FAFAFA;
+  padding-top: 16px;
+padding-bottom: 16px;
+padding-left: 11.5px;
+padding-right: 11.5px;
+border-radius: 5px;
+}
+.add_news_label{
+  font-size: 16px;
+  font-family: nunito;
+}
+.custom-file-label{
+  font-size: 16px;
+  font-family: nunito;
+}
+.wiki-name_section{
+  font-size: 16px;
+  font-family: nunito_bold;
+  color: #022B94;
+  white-space: normal;       
+  word-break: break-word;    
+  overflow-wrap: break-word; 
+  max-width: 184px;
+  padding-left: 16px;
+}
+.wiki-details-section{
+  padding-top: 8px;
+  padding-bottom: 8px;
+  height: 64px;
+}
+.wiki-actions-section{
+  padding-top: 17px;
+  padding-bottom: 17px;
+}
+.wiki-item-section{
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.wiki-details-section_subsection{
+  height: auto;
+}
+.wiki-item_subsection{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+.wiki-details-section_subsection{
+  max-width: 276px;
+  width: 100%;
+  padding-top: 9px;
+  padding-bottom: 9px;
+ 
+}
+.wiki-name_subsection{
+  font-size: 16px;
+  font-family: nunito_semibold;
+  color: #022B94;
+  padding-left: 10px;
+  max-width: inherit;
+}
+.wiki_details_img_subsection{
+  width: 22px;
+  height: 22px;
+}
+.wiki_details_img_subsection img{
+  vertical-align: baseline;
+  fill: #022B94;
+}
+.wiki-edit-btn_subsection img{
+  vertical-align: baseline; ;
+}
+.wiki-actions-section_subsection{
+  padding: 11.14px;
+}
+.wiki-edit-btn_subsection{
+  width: 20px;
+  height: 20px;
+  vertical-align: baseline;
+}
+.edit-sidebar_add-edit-form{
+  max-height: 468px;
+  position: relative;
+  left: 0;
+  margin-top: 8px;
+}
+.article-form-row{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.add-article-form{
+  max-width: 1460px;
+  width: 100%;
+
+  background-color: #FFFFFF;
+  padding: 10px;
+  margin-top: 180px;
+}
+.ck-editor__main{
+  min-height: 300px;
+}
+.ck-content{
+  min-height: 100vh;
 }
 @media (max-width:1098px) {
   .form_modal {

@@ -89,6 +89,8 @@ const Main = () => {
         fetchData();
     }, [navigate]);
 
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
